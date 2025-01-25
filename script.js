@@ -54,83 +54,57 @@ function showSettingsModal() {
 
   // 1. Read cookies for theme and pace
   const currentTheme = getCookie("theme") || "blue"; // Default to blue if no theme cookie
-  const currentSpeed = getCookie("speed") || "0"; // Default to 'Right on Time' if no speed cookie
+  const currentSpeed = getCookie("speed") || "0";   // Default to 'Right on Time' if no speed cookie
 
-  console.log(
-    "showSettingsModal: Reading cookies - Theme:",
-    currentTheme,
-    ", Pace:",
-    currentSpeed
-  ); // Debugging
+  console.log("showSettingsModal: Reading cookies - Theme:", currentTheme, ", Pace:", currentSpeed); // Debugging
 
   // 2. Set Pace in GUI
   document.getElementById("paceSelect").value = currentSpeed;
   console.log("showSettingsModal: Pace select dropdown set to:", currentSpeed); // Debugging
 
   // 3. Set Theme in GUI
-  console.log(
-    "showSettingsModal: Setting theme checkmarks for theme:",
-    currentTheme
-  ); // Debugging
+  console.log("showSettingsModal: Setting theme checkmarks for theme:", currentTheme); // Debugging
   document.querySelectorAll(".theme-option").forEach((option) => {
     option.classList.remove("selected"); // Clear all checkmarks first
     const themeValue = option.getAttribute("data-theme");
     if (themeValue === currentTheme) {
       option.classList.add("selected"); // Set checkmark for the current theme
-      console.log(
-        "showSettingsModal: Checkmark added to theme option:",
-        themeValue
-      ); // Debugging
+      console.log("showSettingsModal: Checkmark added to theme option:", themeValue); // Debugging
     } else {
-      console.log(
-        "showSettingsModal: Checkmark removed from theme option:",
-        themeValue
-      ); // Debugging
+      console.log("showSettingsModal: Checkmark removed from theme option:", themeValue); // Debugging
     }
   });
 
   // 4. Handle Custom Theme Preview and Color Picker Visibility
   if (currentTheme === "custom") {
-    console.log(
-      "showSettingsModal: Current theme is 'custom', updating custom theme preview."
-    ); // Debugging
+    console.log("showSettingsModal: Current theme is 'custom', updating custom theme preview."); // Debugging
     showCustomColorPicker(); // Ensure color picker is ready if we switch to custom directly later (though it's hidden initially)
     const customColor = getCookie("customColor") || "#3399ff"; // Get custom color from cookie
-    const customThemePreview = document.querySelector(
-      '.theme-option[data-theme="custom"] .theme-color'
-    );
+    const customThemePreview = document.querySelector('.theme-option[data-theme="custom"] .theme-color');
     if (customThemePreview) {
       customThemePreview.style.backgroundColor = customColor; // Set preview color
       customThemePreview.innerHTML = ""; // Clear plus icon
-      console.log(
-        "showSettingsModal: Custom theme preview updated to color:",
-        customColor
-      ); // Debugging
+      console.log("showSettingsModal: Custom theme preview updated to color:", customColor); // Debugging
     }
   } else {
-    console.log(
-      "showSettingsModal: Current theme is NOT 'custom', hiding color picker and resetting preview."
-    ); // Debugging
+    console.log("showSettingsModal: Current theme is NOT 'custom', hiding color picker and resetting preview."); // Debugging
     hideCustomColorPicker(); // Hide color picker for non-custom themes
     // Revert custom theme preview to plus icon for other themes
-    const customThemePreview = document.querySelector(
-      '.theme-option[data-theme="custom"] .theme-color'
-    );
+    const customThemePreview = document.querySelector('.theme-option[data-theme="custom"] .theme-color');
     if (customThemePreview) {
       customThemePreview.style.backgroundColor = ""; // Reset background color
       customThemePreview.innerHTML = `
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 2v20M2 12h20" />
         </svg>`; // Restore plus icon
-      console.log(
-        "showSettingsModal: Custom theme preview reset to plus icon."
-      ); // Debugging
+        console.log("showSettingsModal: Custom theme preview reset to plus icon."); // Debugging
     }
   }
 
   modal.style.display = "block"; // Finally, show the settings modal
   console.log("showSettingsModal: Settings modal displayed."); // Debugging
 }
+
 function hideSettingsModal() {
   document.getElementById("settingsModal").style.display = "none";
 }
@@ -456,32 +430,39 @@ function applyTheme(themeName) {
 }
 
 function updateThemeCheckmarks(themeName) {
-  console.log(
-    "updateThemeCheckmarks: Updating checkmarks for theme:",
-    themeName
-  ); // Debugging
+  console.log("updateThemeCheckmarks: Updating checkmarks for theme:", themeName); // Debugging
   document.querySelectorAll(".theme-option").forEach((option) => {
     option.classList.remove("selected");
     const optionTheme = option.getAttribute("data-theme");
     if (optionTheme === themeName) {
       option.classList.add("selected");
-      console.log("updateThemeCheckmarks: Selected option:", optionTheme); // Debugging
+      console.log(
+        "updateThemeCheckmarks: Selected option:",
+        optionTheme
+      ); // Debugging
     } else {
-      console.log("updateThemeCheckmarks: Not selected option:", optionTheme); // Debugging
+      console.log(
+        "updateThemeCheckmarks: Not selected option:",
+        optionTheme
+      ); // Debugging
     }
   });
 }
 
+
 function showCustomColorPicker() {
   document.getElementById("customColorPicker").style.display = "block";
   document.getElementById("themeSelector").style.display = "none";
-  updateThemeCheckmarks("custom"); // Ensure 'custom' is checked when color picker is shown
+  updateThemeCheckmarks('custom'); // Ensure 'custom' is checked when color picker is shown
   setSelectedSwatch(getCookie("customColor") || "#3399ff"); // Select the previously chosen swatch
 }
+
 
 function hideCustomColorPicker() {
   document.getElementById("customColorPicker").style.display = "none";
   document.getElementById("themeSelector").style.display = "block";
+  setSelectedSwatch(null); // Deselect any selected swatch when hiding color picker!
+  console.log("hideCustomColorPicker: Color picker hidden, swatch deselected."); // Debugging
 }
 
 function setCustomTheme() {
@@ -540,25 +521,25 @@ function setSelectedSwatch(hexColor) {
   });
   // If no swatch found matching hexColor, you might want to deselect any previously selected swatch:
   if (!hexColor && selectedSwatch) {
-    selectedSwatch.classList.remove("selected");
-    selectedSwatch = null;
+      selectedSwatch.classList.remove('selected');
+      selectedSwatch = null;
   }
 }
 
+
 function applyCustomColor(hexColor) {
-  // <-- IMPORTANT:  Function now ACCEPTS hexColor as argument
-  console.log("applyCustomColor: Applying color:", hexColor); // Debugging - Shows the color being applied
+  console.log("applyCustomColor: Applying color:", hexColor); // Debugging
   const body = document.body;
   body.classList.add("custom-theme-buttons");
   console.log("applyCustomColor: Added class 'custom-theme-buttons' to body");
 
   // Calculate darker shade (you might want a more sophisticated method)
-  const darkerShade = colorShade(hexColor, -20); // Now using hexColor argument
-  const rgb = hexToRgb(hexColor); // Now using hexColor argument
-  const bgColorLight = colorShade(hexColor, 30); // Now using hexColor argument
-  const bgColorDark = colorShade(hexColor, -30); // Now using hexColor argument
+  const darkerShade = colorShade(hexColor, -20);
+  const rgb = hexToRgb(hexColor);
+  const bgColorLight = colorShade(hexColor, 30);
+  const bgColorDark = colorShade(hexColor, -30);
 
-  document.documentElement.style.setProperty("--custom-color", hexColor); // Now using hexColor argument
+  document.documentElement.style.setProperty("--custom-color", hexColor);
   document.documentElement.style.setProperty(
     "--custom-color-darker",
     darkerShade
