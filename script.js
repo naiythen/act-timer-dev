@@ -51,30 +51,67 @@ function setCookie(name, value, days = 365) {
 
 function showSettingsModal() {
   const modal = document.getElementById("settingsModal");
-  const currentSpeed = getCookie("speed") || "0";
-  document.getElementById("paceSelect").value = currentSpeed;
 
-  const currentTheme = getCookie("theme") || "blue";
+  // 1. Read cookies for theme and pace
+  const currentTheme = getCookie("theme") || "blue"; // Default to blue if no theme cookie
+  const currentSpeed = getCookie("speed") || "0"; // Default to 'Right on Time' if no speed cookie
+
+  console.log(
+    "showSettingsModal: Reading cookies - Theme:",
+    currentTheme,
+    ", Pace:",
+    currentSpeed
+  ); // Debugging
+
+  // 2. Set Pace in GUI
+  document.getElementById("paceSelect").value = currentSpeed;
+  console.log("showSettingsModal: Pace select dropdown set to:", currentSpeed); // Debugging
+
+  // 3. Set Theme in GUI
+  console.log(
+    "showSettingsModal: Setting theme checkmarks for theme:",
+    currentTheme
+  ); // Debugging
   document.querySelectorAll(".theme-option").forEach((option) => {
-    option.classList.remove("selected");
-    if (option.getAttribute("data-theme") === currentTheme) {
-      option.classList.add("selected");
+    option.classList.remove("selected"); // Clear all checkmarks first
+    const themeValue = option.getAttribute("data-theme");
+    if (themeValue === currentTheme) {
+      option.classList.add("selected"); // Set checkmark for the current theme
+      console.log(
+        "showSettingsModal: Checkmark added to theme option:",
+        themeValue
+      ); // Debugging
+    } else {
+      console.log(
+        "showSettingsModal: Checkmark removed from theme option:",
+        themeValue
+      ); // Debugging
     }
   });
 
-  // Update custom theme preview in settings if custom theme is active
+  // 4. Handle Custom Theme Preview and Color Picker Visibility
   if (currentTheme === "custom") {
-    showCustomColorPicker(); // Ensure color picker is shown if custom theme
-    const customColor = getCookie("customColor") || "#3399ff";
+    console.log(
+      "showSettingsModal: Current theme is 'custom', updating custom theme preview."
+    ); // Debugging
+    showCustomColorPicker(); // Ensure color picker is ready if we switch to custom directly later (though it's hidden initially)
+    const customColor = getCookie("customColor") || "#3399ff"; // Get custom color from cookie
     const customThemePreview = document.querySelector(
       '.theme-option[data-theme="custom"] .theme-color'
     );
     if (customThemePreview) {
       customThemePreview.style.backgroundColor = customColor; // Set preview color
-      customThemePreview.innerHTML = ""; // Clear plus icon if it was there before
+      customThemePreview.innerHTML = ""; // Clear plus icon
+      console.log(
+        "showSettingsModal: Custom theme preview updated to color:",
+        customColor
+      ); // Debugging
     }
   } else {
-    hideCustomColorPicker();
+    console.log(
+      "showSettingsModal: Current theme is NOT 'custom', hiding color picker and resetting preview."
+    ); // Debugging
+    hideCustomColorPicker(); // Hide color picker for non-custom themes
     // Revert custom theme preview to plus icon for other themes
     const customThemePreview = document.querySelector(
       '.theme-option[data-theme="custom"] .theme-color'
@@ -85,12 +122,15 @@ function showSettingsModal() {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 2v20M2 12h20" />
         </svg>`; // Restore plus icon
+      console.log(
+        "showSettingsModal: Custom theme preview reset to plus icon."
+      ); // Debugging
     }
   }
 
-  modal.style.display = "block";
+  modal.style.display = "block"; // Finally, show the settings modal
+  console.log("showSettingsModal: Settings modal displayed."); // Debugging
 }
-
 function hideSettingsModal() {
   document.getElementById("settingsModal").style.display = "none";
 }
@@ -382,6 +422,7 @@ function goBack() {
 }
 
 function setTheme(themeName) {
+  console.log("setTheme: Setting theme to:", themeName); // Debugging
   setCookie("theme", themeName);
   applyTheme(themeName); // Apply theme immediately
   hideSettingsModal();
@@ -406,6 +447,8 @@ function applyTheme(themeName) {
     body.classList.add("green-theme-buttons");
   } else if (themeName === "red") {
     body.classList.add("red-theme-buttons");
+  } else {
+    console.log("applyTheme: Unknown themeName:", themeName); // Debugging
   }
 
   // Update checkmarks in settings (important to do this *after* applying theme)
@@ -413,10 +456,18 @@ function applyTheme(themeName) {
 }
 
 function updateThemeCheckmarks(themeName) {
+  console.log(
+    "updateThemeCheckmarks: Updating checkmarks for theme:",
+    themeName
+  ); // Debugging
   document.querySelectorAll(".theme-option").forEach((option) => {
     option.classList.remove("selected");
-    if (option.getAttribute("data-theme") === themeName) {
+    const optionTheme = option.getAttribute("data-theme");
+    if (optionTheme === themeName) {
       option.classList.add("selected");
+      console.log("updateThemeCheckmarks: Selected option:", optionTheme); // Debugging
+    } else {
+      console.log("updateThemeCheckmarks: Not selected option:", optionTheme); // Debugging
     }
   });
 }
@@ -425,15 +476,7 @@ function showCustomColorPicker() {
   document.getElementById("customColorPicker").style.display = "block";
   document.getElementById("themeSelector").style.display = "none";
   updateThemeCheckmarks("custom"); // Ensure 'custom' is checked when color picker is shown
-
-  // No need to remove/add 'selected' classes for individual theme options here anymore,
-  // as updateThemeCheckmarks('custom') handles it.
-
-  // Ensure previously selected swatch is marked if custom theme is already active
-  if (getCookie("theme") === "custom") {
-    const customColor = getCookie("customColor") || "#3399ff";
-    setSelectedSwatch(customColor);
-  }
+  setSelectedSwatch(getCookie("customColor") || "#3399ff"); // Select the previously chosen swatch
 }
 
 function hideCustomColorPicker() {
@@ -449,8 +492,8 @@ function setCustomTheme() {
     setCookie("theme", "custom");
     applyTheme("custom"); // Apply theme immediately, pass 'custom' to applyTheme
     hideCustomColorPicker();
-    // Clear selectedSwatch after applying the theme
-    selectedSwatch = null;
+    // Clear selectedSwatch after applying the theme - No, keep it selected for next time
+    // selectedSwatch = null;
     console.log("setCustomTheme: Custom theme applied and cookies set.");
   } else {
     console.log("setCustomTheme: No swatch selected.");
@@ -492,22 +535,30 @@ function setSelectedSwatch(hexColor) {
   swatches.forEach((swatch) => {
     if (swatch.dataset.color === hexColor) {
       selectColorSwatch(swatch); // Programmatically select the swatch
+      return; // Exit after finding the swatch
     }
   });
+  // If no swatch found matching hexColor, you might want to deselect any previously selected swatch:
+  if (!hexColor && selectedSwatch) {
+    selectedSwatch.classList.remove("selected");
+    selectedSwatch = null;
+  }
 }
 
 function applyCustomColor(hexColor) {
-  console.log("applyCustomColor: Applying color:", hexColor);
+  // <-- IMPORTANT:  Function now ACCEPTS hexColor as argument
+  console.log("applyCustomColor: Applying color:", hexColor); // Debugging - Shows the color being applied
   const body = document.body;
   body.classList.add("custom-theme-buttons");
+  console.log("applyCustomColor: Added class 'custom-theme-buttons' to body");
 
   // Calculate darker shade (you might want a more sophisticated method)
-  const darkerShade = colorShade(hexColor, -20);
-  const rgb = hexToRgb(hexColor);
-  const bgColorLight = colorShade(hexColor, 30);
-  const bgColorDark = colorShade(hexColor, -30);
+  const darkerShade = colorShade(hexColor, -20); // Now using hexColor argument
+  const rgb = hexToRgb(hexColor); // Now using hexColor argument
+  const bgColorLight = colorShade(hexColor, 30); // Now using hexColor argument
+  const bgColorDark = colorShade(hexColor, -30); // Now using hexColor argument
 
-  document.documentElement.style.setProperty("--custom-color", hexColor);
+  document.documentElement.style.setProperty("--custom-color", hexColor); // Now using hexColor argument
   document.documentElement.style.setProperty(
     "--custom-color-darker",
     darkerShade
@@ -525,7 +576,13 @@ function applyCustomColor(hexColor) {
     bgColorDark
   );
 
-  console.log("applyCustomColor: CSS variables set.");
+  console.log("applyCustomColor: CSS variables set:", {
+    customColor: hexColor,
+    customColorDarker: darkerShade,
+    customColorRgb: `${rgb.r}, ${rgb.g}, ${rgb.b}`,
+    customColorBgLight: bgColorLight,
+    customColorBgDark: bgColorDark,
+  });
 }
 
 function isValidHexColor(hex) {
