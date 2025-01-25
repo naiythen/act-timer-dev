@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="icon" type="image/webp" href="favico.webp" />
+    <meta charset="UTF-8" />
+    <title>ACT Timer</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="blue-theme-buttons">
+    <div class="container">
+      <div id="speedSelection" style="display: none">
+        <h2>⏱️ Set Your Pace</h2>
+        <p class="speed-subtitle">
+          Choose how early you want to finish sections:
+        </p>
+        <div class="speed-options">
+          <button class="speed-option" onclick="setSpeedPreference(0)">
+            <div class="speed-content">
+              <span class="speed-emoji">🕒</span>
+              <div class="speed-text">
+                <h3>Right on Time</h3>
+                <p>Perfect if you like to use all available time</p>
+              </div>
+            </div>
+          </button>
+          <button class="speed-option" onclick="setSpeedPreference(1)">
+            <div class="speed-content">
+              <span class="speed-emoji">⏩</span>
+              <div class="speed-text">
+                <h3>5 Minutes Early</h3>
+                <p>Gives you time to review answers</p>
+              </div>
+            </div>
+          </button>
+          <button class="speed-option" onclick="setSpeedPreference(2)">
+            <div class="speed-content">
+              <span class="speed-emoji">🚀</span>
+              <div class="speed-text">
+                <h3>10 Minutes Early</h3>
+                <p>For fast test-takers who want buffer time</p>
+              </div>
+            </div>
+          </button>
+        </div>
+        <p class="speed-note">You can change this later</p>
+      </div>
+
+      <div
+        id="settingsModal"
+        style="
+          display: none;
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: white;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+          z-index: 1000;
+        "
+      >
+        <div class="modal-header">
+          <!-- Header for close button -->
+          <h3>Settings</h3>
+          <span class="close-button" onclick="hideSettingsModal()"> × </span>
+        </div>
+        <label
+          >Pace:
+          <select id="paceSelect" onchange="updateSpeedPreference(this.value)">
+            <option value="0">Right on Time</option>
+            <option value="1">5 Minutes Early</option>
+            <option value="2">10 Minutes Early</option>
+          </select>
+        </label>
+
+        <div id="themeSelector">
+          <h3>Theme</h3>
+          <div class="theme-options">
+            <div
+              class="theme-option"
+              onclick="setTheme('red')"
+              data-theme="red"
+            >
+              <div class="theme-color red-theme"></div>
+              <div class="checkmark">✓</div>
+            </div>
+            <div
+              class="theme-option"
+              onclick="setTheme('green')"
+              data-theme="green"
+            >
+              <div class="theme-color green-theme"></div>
+              <div class="checkmark">✓</div>
+            </div>
+            <div
+              class="theme-option"
+              onclick="setTheme('blue')"
+              data-theme="blue"
+            >
+              <div class="theme-color blue-theme"></div>
+              <div class="checkmark">✓</div>
+            </div>
+            <div
+              class="theme-option"
+              onclick="showCustomColorPicker()"
+              data-theme="custom"
+            >
+              <div class="theme-color custom-theme">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M12 2v20M2 12h20" />
+                </svg>
+              </div>
+              <div class="checkmark">✓</div>
+            </div>
+          </div>
+        </div>
+        <div
+          id="customColorPicker"
+          style="display: none; margin-top: 20px; text-align: center"
+        >
+          <div id="colorPalette">
+            <!-- Color swatches will be added here by JavaScript -->
+          </div>
+          <button onclick="setCustomTheme()">Done</button>
+          <button onclick="hideCustomColorPicker()">Cancel</button>
+        </div>
+      </div>
+
+      <div id="menu">
+        <button onclick="startTimer('English', 45, 75)">
+          English (45 min)
+        </button>
+        <button onclick="startTimer('Math', 60, 60)">Math (60 min)</button>
+        <button onclick="startTimer('Reading', 35, 40)">
+          Reading (35 min)
+        </button>
+        <button onclick="startTimer('Science', 35, 40)">
+          Science (35 min)
+        </button>
+        <button onclick="startFullTest()">Full ACT Test</button>
+        <button onclick="showCustomInput()">Custom</button>
+      </div>
+
+      <div id="customInput" style="display: none; text-align: center">
+        <h2>Custom Timer</h2>
+        <label for="customTime">Time (minutes):</label>
+        <input
+          type="number"
+          id="customTime"
+          placeholder="Enter time in minutes"
+        />
+        <br /><br />
+        <label for="customQuestions">Number of Questions:</label>
+        <input
+          type="number"
+          id="customQuestions"
+          placeholder="Enter number of questions"
+        />
+        <br /><br />
+        <button onclick="startCustomTimer()">Start</button>
+        <button onclick="goBack()">Cancel</button>
+      </div>
+
+      <div id="timerScreen">
+        <h1 id="sectionTitle"></h1>
+        <div id="timeDisplay">00:00</div>
+        <div class="progress-container">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div id="questionCounter"></div>
+        <div class="controls">
+          <button id="pauseBtn" onclick="pauseTimer()">Pause</button>
+          <button id="resumeBtn" onclick="resumeTimer()">Resume</button>
+          <button id="resetBtn" onclick="resetTimer()">Reset</button>
+        </div>
+        <div id="nextSectionContainer" style="display: none">
+          <button onclick="nextSection()">Next Section</button>
+        </div>
+      </div>
+
+      <a
+        id="settingsIcon"
+        href="javascript:void(0)"
+        onclick="showSettingsModal()"
+        style="
+          display: none;
+          position: absolute;
+          bottom: 30px;
+          left: 30px;
+          font-size: 1.4rem;
+          text-decoration: none;
+          padding: 15px 20px;
+          cursor: pointer;
+        "
+      >
+        ⚙️
+      </a>
+      <a
+        id="backArrow"
+        href="javascript:void(0)"
+        onclick="goBack()"
+        style="display: none"
+        >←</a
+      >
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

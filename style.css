@@ -1,0 +1,950 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+  --modal-bg: white;
+  --modal-text: #333;
+  --modal-border: rgba(0, 0, 0, 0.1);
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(145deg, #37507b, #0d151b);
+  padding: 20px;
+  animation: gradient 15s ease infinite;
+  background-size: 400% 400%;
+}
+
+.container {
+  width: 95%;
+  max-width: 1200px;
+  min-height: 80vh;
+  background-color: rgba(248, 249, 250, 0.95);
+  border-radius: 24px;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
+  padding: 40px;
+  position: relative;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  animation: float 6s ease-in-out infinite;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.35);
+}
+
+#speedSelection {
+  display: none;
+  text-align: center;
+  padding: 30px;
+  animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.speed-subtitle {
+  font-size: 1.4rem;
+  color: #666;
+  margin-bottom: 40px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.speed-options {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.speed-option {
+  padding: 25px;
+  border: none;
+  border-radius: 18px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.speed-option:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.speed-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.speed-emoji {
+  font-size: 2.5rem;
+  min-width: 60px;
+}
+
+.speed-text h3 {
+  font-size: 1.4rem;
+  color: #333;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.speed-text p {
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.speed-note {
+  margin-top: 30px;
+  color: #999;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+#settingsModal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--modal-bg);
+  color: var(--modal-text);
+  padding: 30px;
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  min-width: 300px;
+  animation: modalSlide 0.3s ease-out;
+  border: 1px solid var(--modal-border);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--modal-border);
+  margin-bottom: 20px;
+}
+
+.modal-header h3 {
+  margin-bottom: 0; /* Reset h3 margin for header */
+}
+
+.close-button {
+  color: var(--modal-text, #aaa);
+  float: right;
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  line-height: 1; /* Adjust line height for vertical centering */
+  height: 2rem; /* Ensure height for vertical centering */
+  display: flex;
+  align-items: center; /* Vertically center the X */
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: var(--modal-text, #666);
+  text-decoration: none;
+}
+
+#settingsModal h3 {
+  color: var(--modal-text, #333);
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+#settingsModal label {
+  display: block;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+  color: var(--modal-text, #555);
+}
+
+#paceSelect {
+  width: 100%;
+  padding: 12px 18px;
+  border: 2px solid #3399ff;
+  border-radius: 10px;
+  font-size: 1rem;
+  margin-top: 8px;
+  background: var(--modal-bg, white);
+  color: var(--modal-text, #333);
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233399ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 18px;
+}
+
+#paceSelect:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(51, 153, 255, 0.3);
+  border-color: #1e7bcc;
+}
+
+#settingsIcon {
+  display: none;
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  font-size: 1.4rem;
+  text-decoration: none;
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+#settingsIcon:hover {
+  transform: translateZ(20px) rotate(120deg) scale(1.1);
+}
+
+#menu {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+#menu button {
+  padding: 20px;
+  font-size: 1.4rem;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  background: #3399ff;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 15px rgba(51, 153, 255, 0.25);
+  position: relative;
+  overflow: hidden;
+  border: 2px solid transparent;
+}
+
+#menu button:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: all 0.6s;
+}
+
+#menu button:hover:before {
+  left: 100%;
+}
+
+#menu button:hover {
+  background: #1e7bcc;
+  transform: scale(1.02) translateY(-2px);
+  box-shadow: 0 12px 20px rgba(51, 153, 255, 0.35);
+}
+
+#menu button:active {
+  transform: scale(0.95);
+}
+
+#timerScreen {
+  text-align: center;
+  display: none;
+  padding: 20px;
+  animation: fadeIn 0.5s forwards;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+#sectionTitle {
+  font-size: 3.5rem;
+  color: #999;
+  margin-bottom: 30px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#timeDisplay {
+  font-size: 6rem;
+  margin: 40px 0;
+  color: #999;
+  font-weight: 700;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 2px;
+  position: relative;
+  animation: pulse 2s ease-in-out infinite;
+  background: linear-gradient(45deg, #333, #666);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+#timeDisplay.warning {
+  color: #ff3b3b;
+  animation: shake 0.5s ease-in-out;
+}
+
+.progress-container {
+  width: 100%;
+  background-color: #e0e0e0;
+  border-radius: 15px;
+  margin: 30px 0;
+  overflow: hidden;
+  height: 25px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #3399ff, #66b3ff);
+  border-radius: 15px;
+  transition: width 1s ease;
+  box-shadow: 0 2px 4px rgba(51, 153, 255, 0.2);
+  position: relative;
+  background: linear-gradient(90deg, #3399ff, #66b3ff, #3399ff);
+  background-size: 200% 100%;
+  animation: gradient 3s linear infinite;
+}
+
+.progress-bar:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: progressShine 2s infinite;
+}
+
+#questionCounter {
+  font-size: 1.8rem;
+  color: #555;
+  margin: 25px 0;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+#questionCounter:hover {
+  transform: rotateX(10deg) rotateY(10deg);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.controls button {
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  background: #3399ff;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(51, 153, 255, 0.25);
+  min-width: 160px;
+  position: relative;
+  overflow: hidden;
+}
+
+.controls button:hover {
+  background: #1e7bcc;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(51, 153, 255, 0.35);
+}
+
+.controls button:after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.2) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.3s;
+}
+
+.controls button:hover:after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+#nextSectionContainer {
+  margin-top: 40px;
+}
+
+#nextSectionContainer button {
+  padding: 20px 40px;
+  font-size: 1.3rem;
+  border-radius: 15px;
+  box-shadow: 0 6px 15px rgba(51, 153, 255, 0.25);
+  background: linear-gradient(135deg, #3399ff, #1e7bcc);
+}
+
+#backArrow {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  font-size: 1.4rem;
+  text-decoration: none;
+  background: linear-gradient(135deg, #ff3b3b, #e63737);
+  color: #fff;
+  padding: 15px 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 15px rgba(255, 59, 59, 0.25);
+  transition: all 0.3s ease;
+  width: 56px;
+  height: 56px;
+}
+
+#backArrow:hover {
+  background: linear-gradient(135deg, #e63737, #cc3333);
+  transform: scale(1.1);
+  box-shadow: 0 8px 20px rgba(255, 59, 59, 0.35);
+}
+
+#customInput {
+  display: none;
+  text-align: center;
+  animation: fadeIn 0.5s forwards;
+}
+
+#customInput input {
+  width: 200px;
+  padding: 12px;
+  margin: 10px;
+  border: 2px solid #3399ff;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  transition: all 0.3s;
+}
+
+#customInput input:focus {
+  outline: none;
+  border-color: #1e7bcc;
+  box-shadow: 0 0 15px rgba(51, 153, 255, 0.3);
+}
+
+#customInput button {
+  margin: 10px;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #3399ff, #2980b9);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+#customInput button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(51, 153, 255, 0.3);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-5px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes progressShine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes modalSlide {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+    min-height: 90vh;
+  }
+  #sectionTitle {
+    font-size: 2.5rem;
+  }
+  #timeDisplay {
+    font-size: 4rem;
+  }
+  #questionCounter {
+    font-size: 1.4rem;
+  }
+  .controls button {
+    padding: 12px 24px;
+    font-size: 1rem;
+    min-width: 140px;
+  }
+  #settingsModal {
+    width: 90%;
+    padding: 20px;
+  }
+}
+
+@media (min-width: 2000px) {
+  .container {
+    max-width: 1600px;
+  }
+  #sectionTitle {
+    font-size: 4.5rem;
+  }
+  #timeDisplay {
+    font-size: 8rem;
+  }
+  #questionCounter {
+    font-size: 2.2rem;
+  }
+  .controls button {
+    padding: 25px 50px;
+    font-size: 1.6rem;
+    min-width: 200px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --modal-bg: #2a2a2a;
+    --modal-text: #fff;
+    --modal-border: #3a3a3a;
+  }
+
+  body {
+    background: linear-gradient(145deg, #1a1a1a, #2c3e50);
+  }
+  .container {
+    background: rgba(30, 30, 30, 0.95);
+    color: #fff;
+  }
+  #timeDisplay {
+    background: linear-gradient(45deg, #fff, #ccc);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+  #questionCounter {
+    background-color: rgba(40, 40, 40, 0.9);
+    color: #fff;
+  }
+  #settingsModal {
+    background: #2a2a2a !important;
+    color: #fff !important;
+    border-color: #3a3a3a !important;
+  }
+  #settingsModal h3 {
+    color: #fff !important;
+  }
+  #settingsModal label {
+    color: #ddd !important;
+  }
+  #paceSelect {
+    background-color: #3a3a3a;
+    color: #fff;
+  }
+  #paceSelect option {
+    background: #2a2a2a;
+    color: #fff;
+  }
+  .speed-option {
+    background: #3a3a3a;
+  }
+  .speed-text h3 {
+    color: #fff;
+  }
+  .speed-text p {
+    color: #ccc;
+  }
+  .speed-note {
+    color: #888;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 15px;
+    min-height: 95vh;
+  }
+  #menu button {
+    padding: 15px;
+    font-size: 1.1rem;
+  }
+  #timeDisplay {
+    font-size: 3.5rem;
+  }
+  .controls {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .controls button {
+    width: 100%;
+  }
+  #settingsIcon {
+    bottom: 20px;
+    left: 20px;
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* Theme Selector Styles */
+#themeSelector {
+  margin-top: 30px;
+}
+
+#themeSelector h3 {
+  margin-bottom: 20px;
+}
+
+.theme-options {
+  display: flex;
+  justify-content: center; /* Center the themes horizontally */
+  gap: 20px;
+}
+
+.theme-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content vertically in theme option */
+  cursor: pointer;
+  position: relative; /* For checkmark positioning */
+}
+
+.theme-color {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--modal-border); /* Add border to theme circles */
+  transition: border-color 0.3s ease;
+}
+
+.theme-option.selected .theme-color {
+  border-color: #fff; /* White border when selected */
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.7); /* Add a glow effect when selected */
+}
+
+.red-theme {
+  background-color: red;
+}
+
+.green-theme {
+  background-color: green;
+}
+
+.blue-theme {
+  background-color: blue; /* Default theme */
+}
+
+.custom-theme {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-theme svg {
+  width: 60%;
+  height: 60%;
+  stroke: #555; /* Adjust color of plus icon */
+}
+
+.checkmark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 1.5rem;
+  display: none; /* Initially hidden */
+}
+
+.theme-option.selected .checkmark {
+  display: block; /* Show checkmark when selected */
+}
+
+/* Theme Classes for buttons and background */
+.red-theme-buttons #menu button,
+.red-theme-buttons .controls button,
+.red-theme-buttons #customInput button,
+.red-theme-buttons #nextSectionContainer button {
+  background: red;
+  box-shadow: 0 8px 15px rgba(255, 0, 0, 0.25);
+}
+
+.red-theme-buttons #menu button:hover,
+.red-theme-buttons .controls button:hover,
+.red-theme-buttons #customInput button:hover,
+.red-theme-buttons #nextSectionContainer button:hover {
+  background: darkred;
+  box-shadow: 0 12px 20px rgba(255, 0, 0, 0.35);
+}
+
+.red-theme-buttons body {
+  background: linear-gradient(145deg, #501a1b, #7b0d15);
+  box-shadow: 0 0 30px 15px rgba(255, 0, 0, 0.1); /* Increased blur and spread */
+}
+
+.green-theme-buttons #menu button,
+.green-theme-buttons .controls button,
+.green-theme-buttons #customInput button,
+.green-theme-buttons #nextSectionContainer button {
+  background: green;
+  box-shadow: 0 8px 15px rgba(0, 255, 0, 0.25);
+}
+
+.green-theme-buttons #menu button:hover,
+.green-theme-buttons .controls button:hover,
+.green-theme-buttons #customInput button:hover,
+.green-theme-buttons #nextSectionContainer button:hover {
+  background: darkgreen;
+  box-shadow: 0 12px 20px rgba(0, 255, 0, 0.35);
+}
+
+.green-theme-buttons body {
+  background: linear-gradient(145deg, #1b502c, #0d7b15);
+  box-shadow: 0 0 30px 15px rgba(0, 255, 0, 0.1); /* Increased blur and spread */
+}
+
+.blue-theme-buttons #menu button,
+.blue-theme-buttons .controls button,
+.blue-theme-buttons #customInput button,
+.blue-theme-buttons #nextSectionContainer button {
+  /* Default blue theme - existing styles already apply */
+}
+
+.blue-theme-buttons body {
+  box-shadow: 0 0 30px 15px rgba(51, 153, 255, 0.1); /* Increased blur and spread */
+}
+
+.custom-theme-buttons #menu button,
+.custom-theme-buttons .controls button,
+.custom-theme-buttons #customInput button,
+.custom-theme-buttons #nextSectionContainer button {
+  background-color: var(--custom-color); /* Use custom color variable */
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25); /* Default shadow, adjust if needed */
+}
+
+.custom-theme-buttons #menu button:hover,
+.custom-theme-buttons .controls button:hover,
+.custom-theme-buttons #customInput button:hover,
+.custom-theme-buttons #nextSectionContainer button:hover {
+  background-color: var(
+    --custom-color-darker
+  ); /* Use darker custom color variable */
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.35); /* Default hover shadow, adjust if needed */
+}
+
+.custom-theme-buttons body {
+  background: linear-gradient(
+    145deg,
+    var(--custom-color-bg-light),
+    var(--custom-color-bg-dark)
+  ); /* Custom background gradient */
+  box-shadow: 0 0 30px 15px rgba(var(--custom-color-rgb), 0.1); /* Custom color soft glow */
+}
+
+/* Add theme classes to the body */
+body.red-theme-buttons .container,
+body.green-theme-buttons .container,
+body.blue-theme-buttons .container,
+body.custom-theme-buttons .container {
+  transition: background 0.5s ease, box-shadow 0.5s ease;
+}
+
+/* Custom Color Picker Styling */
+#customColorPicker {
+  margin-top: 20px;
+  text-align: center;
+}
+
+#colorPalette {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(30px, 1fr)
+  ); /* Responsive grid */
+  gap: 10px;
+  margin-bottom: 15px;
+  justify-content: center; /* Center the swatches */
+}
+
+.color-swatch {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent; /* Initially no border */
+  transition: border-color 0.3s ease, transform 0.2s ease;
+}
+
+.color-swatch:hover,
+.color-swatch.selected {
+  border-color: #fff; /* White border on hover/selection */
+  transform: scale(1.1);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+#customColorPicker button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #3399ff;
+  color: white;
+  cursor: pointer;
+}
+
+#customColorPicker button:last-child {
+  /* Style for the Cancel button if needed */
+  background-color: #f44336; /* Example: Red for Cancel */
+}
