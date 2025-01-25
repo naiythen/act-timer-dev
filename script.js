@@ -46,7 +46,7 @@ function getCookie(name) {
 function setCookie(name, value, days = 365) {
   const date = new Date();
   date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-  document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/;SameSite=Lax`;
+  document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/;SameSite=Lax;`;
 }
 
 function showSettingsModal() {
@@ -55,9 +55,6 @@ function showSettingsModal() {
   document.getElementById("paceSelect").value = currentSpeed;
 
   const currentTheme = getCookie("theme") || "blue";
-  // apply theme when opening setting modal
-  applyTheme(currentTheme);
-
   document.querySelectorAll(".theme-option").forEach((option) => {
     option.classList.remove("selected");
     if (option.getAttribute("data-theme") === currentTheme) {
@@ -65,10 +62,30 @@ function showSettingsModal() {
     }
   });
 
+  // Update custom theme preview in settings if custom theme is active
   if (currentTheme === "custom") {
-    showCustomColorPicker();
+    showCustomColorPicker(); // Ensure color picker is shown if custom theme
+    const customColor = getCookie("customColor") || "#3399ff";
+    const customThemePreview = document.querySelector(
+      '.theme-option[data-theme="custom"] .theme-color'
+    );
+    if (customThemePreview) {
+      customThemePreview.style.backgroundColor = customColor; // Set preview color
+      customThemePreview.innerHTML = ""; // Clear plus icon if it was there before
+    }
   } else {
     hideCustomColorPicker();
+    // Revert custom theme preview to plus icon for other themes
+    const customThemePreview = document.querySelector(
+      '.theme-option[data-theme="custom"] .theme-color'
+    );
+    if (customThemePreview) {
+      customThemePreview.style.backgroundColor = ""; // Reset background color
+      customThemePreview.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v20M2 12h20" />
+        </svg>`; // Restore plus icon
+    }
   }
 
   modal.style.display = "block";
@@ -98,10 +115,18 @@ function updateSpeedPreference(speedValue) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  if (!getCookie("speed") && window.location.pathname === "/") {
+  console.log("DOMContentLoaded event fired!"); // Debugging line
+
+  // Check for the 'speed' cookie. If NOT present, show speed selection.
+  if (!getCookie("speed")) {
+    console.log("Speed cookie NOT found. Showing speed selection."); // Debugging line
     document.getElementById("menu").style.display = "none";
     document.getElementById("speedSelection").style.display = "block";
+    document.getElementById("settingsIcon").style.display = "none"; // Hide settings icon initially
   } else {
+    console.log("Speed cookie FOUND. Showing menu and settings icon."); // Debugging line
+    document.getElementById("menu").style.display = "flex"; // Or 'block' depending on your menu's needs
+    document.getElementById("speedSelection").style.display = "none";
     document.getElementById("settingsIcon").style.display = "flex";
   }
 
@@ -170,7 +195,7 @@ function updateDisplay() {
 function updateProgressBar() {
   const progressBar = document.getElementById("progressBar");
   const percentComplete = ((initialTime - remainingTime) / initialTime) * 100;
-  progressBar.style.width = `${percentComplete}%`;
+  progressBar.style.width = `${percentComplete}%;`;
 }
 
 function updateQuestionGuidance() {
@@ -302,7 +327,7 @@ function startNextFullTestSection() {
   if (currentFullTestSection < fullTestSections.length) {
     const section = fullTestSections[currentFullTestSection];
     startTimer(
-      `ACT FULL Test - ${section.name}`,
+      `ACT Full Test - ${section.name}`,
       section.time,
       section.questions
     );
@@ -358,8 +383,8 @@ function goBack() {
 
 function setTheme(themeName) {
   setCookie("theme", themeName);
-  applyTheme(themeName);
-  hideCustomColorPicker();
+  applyTheme(themeName); // Apply theme immediately
+  hideSettingsModal();
 }
 
 function applyTheme(themeName) {
@@ -383,7 +408,11 @@ function applyTheme(themeName) {
     body.classList.add("red-theme-buttons");
   }
 
-  // Update checkmarks
+  // Update checkmarks in settings (important to do this *after* applying theme)
+  updateThemeCheckmarks(themeName);
+}
+
+function updateThemeCheckmarks(themeName) {
   document.querySelectorAll(".theme-option").forEach((option) => {
     option.classList.remove("selected");
     if (option.getAttribute("data-theme") === themeName) {
@@ -395,13 +424,11 @@ function applyTheme(themeName) {
 function showCustomColorPicker() {
   document.getElementById("customColorPicker").style.display = "block";
   document.getElementById("themeSelector").style.display = "none";
-  document.querySelectorAll(".theme-option").forEach((option) => {
-    if (option.getAttribute("data-theme") !== "custom") {
-      option.classList.remove("selected");
-    } else {
-      option.classList.add("selected");
-    }
-  });
+  updateThemeCheckmarks("custom"); // Ensure 'custom' is checked when color picker is shown
+
+  // No need to remove/add 'selected' classes for individual theme options here anymore,
+  // as updateThemeCheckmarks('custom') handles it.
+
   // Ensure previously selected swatch is marked if custom theme is already active
   if (getCookie("theme") === "custom") {
     const customColor = getCookie("customColor") || "#3399ff";
@@ -420,7 +447,7 @@ function setCustomTheme() {
     console.log("setCustomTheme: hexColor from swatch:", hexColor);
     setCookie("customColor", hexColor);
     setCookie("theme", "custom");
-    applyCustomColor(hexColor);
+    applyTheme("custom"); // Apply theme immediately, pass 'custom' to applyTheme
     hideCustomColorPicker();
     // Clear selectedSwatch after applying the theme
     selectedSwatch = null;
