@@ -1,4 +1,4 @@
-* {
+{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -20,6 +20,7 @@ body {
   padding: 20px;
   animation: gradient 15s ease infinite;
   background-size: 400% 400%;
+  transition: box-shadow 0.5s ease; /* Add transition for smooth glow change */
 }
 
 .container {
@@ -152,8 +153,8 @@ body {
   font-weight: bold;
   cursor: pointer;
   transition: color 0.2s ease;
-  line-height: 1; /* Adjust line height for vertical centering */
-  height: 2rem; /* Ensure height for vertical centering */
+  line-height: 1; /* Adjust line height for vertical centering /
+  height: 2rem; / Ensure height for vertical centering /
   display: flex;
   align-items: center; /* Vertically center the X */
 }
@@ -757,7 +758,7 @@ body {
 .theme-option {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center content vertically in theme option */
+  align-items: center; /* Center content vertically in theme option /
   cursor: pointer;
   position: relative; /* For checkmark positioning */
 }
@@ -771,7 +772,7 @@ body {
 }
 
 .theme-option.selected .theme-color {
-  border-color: #fff; /* White border when selected */
+  border-color: #fff; /* White border when selected /
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.7); /* Add a glow effect when selected */
 }
 
@@ -833,6 +834,7 @@ body {
 .red-theme-buttons body {
   background: linear-gradient(145deg, #501a1b, #7b0d15);
   box-shadow: 0 0 30px 15px rgba(255, 0, 0, 0.1); /* Increased blur and spread */
+  box-shadow: 0 0 60px 20px rgba(255, 0, 0, 0.08); /* Soft red glow */
 }
 
 .green-theme-buttons #menu button,
@@ -854,6 +856,7 @@ body {
 .green-theme-buttons body {
   background: linear-gradient(145deg, #1b502c, #0d7b15);
   box-shadow: 0 0 30px 15px rgba(0, 255, 0, 0.1); /* Increased blur and spread */
+  box-shadow: 0 0 60px 20px rgba(0, 255, 0, 0.08); /* Soft green glow */
 }
 
 .blue-theme-buttons #menu button,
@@ -865,14 +868,15 @@ body {
 
 .blue-theme-buttons body {
   box-shadow: 0 0 30px 15px rgba(51, 153, 255, 0.1); /* Increased blur and spread */
+  box-shadow: 0 0 60px 20px rgba(51, 153, 255, 0.08); /* Soft blue glow */
 }
 
 .custom-theme-buttons #menu button,
 .custom-theme-buttons .controls button,
 .custom-theme-buttons #customInput button,
 .custom-theme-buttons #nextSectionContainer button {
-  background-color: var(--custom-color); /* Use custom color variable */
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25); /* Default shadow, adjust if needed */
+  background-color: var(--custom-color); /* Use custom color variable /
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25); / Default shadow, adjust if needed */
 }
 
 .custom-theme-buttons #menu button:hover,
@@ -881,8 +885,8 @@ body {
 .custom-theme-buttons #nextSectionContainer button:hover {
   background-color: var(
     --custom-color-darker
-  ); /* Use darker custom color variable */
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.35); /* Default hover shadow, adjust if needed */
+  ); /* Use darker custom color variable /
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.35); / Default hover shadow, adjust if needed */
 }
 
 .custom-theme-buttons body {
@@ -890,9 +894,11 @@ body {
     145deg,
     var(--custom-color-bg-light),
     var(--custom-color-bg-dark)
-  ); /* Custom background gradient */
-  box-shadow: 0 0 30px 15px rgba(var(--custom-color-rgb), 0.1); /* Custom color soft glow */
+  ); /* Custom background gradient /
+  box-shadow: 0 0 30px 15px rgba(var(--custom-color-rgb), 0.1); / Custom color soft glow */
+  box-shadow: 0 0 60px 20px rgba(var(--custom-color-rgb), 0.08); /* Soft custom color glow */
 }
+
 
 /* Add theme classes to the body */
 body.red-theme-buttons .container,
@@ -913,7 +919,7 @@ body.custom-theme-buttons .container {
   grid-template-columns: repeat(
     auto-fill,
     minmax(30px, 1fr)
-  ); /* Responsive grid */
+  ); /* Responsive grid /
   gap: 10px;
   margin-bottom: 15px;
   justify-content: center; /* Center the swatches */
@@ -945,6 +951,6 @@ body.custom-theme-buttons .container {
 }
 
 #customColorPicker button:last-child {
-  /* Style for the Cancel button if needed */
-  background-color: #f44336; /* Example: Red for Cancel */
+  /* Style for the Cancel button if needed /
+  background-color: #f44336; / Example: Red for Cancel */
 }
