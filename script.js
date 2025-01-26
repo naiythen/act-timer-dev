@@ -13,9 +13,9 @@ const fullTestSections = [
 
 // Predefined colors for the palette
 const paletteColors = [
-  "#FF0000",
-  "#00FF00",
-  "#0000FF",
+  "#e03a3a", // Less neon red
+  "#49e049", // Less neon green
+  "#4287f5", // Less neon blue
   "#FFFF00",
   "#FF00FF",
   "#00FFFF",
@@ -60,7 +60,7 @@ function showSettingsModal() {
 
   // 1. Read cookies for theme and pace
   const currentTheme = getCookie("theme") || "blue"; // Default to blue if no theme cookie
-  const currentSpeed = getCookie("speed") || "0";   // Default to 'Right on Time' if no speed cookie
+  const currentSpeed = getCookie("speed") || "0"; // Default to 'Right on Time' if no speed cookie
 
   // 2. Set Pace in GUI
   document.getElementById("paceSelect").value = currentSpeed;
@@ -77,7 +77,9 @@ function showSettingsModal() {
   // 4. Handle Custom Theme Preview and Color Picker Visibility
   if (currentTheme === "custom") {
     const customColor = getCookie("customColor") || "#3399ff"; // Get custom color from cookie
-    const customThemePreview = document.querySelector('.theme-option[data-theme="custom"] .theme-color');
+    const customThemePreview = document.querySelector(
+      '.theme-option[data-theme="custom"] .theme-color'
+    );
     if (customThemePreview) {
       customThemePreview.style.backgroundColor = customColor; // Set preview color
       customThemePreview.innerHTML = ""; // Clear plus icon
@@ -86,7 +88,9 @@ function showSettingsModal() {
   } else {
     hideCustomColorPicker(); // Hide color picker for non-custom themes
     // Revert custom theme preview to plus icon for other themes
-    const customThemePreview = document.querySelector('.theme-option[data-theme="custom"] .theme-color');
+    const customThemePreview = document.querySelector(
+      '.theme-option[data-theme="custom"] .theme-color'
+    );
     if (customThemePreview) {
       customThemePreview.style.backgroundColor = ""; // Reset background color
       customThemePreview.innerHTML = `
@@ -107,19 +111,7 @@ function updateSpeedPreference(speedValue) {
   setCookie("speed", speedValue);
   hideSettingsModal();
 
-  const confirmation = document.createElement("div");
-  confirmation.textContent = "⏱️ Pace preference updated!";
-  confirmation.style.position = "fixed";
-  confirmation.style.bottom = "20px";
-  confirmation.style.right = "20px";
-  confirmation.style.background = "#3399ff";
-  confirmation.style.color = "white";
-  confirmation.style.padding = "15px 25px";
-  confirmation.style.borderRadius = "8px";
-  confirmation.style.boxShadow = "0 4px 15px rgba(51, 153, 255, 0.3)";
-  confirmation.style.zIndex = "1000";
-  document.body.appendChild(confirmation);
-  setTimeout(() => confirmation.remove(), 2000);
+  showNotification("⏱️ Pace preference updated!");
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -148,25 +140,12 @@ function setSpeedPreference(speedValue) {
   document.getElementById("menu").style.display = "flex";
   document.getElementById("settingsIcon").style.display = "flex";
 
-  const confirmation = document.createElement("div");
-  confirmation.textContent = "⏱️ Pace preference saved!";
-  confirmation.style.position = "fixed";
-  confirmation.style.bottom = "20px";
-  confirmation.style.right = "20px";
-  confirmation.style.background = "#3399ff";
-  confirmation.style.color = "white";
-  confirmation.style.padding = "15px 25px";
-  confirmation.style.borderRadius = "8px";
-  confirmation.style.boxShadow = "0 4px 15px rgba(51, 153, 255, 0.3)";
-  confirmation.style.zIndex = "1000";
-  confirmation.style.fontWeight = "500";
-  document.body.appendChild(confirmation);
-  setTimeout(() => confirmation.remove(), 2000);
+  showNotification("⏱️ Speed preference saved!");
 }
 
 function startTimer(sectionName, durationMinutes, numQuestions) {
   if (document.getElementById("settingsModal").style.display === "block") {
-    alert("Please close settings before starting the timer.");
+    showNotification("Please close settings before starting the timer.");
     return;
   }
   showTimerScreen(sectionName);
@@ -180,183 +159,18 @@ function startTimer(sectionName, durationMinutes, numQuestions) {
   startInterval();
 }
 
-function showTimerScreen(sectionName) {
-  document.getElementById("menu").style.display = "none";
-  document.getElementById("customInput").style.display = "none";
-  document.getElementById("timerScreen").style.display = "block";
-  document.getElementById("backArrow").style.display = "flex";
-  document.getElementById("settingsIcon").style.display = "none";
-  document.getElementById("sectionTitle").textContent = sectionName;
-}
-
-function updateDisplay() {
-  let minutes = Math.floor(remainingTime / 60);
-  let seconds = remainingTime % 60;
-  document.getElementById("timeDisplay").textContent =
-    String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
-}
-
-function updateProgressBar() {
-  const progressBar = document.getElementById("progressBar");
-  const percentComplete = ((initialTime - remainingTime) / initialTime) * 100;
-  progressBar.style.width = `${percentComplete}%;`;
-}
-
-function updateQuestionGuidance() {
-  const questionCounter = document.getElementById("questionCounter");
-  if (totalQuestions === 0) {
-    questionCounter.style.display = "none";
-    return;
-  }
-
-  const speed = parseInt(getCookie("speed")) || 0;
-  const speedOffset = speed * 5 * 60;
-  const adjustedTime = Math.max(initialTime - speedOffset, 1);
-  const timePerQuestion = adjustedTime / totalQuestions;
-  const elapsedTime = initialTime - remainingTime;
-
-  const questionsShouldComplete = Math.min(
-    Math.ceil(elapsedTime / timePerQuestion),
-    totalQuestions
-  );
-
-  if (!questionCounter.querySelector(".counter-container")) {
-    const container = document.createElement("div");
-    container.className = "counter-container";
-    const textSpan = document.createElement("span");
-    textSpan.className = "question-text";
-    textSpan.textContent = `You should be on Question: ${questionsShouldComplete}/${totalQuestions}`;
-    const toggleBtn = document.createElement("button");
-    toggleBtn.className = "eye-toggle";
-    toggleBtn.setAttribute("aria-label", "Toggle visibility");
-    const openEyeSVG = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "svg"
-    );
-    openEyeSVG.setAttribute("viewBox", "0 0 24 24");
-    openEyeSVG.setAttribute("stroke-linecap", "round");
-    openEyeSVG.setAttribute("stroke-linejoin", "round");
-    openEyeSVG.innerHTML =
-      '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
-    const closedEyeSVG = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "svg"
-    );
-    closedEyeSVG.setAttribute("viewBox", "0 0 24 24");
-    closedEyeSVG.setAttribute("stroke-linecap", "round");
-    closedEyeSVG.setAttribute("stroke-linejoin", "round");
-    closedEyeSVG.innerHTML =
-      '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
-    toggleBtn.appendChild(openEyeSVG);
-    toggleBtn.addEventListener("click", function (e) {
-      e.preventDefault();
-      container.classList.toggle("blurred");
-      toggleBtn.innerHTML = "";
-      toggleBtn.appendChild(
-        container.classList.contains("blurred") ? closedEyeSVG : openEyeSVG
-      );
-    });
-    container.appendChild(textSpan);
-    container.appendChild(toggleBtn);
-    questionCounter.innerHTML = "";
-    questionCounter.appendChild(container);
-  } else {
-    const textSpan = questionCounter.querySelector(".question-text");
-    textSpan.textContent = `You should be on Question: ${questionsShouldComplete}/${totalQuestions}`;
-  }
-}
-
-function startInterval() {
-  clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    if (isRunning && remainingTime > 0) {
-      remainingTime--;
-      updateDisplay();
-      updateProgressBar();
-      updateQuestionGuidance();
-      if (remainingTime <= 0) {
-        clearInterval(timerInterval);
-        remainingTime = 0;
-        updateDisplay();
-        updateProgressBar();
-        updateQuestionGuidance();
-        isRunning = false;
-        showNextSectionButton();
-      }
-    }
-  }, 1000);
-}
-
-function pauseTimer() {
-  isRunning = false;
-}
-
-function resumeTimer() {
-  if (!isRunning && remainingTime > 0) {
-    isRunning = true;
-    startInterval();
-  }
-}
-
-function resetTimer() {
-  clearInterval(timerInterval);
-  remainingTime = initialTime;
-  isRunning = false;
-  updateDisplay();
-  updateProgressBar();
-  updateQuestionGuidance();
-  hideNextSectionButton();
-}
-
-function showNextSectionButton() {
-  if (currentFullTestSection < fullTestSections.length) {
-    document.getElementById("nextSectionContainer").style.display = "block";
-  }
-}
-
-function hideNextSectionButton() {
-  document.getElementById("nextSectionContainer").style.display = "none";
-}
-
 function startFullTest() {
   if (document.getElementById("settingsModal").style.display === "block") {
-    alert("Please close settings before starting the timer.");
+    showNotification("Please close settings before starting the timer.");
     return;
   }
   currentFullTestSection = 0;
   startNextFullTestSection();
 }
 
-function startNextFullTestSection() {
-  if (currentFullTestSection < fullTestSections.length) {
-    const section = fullTestSections[currentFullTestSection];
-    startTimer(
-      `ACT Full Test - ${section.name}`,
-      section.time,
-      section.questions
-    );
-    currentFullTestSection++;
-  }
-}
-
-function nextSection() {
-  resetTimer();
-  hideNextSectionButton();
-  startNextFullTestSection();
-}
-
-function showCustomInput() {
-  if (document.getElementById("settingsModal").style.display === "block") {
-    alert("Please close settings before starting the timer.");
-    return;
-  }
-  document.getElementById("menu").style.display = "none";
-  document.getElementById("customInput").style.display = "block";
-}
-
 function startCustomTimer() {
   if (document.getElementById("settingsModal").style.display === "block") {
-    alert("Please close settings before starting the timer.");
+    showNotification("Please close settings before starting the timer.");
     return;
   }
   const customTime = parseInt(document.getElementById("customTime").value);
@@ -375,6 +189,22 @@ function startCustomTimer() {
   startTimer("Custom Section", customTime, customQuestions);
 }
 
+
+function showNotification(message) {
+  const notification = document.createElement("div");
+  notification.classList.add("notification");
+  notification.textContent = message;
+  document.body.appendChild(notification);
+  setTimeout(() => {
+    notification.classList.remove("slideInBottomRight");
+    notification.classList.add("slideOutBottomRight");
+    notification.addEventListener('animationend', () => {
+      notification.remove();
+    }, { once: true });
+  }, 3000);
+}
+
+
 function goBack() {
   resetTimer();
   document.getElementById("menu").style.display = "flex";
@@ -388,7 +218,7 @@ function goBack() {
 function setTheme(themeName) {
   setCookie("theme", themeName);
   applyTheme(themeName); // Apply theme immediately
-  hideSettingsModal();
+  // Do NOT hide settings modal here for preset themes
 }
 
 function applyTheme(themeName) {
@@ -424,14 +254,12 @@ function updateThemeCheckmarks(themeName) {
   });
 }
 
-
 function showCustomColorPicker() {
   document.getElementById("customColorPicker").style.display = "block";
   document.getElementById("themeSelector").style.display = "none";
-  updateThemeCheckmarks('custom'); // Ensure 'custom' is checked when color picker is shown
+  updateThemeCheckmarks("custom"); // Ensure 'custom' is checked when color picker is shown
   setSelectedSwatch(getCookie("customColor") || "#3399ff"); // Select the previously chosen swatch
 }
-
 
 function hideCustomColorPicker() {
   document.getElementById("customColorPicker").style.display = "none";
@@ -439,18 +267,13 @@ function hideCustomColorPicker() {
   setSelectedSwatch(null); // Deselect any selected swatch when hiding color picker!
 }
 
-function setCustomTheme() {
-  if (selectedSwatch) {
-    const hexColor = selectedSwatch.dataset.color;
-    setCookie("customColor", hexColor);
-    setCookie("theme", "custom");
-    applyTheme("custom"); // Apply theme immediately, pass 'custom' to applyTheme
-    hideCustomColorPicker();
-    // Clear selectedSwatch after applying the theme - No, keep it selected for next time
-    // selectedSwatch = null;
-  } else {
-    alert("Please select a color from the palette.");
-  }
+function setCustomTheme(swatchElement) { // Modified to accept swatchElement
+  const hexColor = swatchElement.dataset.color;
+  setCookie("customColor", hexColor);
+  setCookie("theme", "custom");
+  applyTheme("custom"); // Apply theme immediately
+  // hideCustomColorPicker(); // Do NOT hide color picker after color selection
+  // Clear selectedSwatch is now handled in selectColorSwatch if needed
 }
 
 function createColorPalette() {
@@ -462,6 +285,7 @@ function createColorPalette() {
     swatch.dataset.color = color; // Store color in data attribute
     swatch.addEventListener("click", function () {
       selectColorSwatch(this);
+      setCustomTheme(this); // Apply custom theme immediately on swatch click
     });
     palette.appendChild(swatch);
   });
@@ -488,11 +312,10 @@ function setSelectedSwatch(hexColor) {
   });
   // If no swatch found matching hexColor, you might want to deselect any previously selected swatch:
   if (!hexColor && selectedSwatch) {
-      selectedSwatch.classList.remove('selected');
-      selectedSwatch = null;
+    selectedSwatch.classList.remove("selected");
+    selectedSwatch = null;
   }
 }
-
 
 function applyCustomColor(hexColor) {
   const body = document.body;
