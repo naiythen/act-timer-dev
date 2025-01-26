@@ -422,11 +422,20 @@ function goBack() {
   document.getElementById("settingsIcon").style.display = "flex";
 }
 
-function setTheme(themeName) {
-  console.log("setTheme: Setting theme to:", themeName); // Debugging
-  setCookie("theme", themeName);
-  applyTheme(themeName); // Apply theme immediately
-  hideSettingsModal();
+function setCustomTheme() {
+  if (selectedSwatch) {
+    const hexColor = selectedSwatch.dataset.color;
+    console.log("setCustomTheme: hexColor from swatch:", hexColor);
+    setCookie("customColor", hexColor);
+    setCookie("theme", "custom");
+    applyTheme("custom"); // Apply theme immediately, pass 'custom' to applyTheme
+    // Clear selectedSwatch after applying the theme - No, keep it selected for next time
+    // selectedSwatch = null;
+    console.log("setCustomTheme: Custom theme applied and cookies set.");
+  } else {
+    console.log("setCustomTheme: No swatch selected.");
+    alert("Please select a color from the palette.");
+  }
 }
 
 function applyTheme(themeName) {
