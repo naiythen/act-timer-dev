@@ -11,11 +11,11 @@ const fullTestSections = [
   { name: "Reading", time: 35, questions: 40 },
 ];
 
-// Predefined colors for the palette
+// Predefined colors for the palette (less neon)
 const paletteColors = [
-  "#e03a3a", // Less neon red
-  "#49e049", // Less neon green
-  "#4287f5", // Less neon blue
+  "#e03a3a",
+  "#49e049",
+  "#4287f5",
   "#FFFF00",
   "#FF00FF",
   "#00FFFF",
@@ -84,7 +84,7 @@ function showSettingsModal() {
       customThemePreview.style.backgroundColor = customColor; // Set preview color
       customThemePreview.innerHTML = ""; // Clear plus icon
     }
-    hideCustomColorPicker(); // Ensure color picker is hidden initially on opening settings
+    showCustomColorPicker(); // Ensure color picker is shown for custom theme
   } else {
     hideCustomColorPicker(); // Hide color picker for non-custom themes
     // Revert custom theme preview to plus icon for other themes
@@ -110,7 +110,6 @@ function hideSettingsModal() {
 function updateSpeedPreference(speedValue) {
   setCookie("speed", speedValue);
   hideSettingsModal();
-
   showNotification("⏱️ Pace preference updated!");
 }
 
@@ -139,7 +138,6 @@ function setSpeedPreference(speedValue) {
   document.getElementById("speedSelection").style.display = "none";
   document.getElementById("menu").style.display = "flex";
   document.getElementById("settingsIcon").style.display = "flex";
-
   showNotification("⏱️ Speed preference saved!");
 }
 
@@ -189,19 +187,18 @@ function startCustomTimer() {
   startTimer("Custom Section", customTime, customQuestions);
 }
 
-
 function showNotification(message) {
   const notification = document.createElement("div");
   notification.classList.add("notification");
   notification.textContent = message;
   document.body.appendChild(notification);
-  setTimeout(() => {
-    notification.classList.remove("slideInBottomRight");
-    notification.classList.add("slideOutBottomRight");
-    notification.addEventListener('animationend', () => {
-      notification.remove();
-    }, { once: true });
-  }, 3000);
+    // Trigger slide-out animation after 3 seconds
+    setTimeout(() => {
+      notification.classList.add("slide-out");
+      notification.addEventListener('transitionend', () => {
+        notification.remove(); // Remove from DOM after animation completes
+      }, { once: true }); // Ensure event listener runs only once
+    }, 3000);
 }
 
 
@@ -218,7 +215,7 @@ function goBack() {
 function setTheme(themeName) {
   setCookie("theme", themeName);
   applyTheme(themeName); // Apply theme immediately
-  // Do NOT hide settings modal here for preset themes
+  hideSettingsModal(); // Hide settings modal when preset theme is chosen
 }
 
 function applyTheme(themeName) {
@@ -272,8 +269,6 @@ function setCustomTheme(swatchElement) { // Modified to accept swatchElement
   setCookie("customColor", hexColor);
   setCookie("theme", "custom");
   applyTheme("custom"); // Apply theme immediately
-  // hideCustomColorPicker(); // Do NOT hide color picker after color selection
-  // Clear selectedSwatch is now handled in selectColorSwatch if needed
 }
 
 function createColorPalette() {
