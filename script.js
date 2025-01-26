@@ -138,7 +138,6 @@ function hideSettingsModal() {
 
 function updateSpeedPreference(speedValue) {
   setCookie("speed", speedValue);
-  hideSettingsModal();
 
   const confirmation = document.createElement("div");
   confirmation.textContent = "⏱️ Pace preference updated!";
