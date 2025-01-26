@@ -525,30 +525,15 @@ body {
   box-shadow: 0 4px 15px rgba(51, 153, 255, 0.3);
   z-index: 1100; /* Higher than settings modal */
   font-weight: 500;
-  animation: slideInBottomRight 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards, slideOutBottomRight 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 2.5s forwards;
+  opacity: 1; /* Set opacity to 1 for initial visibility */
+  transform: translateX(0); /* Ensure it starts at its final position */
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth transition */
+}
+
+
+.notification.slide-out {
+  transform: translateY(100%) translateX(100%);
   opacity: 0;
-}
-
-@keyframes slideInBottomRight {
-  0% {
-    transform: translateY(100%) translateX(100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0) translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slideOutBottomRight {
-  0% {
-    transform: translateY(0) translateX(0);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(100%) translateX(100%);
-    opacity: 0;
-  }
 }
 
 
@@ -1010,9 +995,5 @@ body.custom-theme-buttons .container {
   background-color: #3399ff;
   color: white;
   cursor: pointer;
-}
-
-#customColorPicker button:last-child {
-  /* Style for the Cancel button if needed /
-  background-color: #f44336; / Example: Red for Cancel */
+  display: none; /* Hide the Done and Cancel buttons */
 }
