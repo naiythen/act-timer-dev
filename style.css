@@ -1,4 +1,3 @@
-/* General Reset and Base Styles */
 * {
   margin: 0;
   padding: 0;
@@ -7,25 +6,9 @@
 }
 
 :root {
-  /* Default Theme Variables */
-  --primary-color: #3399ff;
-  --primary-color-darker: #1e7bcc;
-  --body-bg-light: #37507b;
-  --body-bg-dark: #0d151b;
-  --container-bg: rgba(248, 249, 250, 0.95);
-  --container-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
   --modal-bg: white;
   --modal-text: #333;
   --modal-border: rgba(0, 0, 0, 0.1);
-  --text-color-light: #999;
-  --text-color-dark: #555;
-  --progress-bar-color-start: #3399ff;
-  --progress-bar-color-end: #66b3ff;
-  --button-text-color: #fff;
-  --button-shadow: 0 8px 15px rgba(51, 153, 255, 0.25);
-  --button-hover-shadow: 0 12px 20px rgba(51, 153, 255, 0.35);
-  --notification-bg: var(--primary-color);
-  --notification-shadow: 0 4px 15px rgba(51, 153, 255, 0.3);
 }
 
 body {
@@ -33,20 +16,19 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(145deg, var(--body-bg-light), var(--body-bg-dark));
+  background: linear-gradient(145deg, #37507b, #0d151b);
   padding: 20px;
   animation: gradient 15s ease infinite;
   background-size: 400% 400%;
-  transition: box-shadow 0.5s ease;
 }
 
 .container {
   width: 95%;
   max-width: 1200px;
   min-height: 80vh;
-  background-color: var(--container-bg);
+  background-color: rgba(248, 249, 250, 0.95);
   border-radius: 24px;
-  box-shadow: var(--container-shadow);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
   padding: 40px;
   position: relative;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -63,19 +45,16 @@ body {
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.35);
 }
 
-/* Screen Styles (Speed Selection, Menu, Custom Input, Timer Screen) */
-.screen {
+#speedSelection {
+  display: none;
   text-align: center;
   padding: 30px;
-}
-
-#speedSelection {
   animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .speed-subtitle {
   font-size: 1.4rem;
-  color: var(--text-color-dark);
+  color: #666;
   margin-bottom: 40px;
   font-weight: 500;
   letter-spacing: 0.5px;
@@ -118,13 +97,13 @@ body {
 
 .speed-text h3 {
   font-size: 1.4rem;
-  color: var(--modal-text);
+  color: #333;
   margin-bottom: 8px;
   font-weight: 600;
 }
 
 .speed-text p {
-  color: var(--text-color-dark);
+  color: #666;
   font-size: 1rem;
   line-height: 1.4;
 }
@@ -136,9 +115,8 @@ body {
   font-style: italic;
 }
 
-/* Settings Modal Styles */
-.modal {
-  display: none; /* Hidden by default, controlled by JS */
+#settingsModal {
+  display: none;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -154,10 +132,6 @@ body {
   border: 1px solid var(--modal-border);
 }
 
-.modal-content {
-  /* Add if you need to style the content area inside modal further */
-}
-
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -168,26 +142,20 @@ body {
 }
 
 .modal-header h3 {
-  margin-bottom: 0;
-}
-
-.modal-body {
-  /* Styles for the body of the modal if needed */
-}
-
-.setting-group {
-  margin-bottom: 25px;
+  margin-bottom: 0; /* Reset h3 margin for header */
 }
 
 .close-button {
   color: var(--modal-text, #aaa);
+  float: right;
   font-size: 2rem;
   font-weight: bold;
   cursor: pointer;
   transition: color 0.2s ease;
-  line-height: 1;
-  background: none;
-  border: none;
+  line-height: 1; /* Adjust line height for vertical centering */
+  height: 2rem; /* Ensure height for vertical centering */
+  display: flex;
+  align-items: center; /* Vertically center the X */
 }
 
 .close-button:hover,
@@ -205,7 +173,7 @@ body {
 
 #settingsModal label {
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   font-size: 1.1rem;
   color: var(--modal-text, #555);
 }
@@ -213,7 +181,7 @@ body {
 #paceSelect {
   width: 100%;
   padding: 12px 18px;
-  border: 2px solid var(--primary-color);
+  border: 2px solid #3399ff;
   border-radius: 10px;
   font-size: 1rem;
   margin-top: 8px;
@@ -230,10 +198,33 @@ body {
 #paceSelect:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(51, 153, 255, 0.3);
-  border-color: var(--primary-color-darker);
+  border-color: #1e7bcc;
 }
 
-/* Menu Styles */
+#settingsIcon {
+  display: none;
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  font-size: 1.4rem;
+  text-decoration: none;
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+#settingsIcon:hover {
+  transform: translateZ(20px) rotate(120deg) scale(1.1);
+}
+
 #menu {
   display: flex;
   flex-direction: column;
@@ -243,24 +234,24 @@ body {
   width: 100%;
 }
 
-.menu-button {
+#menu button {
   padding: 20px;
   font-size: 1.4rem;
   border: none;
   border-radius: 50px;
   cursor: pointer;
-  background: var(--primary-color);
-  color: var(--button-text-color);
+  background: #3399ff;
+  color: #fff;
   text-transform: uppercase;
   letter-spacing: 1.5px;
   transition: all 0.3s ease;
-  box-shadow: var(--button-shadow);
+  box-shadow: 0 8px 15px rgba(51, 153, 255, 0.25);
   position: relative;
   overflow: hidden;
   border: 2px solid transparent;
 }
 
-.menu-button:before {
+#menu button:before {
   content: "";
   position: absolute;
   top: 0;
@@ -276,23 +267,23 @@ body {
   transition: all 0.6s;
 }
 
-.menu-button:hover:before {
+#menu button:hover:before {
   left: 100%;
 }
 
-.menu-button:hover {
-  background: var(--primary-color-darker);
+#menu button:hover {
+  background: #1e7bcc;
   transform: scale(1.02) translateY(-2px);
-  box-shadow: var(--button-hover-shadow);
+  box-shadow: 0 12px 20px rgba(51, 153, 255, 0.35);
 }
 
-.menu-button:active {
+#menu button:active {
   transform: scale(0.95);
 }
 
-/* Timer Screen Styles */
 #timerScreen {
   text-align: center;
+  display: none;
   padding: 20px;
   animation: fadeIn 0.5s forwards;
   max-width: 1000px;
@@ -302,7 +293,7 @@ body {
 
 #sectionTitle {
   font-size: 3.5rem;
-  color: var(--text-color-light);
+  color: #999;
   margin-bottom: 30px;
   font-weight: 700;
   text-transform: uppercase;
@@ -313,7 +304,7 @@ body {
 #timeDisplay {
   font-size: 6rem;
   margin: 40px 0;
-  color: var(--text-color-light);
+  color: #999;
   font-weight: 700;
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15);
   font-variant-numeric: tabular-nums;
@@ -345,12 +336,12 @@ body {
 .progress-bar {
   width: 0%;
   height: 100%;
-  background: linear-gradient(90deg, var(--progress-bar-color-start), var(--progress-bar-color-end));
+  background: linear-gradient(90deg, #3399ff, #66b3ff);
   border-radius: 15px;
   transition: width 1s ease;
   box-shadow: 0 2px 4px rgba(51, 153, 255, 0.2);
   position: relative;
-  background: linear-gradient(90deg, var(--progress-bar-color-start), var(--progress-bar-color-end), var(--progress-bar-color-start));
+  background: linear-gradient(90deg, #3399ff, #66b3ff, #3399ff);
   background-size: 200% 100%;
   animation: gradient 3s linear infinite;
 }
@@ -373,7 +364,7 @@ body {
 
 #questionCounter {
   font-size: 1.8rem;
-  color: var(--text-color-dark);
+  color: #555;
   margin: 25px 0;
   padding: 20px;
   background-color: #fff;
@@ -406,21 +397,21 @@ body {
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  background: var(--primary-color);
-  color: var(--button-text-color);
+  background: #3399ff;
+  color: #fff;
   text-transform: uppercase;
   letter-spacing: 1.5px;
   transition: all 0.3s ease;
-  box-shadow: var(--button-shadow);
+  box-shadow: 0 4px 12px rgba(51, 153, 255, 0.25);
   min-width: 160px;
   position: relative;
   overflow: hidden;
 }
 
 .controls button:hover {
-  background: var(--primary-color-darker);
+  background: #1e7bcc;
   transform: translateY(-2px);
-  box-shadow: var(--button-hover-shadow);
+  box-shadow: 0 8px 20px rgba(51, 153, 255, 0.35);
 }
 
 .controls button:after {
@@ -453,19 +444,17 @@ body {
   padding: 20px 40px;
   font-size: 1.3rem;
   border-radius: 15px;
-  box-shadow: var(--button-shadow);
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-color-darker));
-  color: var(--button-text-color);
-  border: none;
-  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(51, 153, 255, 0.25);
+  background: linear-gradient(135deg, #3399ff, #1e7bcc);
 }
 
-/* Back Arrow and Settings Icon Styles */
-#backArrow, #settingsIcon {
+#backArrow {
   position: absolute;
   bottom: 30px;
+  right: 30px;
   font-size: 1.4rem;
   text-decoration: none;
+  background: linear-gradient(135deg, #ff3b3b, #e63737);
   color: #fff;
   padding: 15px 20px;
   border-radius: 50%;
@@ -473,31 +462,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 6px 15px rgba(255, 59, 59, 0.25);
   transition: all 0.3s ease;
   width: 56px;
   height: 56px;
-  border: none;
-  background-color: transparent; /* Make button background transparent */
-  z-index: 100;
-}
-
-#settingsIcon {
-  left: 30px;
-  background: var(--primary-color);
-  box-shadow: var(--button-shadow);
-}
-
-#settingsIcon:hover {
-  background: var(--primary-color-darker);
-  transform: translateZ(20px) rotate(120deg) scale(1.1);
-  box-shadow: var(--button-hover-shadow);
-}
-
-
-#backArrow {
-  right: 30px;
-  background: linear-gradient(135deg, #ff3b3b, #e63737);
-  box-shadow: 0 6px 15px rgba(255, 59, 59, 0.25);
 }
 
 #backArrow:hover {
@@ -506,28 +474,17 @@ body {
   box-shadow: 0 8px 20px rgba(255, 59, 59, 0.35);
 }
 
-
-/* Custom Input Styles */
 #customInput {
+  display: none;
+  text-align: center;
   animation: fadeIn 0.5s forwards;
-}
-
-.input-group {
-  margin-bottom: 20px;
-}
-
-#customInput label {
-  display: block;
-  margin-bottom: 5px;
-  font-size: 1.1rem;
-  color: var(--text-color-dark);
 }
 
 #customInput input {
   width: 200px;
   padding: 12px;
-  margin: 5px 0;
-  border: 2px solid var(--primary-color);
+  margin: 10px;
+  border: 2px solid #3399ff;
   border-radius: 8px;
   font-size: 1.1rem;
   transition: all 0.3s;
@@ -535,12 +492,8 @@ body {
 
 #customInput input:focus {
   outline: none;
-  border-color: var(--primary-color-darker);
+  border-color: #1e7bcc;
   box-shadow: 0 0 15px rgba(51, 153, 255, 0.3);
-}
-
-.button-group {
-  margin-top: 20px;
 }
 
 #customInput button {
@@ -549,42 +502,17 @@ body {
   font-size: 1.1rem;
   border: none;
   border-radius: 8px;
-  background: linear-gradient(145deg, var(--primary-color), var(--primary-color-darker));
-  color: var(--button-text-color);
+  background: linear-gradient(145deg, #3399ff, #2980b9);
+  color: white;
   cursor: pointer;
   transition: all 0.3s;
-  box-shadow: var(--button-shadow);
 }
 
 #customInput button:hover {
   transform: translateY(-2px);
-  box-shadow: var(--button-hover-shadow);
+  box-shadow: 0 5px 15px rgba(51, 153, 255, 0.3);
 }
 
-
-/* Notification Styles */
-.notification {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: var(--notification-bg);
-  color: white;
-  padding: 15px 25px;
-  border-radius: 8px;
-  box-shadow: var(--notification-shadow);
-  z-index: 1100;
-  font-weight: 500;
-  opacity: 1;
-  transform: translateX(0);
-  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.notification.slide-out {
-  transform: translateY(100%) translateX(100%);
-  opacity: 0;
-}
-
-/* Keyframe Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -683,7 +611,6 @@ body {
   }
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .container {
     padding: 20px;
@@ -734,17 +661,13 @@ body {
     --modal-bg: #2a2a2a;
     --modal-text: #fff;
     --modal-border: #3a3a3a;
-    --container-bg: rgba(30, 30, 30, 0.95);
-    --container-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
-    --text-color-dark: #ddd;
-    --text-color-light: #fff;
   }
 
   body {
     background: linear-gradient(145deg, #1a1a1a, #2c3e50);
   }
   .container {
-    background: var(--container-bg);
+    background: rgba(30, 30, 30, 0.95);
     color: #fff;
   }
   #timeDisplay {
@@ -757,9 +680,9 @@ body {
     color: #fff;
   }
   #settingsModal {
-    background: var(--modal-bg) !important;
+    background: #2a2a2a !important;
     color: #fff !important;
-    border-color: var(--modal-border) !important;
+    border-color: #3a3a3a !important;
   }
   #settingsModal h3 {
     color: #fff !important;
@@ -827,41 +750,41 @@ body {
 
 .theme-options {
   display: flex;
-  justify-content: center;
+  justify-content: center; /* Center the themes horizontally */
   gap: 20px;
 }
 
 .theme-option {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; /* Center content vertically in theme option */
   cursor: pointer;
-  position: relative;
+  position: relative; /* For checkmark positioning */
 }
 
 .theme-color {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 2px solid var(--modal-border);
+  border: 2px solid var(--modal-border); /* Add border to theme circles */
   transition: border-color 0.3s ease;
 }
 
 .theme-option.selected .theme-color {
-  border-color: #fff;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.7);
+  border-color: #fff; /* White border when selected */
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.7); /* Add a glow effect when selected */
 }
 
 .red-theme {
-  background-color: #e03a3a;
+  background-color: red;
 }
 
 .green-theme {
-  background-color: #49e049;
+  background-color: green;
 }
 
 .blue-theme {
-  background-color: #4287f5;
+  background-color: blue; /* Default theme */
 }
 
 .custom-theme {
@@ -873,7 +796,7 @@ body {
 .custom-theme svg {
   width: 60%;
   height: 60%;
-  stroke: #555;
+  stroke: #555; /* Adjust color of plus icon */
 }
 
 .checkmark {
@@ -883,85 +806,93 @@ body {
   transform: translate(-50%, -50%);
   color: white;
   font-size: 1.5rem;
-  display: none;
+  display: none; /* Initially hidden */
 }
 
 .theme-option.selected .checkmark {
-  display: block;
+  display: block; /* Show checkmark when selected */
 }
 
-/* Theme Classes for buttons and background - REFACTORED with CSS Variables */
-.red-theme-buttons {
-  --primary-color: #e03a3a;
-  --primary-color-darker: #b32e2e;
-  --body-bg-light: #501a1b;
-  --body-bg-dark: #7b0d15;
-  --button-shadow: 0 8px 15px rgba(224, 58, 58, 0.25);
-  --button-hover-shadow: 0 12px 20px rgba(224, 58, 58, 0.35);
-  --notification-bg: var(--primary-color);
+/* Theme Classes for buttons and background */
+.red-theme-buttons #menu button,
+.red-theme-buttons .controls button,
+.red-theme-buttons #customInput button,
+.red-theme-buttons #nextSectionContainer button {
+  background: red;
+  box-shadow: 0 8px 15px rgba(255, 0, 0, 0.25);
+}
+
+.red-theme-buttons #menu button:hover,
+.red-theme-buttons .controls button:hover,
+.red-theme-buttons #customInput button:hover,
+.red-theme-buttons #nextSectionContainer button:hover {
+  background: darkred;
+  box-shadow: 0 12px 20px rgba(255, 0, 0, 0.35);
 }
 
 .red-theme-buttons body {
-  box-shadow: 0 0 60px 20px rgba(224, 58, 58, 0.08);
+  background: linear-gradient(145deg, #501a1b, #7b0d15);
+  box-shadow: 0 0 30px 15px rgba(255, 0, 0, 0.1); /* Increased blur and spread */
 }
 
-.green-theme-buttons {
-  --primary-color: #49e049;
-  --primary-color-darker: #3aab3a;
-  --body-bg-light: #1b502c;
-  --body-bg-dark: #0d7b15;
-  --button-shadow: 0 8px 15px rgba(73, 224, 73, 0.25);
-  --button-hover-shadow: 0 12px 20px rgba(73, 224, 73, 0.35);
-  --notification-bg: var(--primary-color);
+.green-theme-buttons #menu button,
+.green-theme-buttons .controls button,
+.green-theme-buttons #customInput button,
+.green-theme-buttons #nextSectionContainer button {
+  background: green;
+  box-shadow: 0 8px 15px rgba(0, 255, 0, 0.25);
+}
+
+.green-theme-buttons #menu button:hover,
+.green-theme-buttons .controls button:hover,
+.green-theme-buttons #customInput button:hover,
+.green-theme-buttons #nextSectionContainer button:hover {
+  background: darkgreen;
+  box-shadow: 0 12px 20px rgba(0, 255, 0, 0.35);
 }
 
 .green-theme-buttons body {
-  box-shadow: 0 0 60px 20px rgba(73, 224, 73, 0.08);
+  background: linear-gradient(145deg, #1b502c, #0d7b15);
+  box-shadow: 0 0 30px 15px rgba(0, 255, 0, 0.1); /* Increased blur and spread */
 }
 
-.blue-theme-buttons {
-  --primary-color: #4287f5;
-  --primary-color-darker: #3065b3; /* Darker blue */
-  --notification-bg: var(--primary-color);
+.blue-theme-buttons #menu button,
+.blue-theme-buttons .controls button,
+.blue-theme-buttons #customInput button,
+.blue-theme-buttons #nextSectionContainer button {
+  /* Default blue theme - existing styles already apply */
 }
 
 .blue-theme-buttons body {
-  box-shadow: 0 0 60px 20px rgba(66, 135, 245, 0.08);
+  box-shadow: 0 0 30px 15px rgba(51, 153, 255, 0.1); /* Increased blur and spread */
 }
 
-.custom-theme-buttons {
-  /* Custom colors are set directly via JS in :root scope */
-  --button-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
-  --button-hover-shadow: 0 12px 20px rgba(0, 0, 0, 0.35);
-  --notification-bg: var(--primary-color); /* Assuming notification uses primary color */
-}
-
-.custom-theme-buttons #nextSectionContainer button,
 .custom-theme-buttons #menu button,
 .custom-theme-buttons .controls button,
-.custom-theme-buttons #customInput button {
-  background-color: var(--primary-color);
-  box-shadow: var(--button-shadow);
+.custom-theme-buttons #customInput button,
+.custom-theme-buttons #nextSectionContainer button {
+  background-color: var(--custom-color); /* Use custom color variable */
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25); /* Default shadow, adjust if needed */
 }
 
-.custom-theme-buttons #nextSectionContainer button:hover,
 .custom-theme-buttons #menu button:hover,
 .custom-theme-buttons .controls button:hover,
-.custom-theme-buttons #customInput button:hover {
-  background-color: var(--primary-color-darker);
-  box-shadow: var(--button-hover-shadow);
+.custom-theme-buttons #customInput button:hover,
+.custom-theme-buttons #nextSectionContainer button:hover {
+  background-color: var(
+    --custom-color-darker
+  ); /* Use darker custom color variable */
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.35); /* Default hover shadow, adjust if needed */
 }
-
 
 .custom-theme-buttons body {
   background: linear-gradient(
     145deg,
-    var(--body-bg-light),
-    var(--body-bg-dark)
-  );
-  box-shadow: 0 0 60px 20px rgba(var(--custom-color-rgb), 0.08); /* Soft custom color glow */
+    var(--custom-color-bg-light),
+    var(--custom-color-bg-dark)
+  ); /* Custom background gradient */
+  box-shadow: 0 0 30px 15px rgba(var(--custom-color-rgb), 0.1); /* Custom color soft glow */
 }
-
 
 /* Add theme classes to the body */
 body.red-theme-buttons .container,
@@ -979,10 +910,13 @@ body.custom-theme-buttons .container {
 
 #colorPalette {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(30px, 1fr)
+  ); /* Responsive grid */
   gap: 10px;
   margin-bottom: 15px;
-  justify-content: center;
+  justify-content: center; /* Center the swatches */
 }
 
 .color-swatch {
@@ -990,29 +924,27 @@ body.custom-theme-buttons .container {
   height: 30px;
   border-radius: 50%;
   cursor: pointer;
-  border: 2px solid transparent;
+  border: 2px solid transparent; /* Initially no border */
   transition: border-color 0.3s ease, transform 0.2s ease;
 }
 
 .color-swatch:hover,
 .color-swatch.selected {
-  border-color: #fff;
+  border-color: #fff; /* White border on hover/selection */
   transform: scale(1.1);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-}
-
-#customColorPicker .button-group {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
 }
 
 #customColorPicker button {
   padding: 8px 15px;
   border: none;
   border-radius: 5px;
-  background-color: var(--primary-color); /* Use primary color for buttons */
+  background-color: #3399ff;
   color: white;
   cursor: pointer;
-  display: none; /* Hide the Done and Cancel buttons initially */
+}
+
+#customColorPicker button:last-child {
+  /* Style for the Cancel button if needed */
+  background-color: #f44336; /* Example: Red for Cancel */
 }
