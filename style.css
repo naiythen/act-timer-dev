@@ -514,6 +514,72 @@ body {
   box-shadow: 0 5px 15px rgba(51, 153, 255, 0.3);
 }
 
+.notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #3399ff;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(51, 153, 255, 0.3);
+  z-index: 1100; /* Higher than settings modal */
+  font-weight: 500;
+  animation: slideInBottomRight 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards, slideOutBottomRight 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 2.5s forwards;
+  opacity: 0;
+}
+
+@keyframes slideInBottomRight {
+  0% {
+    transform: translateY(100%) translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutBottomRight {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%) translateX(100%);
+    opacity: 0;
+  }
+}
+
+
+.eye-toggle {
+  background-color: #ddd;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: opacity 0.3s ease;
+  animation: float 6s ease-in-out infinite;
+  margin-left: 10px;
+}
+
+.eye-toggle:hover {
+  opacity: 0.7;
+}
+
+.eye-toggle svg {
+  width: 16px;
+  height: 16px;
+  stroke: #333;
+  fill: none;
+  stroke-width: 1.5;
+  display: block;
+}
+
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -777,15 +843,15 @@ body {
 }
 
 .red-theme {
-  background-color: red;
+  background-color: #e03a3a; /* Less neon red */
 }
 
 .green-theme {
-  background-color: green;
+  background-color: #49e049; /* Less neon green */
 }
 
 .blue-theme {
-  background-color: blue; /* Default theme */
+  background-color: #4287f5; /* Less neon blue */
 }
 
 .custom-theme {
@@ -819,56 +885,53 @@ body {
 .red-theme-buttons .controls button,
 .red-theme-buttons #customInput button,
 .red-theme-buttons #nextSectionContainer button {
-  background: red;
-  box-shadow: 0 8px 15px rgba(255, 0, 0, 0.25);
+  background: #e03a3a; /* Less neon red */
+  box-shadow: 0 8px 15px rgba(224, 58, 58, 0.25); /* Adjusted shadow color */
 }
 
 .red-theme-buttons #menu button:hover,
 .red-theme-buttons .controls button:hover,
 .red-theme-buttons #customInput button:hover,
 .red-theme-buttons #nextSectionContainer button:hover {
-  background: darkred;
-  box-shadow: 0 12px 20px rgba(255, 0, 0, 0.35);
+  background: #b32e2e; /* Darker less neon red */
+  box-shadow: 0 12px 20px rgba(224, 58, 58, 0.35); /* Adjusted shadow color */
 }
 
 .red-theme-buttons body {
   background: linear-gradient(145deg, #501a1b, #7b0d15);
-  box-shadow: 0 0 30px 15px rgba(255, 0, 0, 0.1); /* Increased blur and spread */
-  box-shadow: 0 0 60px 20px rgba(255, 0, 0, 0.08); /* Soft red glow */
+  box-shadow: 0 0 60px 20px rgba(224, 58, 58, 0.08); /* Soft red glow - adjusted color */
 }
 
 .green-theme-buttons #menu button,
 .green-theme-buttons .controls button,
 .green-theme-buttons #customInput button,
 .green-theme-buttons #nextSectionContainer button {
-  background: green;
-  box-shadow: 0 8px 15px rgba(0, 255, 0, 0.25);
+  background: #49e049; /* Less neon green */
+  box-shadow: 0 8px 15px rgba(73, 224, 73, 0.25); /* Adjusted shadow color */
 }
 
 .green-theme-buttons #menu button:hover,
 .green-theme-buttons .controls button:hover,
 .green-theme-buttons #customInput button:hover,
 .green-theme-buttons #nextSectionContainer button:hover {
-  background: darkgreen;
-  box-shadow: 0 12px 20px rgba(0, 255, 0, 0.35);
+  background: #3aab3a; /* Darker less neon green */
+  box-shadow: 0 12px 20px rgba(73, 224, 73, 0.35); /* Adjusted shadow color */
 }
 
 .green-theme-buttons body {
   background: linear-gradient(145deg, #1b502c, #0d7b15);
-  box-shadow: 0 0 30px 15px rgba(0, 255, 0, 0.1); /* Increased blur and spread */
-  box-shadow: 0 0 60px 20px rgba(0, 255, 0, 0.08); /* Soft green glow */
+  box-shadow: 0 0 60px 20px rgba(73, 224, 73, 0.08); /* Soft green glow - adjusted color */
 }
 
 .blue-theme-buttons #menu button,
 .blue-theme-buttons .controls button,
 .blue-theme-buttons #customInput button,
 .blue-theme-buttons #nextSectionContainer button {
-  /* Default blue theme - existing styles already apply */
+  background: #4287f5; /* Less neon blue */
 }
 
 .blue-theme-buttons body {
-  box-shadow: 0 0 30px 15px rgba(51, 153, 255, 0.1); /* Increased blur and spread */
-  box-shadow: 0 0 60px 20px rgba(51, 153, 255, 0.08); /* Soft blue glow */
+  box-shadow: 0 0 60px 20px rgba(66, 135, 245, 0.08); /* Soft blue glow - adjusted color */
 }
 
 .custom-theme-buttons #menu button,
@@ -895,7 +958,6 @@ body {
     var(--custom-color-bg-light),
     var(--custom-color-bg-dark)
   ); /* Custom background gradient /
-  box-shadow: 0 0 30px 15px rgba(var(--custom-color-rgb), 0.1); / Custom color soft glow */
   box-shadow: 0 0 60px 20px rgba(var(--custom-color-rgb), 0.08); /* Soft custom color glow */
 }
 
