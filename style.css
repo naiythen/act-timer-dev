@@ -45,11 +45,47 @@ body {
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.35);
 }
 
-#speedSelection {
-  display: none;
+.welcome-section {
   text-align: center;
-  padding: 30px;
-  animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-bottom: 2.5rem;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.welcome-title {
+  font-size: 2.8rem;
+  color: #333;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #37507b, #3399ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  line-height: 1.2;
+}
+
+.tagline {
+  font-size: 1.4rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+}
+
+.welcome-description {
+  font-size: 1.1rem;
+  color: #666;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+  padding: 0 20px;
+}
+
+.speed-content-wrapper {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  margin: 0 auto;
+  max-width: 800px;
 }
 
 .speed-subtitle {
@@ -142,7 +178,7 @@ body {
 }
 
 .modal-header h3 {
-  margin-bottom: 0; /* Reset h3 margin for header */
+  margin-bottom: 0;
 }
 
 .close-button {
@@ -152,10 +188,10 @@ body {
   font-weight: bold;
   cursor: pointer;
   transition: color 0.2s ease;
-  line-height: 1; /* Adjust line height for vertical centering */
-  height: 2rem; /* Ensure height for vertical centering */
+  line-height: 1;
+  height: 2rem;
   display: flex;
-  align-items: center; /* Vertically center the X */
+  align-items: center;
 }
 
 .close-button:hover,
@@ -739,7 +775,6 @@ body {
   }
 }
 
-/* Theme Selector Styles */
 #themeSelector {
   margin-top: 30px;
 }
@@ -750,29 +785,29 @@ body {
 
 .theme-options {
   display: flex;
-  justify-content: center; /* Center the themes horizontally */
+  justify-content: center;
   gap: 20px;
 }
 
 .theme-option {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center content vertically in theme option */
+  align-items: center;
   cursor: pointer;
-  position: relative; /* For checkmark positioning */
+  position: relative;
 }
 
 .theme-color {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 2px solid var(--modal-border); /* Add border to theme circles */
+  border: 2px solid var(--modal-border);
   transition: border-color 0.3s ease;
 }
 
 .theme-option.selected .theme-color {
-  border-color: #fff; /* White border when selected */
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.7); /* Add a glow effect when selected */
+  border-color: #fff;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.7);
 }
 
 .red-theme {
@@ -784,7 +819,7 @@ body {
 }
 
 .blue-theme {
-  background-color: blue; /* Default theme */
+  background-color: blue;
 }
 
 .custom-theme {
@@ -796,7 +831,7 @@ body {
 .custom-theme svg {
   width: 60%;
   height: 60%;
-  stroke: #555; /* Adjust color of plus icon */
+  stroke: #555;
 }
 
 .checkmark {
@@ -806,14 +841,13 @@ body {
   transform: translate(-50%, -50%);
   color: white;
   font-size: 1.5rem;
-  display: none; /* Initially hidden */
+  display: none;
 }
 
 .theme-option.selected .checkmark {
-  display: block; /* Show checkmark when selected */
+  display: block;
 }
 
-/* Theme Classes for buttons and background */
 .red-theme-buttons #menu button,
 .red-theme-buttons .controls button,
 .red-theme-buttons #customInput button,
@@ -832,7 +866,7 @@ body {
 
 .red-theme-buttons body {
   background: linear-gradient(145deg, #501a1b, #7b0d15);
-  box-shadow: 0 0 30px 15px rgba(255, 0, 0, 0.1); /* Increased blur and spread */
+  box-shadow: 0 0 30px 15px rgba(255, 0, 0, 0.1);
 }
 
 .green-theme-buttons #menu button,
@@ -853,36 +887,34 @@ body {
 
 .green-theme-buttons body {
   background: linear-gradient(145deg, #1b502c, #0d7b15);
-  box-shadow: 0 0 30px 15px rgba(0, 255, 0, 0.1); /* Increased blur and spread */
+  box-shadow: 0 0 30px 15px rgba(0, 255, 0, 0.1);
 }
 
 .blue-theme-buttons #menu button,
 .blue-theme-buttons .controls button,
 .blue-theme-buttons #customInput button,
 .blue-theme-buttons #nextSectionContainer button {
-  /* Default blue theme - existing styles already apply */
+  background: #3399ff;
 }
 
 .blue-theme-buttons body {
-  box-shadow: 0 0 30px 15px rgba(51, 153, 255, 0.1); /* Increased blur and spread */
+  box-shadow: 0 0 30px 15px rgba(51, 153, 255, 0.1);
 }
 
 .custom-theme-buttons #menu button,
 .custom-theme-buttons .controls button,
 .custom-theme-buttons #customInput button,
 .custom-theme-buttons #nextSectionContainer button {
-  background-color: var(--custom-color); /* Use custom color variable */
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25); /* Default shadow, adjust if needed */
+  background-color: var(--custom-color);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
 }
 
 .custom-theme-buttons #menu button:hover,
 .custom-theme-buttons .controls button:hover,
 .custom-theme-buttons #customInput button:hover,
 .custom-theme-buttons #nextSectionContainer button:hover {
-  background-color: var(
-    --custom-color-darker
-  ); /* Use darker custom color variable */
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.35); /* Default hover shadow, adjust if needed */
+  background-color: var(--custom-color-darker);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.35);
 }
 
 .custom-theme-buttons body {
@@ -890,11 +922,10 @@ body {
     145deg,
     var(--custom-color-bg-light),
     var(--custom-color-bg-dark)
-  ); /* Custom background gradient */
-  box-shadow: 0 0 30px 15px rgba(var(--custom-color-rgb), 0.1); /* Custom color soft glow */
+  );
+  box-shadow: 0 0 30px 15px rgba(var(--custom-color-rgb), 0.1);
 }
 
-/* Add theme classes to the body */
 body.red-theme-buttons .container,
 body.green-theme-buttons .container,
 body.blue-theme-buttons .container,
@@ -902,7 +933,6 @@ body.custom-theme-buttons .container {
   transition: background 0.5s ease, box-shadow 0.5s ease;
 }
 
-/* Custom Color Picker Styling */
 #customColorPicker {
   margin-top: 20px;
   text-align: center;
@@ -910,13 +940,10 @@ body.custom-theme-buttons .container {
 
 #colorPalette {
   display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(30px, 1fr)
-  ); /* Responsive grid */
+  grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
   gap: 10px;
   margin-bottom: 15px;
-  justify-content: center; /* Center the swatches */
+  justify-content: center;
 }
 
 .color-swatch {
@@ -924,13 +951,13 @@ body.custom-theme-buttons .container {
   height: 30px;
   border-radius: 50%;
   cursor: pointer;
-  border: 2px solid transparent; /* Initially no border */
+  border: 2px solid transparent;
   transition: border-color 0.3s ease, transform 0.2s ease;
 }
 
 .color-swatch:hover,
 .color-swatch.selected {
-  border-color: #fff; /* White border on hover/selection */
+  border-color: #fff;
   transform: scale(1.1);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
@@ -945,6 +972,5 @@ body.custom-theme-buttons .container {
 }
 
 #customColorPicker button:last-child {
-  /* Style for the Cancel button if needed */
-  background-color: #f44336; /* Example: Red for Cancel */
+  background-color: #f44336;
 }
