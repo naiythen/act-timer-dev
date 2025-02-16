@@ -4,19 +4,16 @@
   box-sizing: border-box;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
-
 html,
 body {
-  /* Updated html and body styles */
-  height: 100%; /* Ensure html and body take full viewport height */
-  overflow-x: hidden; /* Prevent horizontal scrollbars */
+  height: 100%;
+  overflow-x: hidden;
 }
-
 body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Ensure body is at least viewport height */
+  min-height: 100vh;
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
   padding: 20px;
@@ -27,8 +24,6 @@ body {
     var(--theme-color-light)
   );
 }
-
-/* Dark theme by default */
 body.dark-theme {
   --theme-color-light: #2c3e50;
   --theme-color-dark: #1a1a1a;
@@ -46,8 +41,6 @@ body.dark-theme {
   --back-arrow-start: #e63737;
   --back-arrow-end: #cc3333;
 }
-
-/* Light theme variables */
 :root {
   --theme-color-light: #0d151b;
   --theme-color-dark: #37507b;
@@ -70,7 +63,6 @@ body.dark-theme {
   --speed-subtitle-color: #666;
   --speed-note-color: #999;
 }
-
 .container {
   width: 95%;
   max-width: 1200px;
@@ -85,15 +77,12 @@ body.dark-theme {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* animation: float 6s ease-in-out infinite;  Removed float animation which could cause issues */
-  margin: 0 auto; /* Added to center container */
+  margin: 0 auto;
 }
-
 .container:hover {
   transform: translateY(-2px);
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.35);
 }
-
 #menu,
 #timerScreen,
 #customInput,
@@ -103,13 +92,11 @@ body.dark-theme {
   margin: 0 auto;
   width: 100%;
 }
-
 #menu {
   display: flex;
   flex-direction: column;
   gap: 25px;
 }
-
 #menu button {
   padding: 20px;
   font-size: 1.4rem;
@@ -131,7 +118,6 @@ body.dark-theme {
     var(--primary-hover-color)
   );
 }
-
 #menu button:before {
   content: "";
   position: absolute;
@@ -147,28 +133,23 @@ body.dark-theme {
   );
   transition: all 0.6s;
 }
-
 #menu button:hover:before {
   left: 100%;
 }
-
 #menu button:hover {
   background: var(--primary-hover-color);
   transform: scale(1.02) translateY(-2px);
   box-shadow: 0 12px 20px rgba(51, 153, 255, 0.35);
 }
-
 #menu button:active {
   transform: scale(0.95);
 }
-
 #timerScreen {
   text-align: center;
   display: none;
   padding: 20px;
   animation: fadeIn 0.5s forwards;
 }
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -179,7 +160,6 @@ body.dark-theme {
     transform: translateY(0);
   }
 }
-
 #sectionTitle {
   font-size: 3.5rem;
   color: var(--text-color-dark);
@@ -189,7 +169,6 @@ body.dark-theme {
   letter-spacing: 2px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 #timeDisplay {
   font-size: 6rem;
   margin: 40px 0;
@@ -205,18 +184,15 @@ body.dark-theme {
   color: transparent;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
-
 body.dark-theme #timeDisplay {
   background: linear-gradient(45deg, #fff, #ccc);
   -webkit-background-clip: text;
   color: transparent;
 }
-
 #timeDisplay.warning {
   color: #ff3b3b;
   animation: shake 0.5s ease-in-out;
 }
-
 .progress-container {
   width: 100%;
   background-color: #e0e0e0;
@@ -226,7 +202,6 @@ body.dark-theme #timeDisplay {
   height: 25px;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 .progress-bar {
   width: 0%;
   height: 100%;
@@ -248,7 +223,6 @@ body.dark-theme #timeDisplay {
   background-size: 200% 100%;
   animation: gradient 3s linear infinite;
 }
-
 .progress-bar:after {
   content: "";
   position: absolute;
@@ -264,7 +238,6 @@ body.dark-theme #timeDisplay {
   );
   animation: progressShine 2s infinite;
 }
-
 @keyframes progressShine {
   0% {
     transform: translateX(-100%);
@@ -273,7 +246,6 @@ body.dark-theme #timeDisplay {
     transform: translateX(100%);
   }
 }
-
 #questionCounter {
   font-size: 1.8rem;
   color: #555;
@@ -290,17 +262,14 @@ body.dark-theme #timeDisplay {
   perspective: 1000px;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-
 body.dark-theme #questionCounter {
   color: var(--text-color-light);
 }
-
 #questionCounter:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
   transform: rotateX(10deg) rotateY(10deg);
 }
-
 .controls {
   display: flex;
   justify-content: center;
@@ -308,7 +277,6 @@ body.dark-theme #questionCounter {
   margin-top: 30px;
   flex-wrap: wrap;
 }
-
 .controls button {
   padding: 15px 30px;
   font-size: 1.2rem;
@@ -326,7 +294,6 @@ body.dark-theme #questionCounter {
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-
 .controls button:after {
   content: "";
   position: absolute;
@@ -343,22 +310,18 @@ body.dark-theme #questionCounter {
   transform: scale(0.5);
   transition: all 0.3s;
 }
-
 .controls button:hover:after {
   opacity: 1;
   transform: scale(1);
 }
-
 .controls button:hover {
   background: var(--primary-hover-color);
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(51, 153, 255, 0.35);
 }
-
 #nextSectionContainer {
   margin-top: 40px;
 }
-
 #nextSectionContainer button {
   padding: 20px 40px;
   font-size: 1.3rem;
@@ -370,7 +333,6 @@ body.dark-theme #questionCounter {
     var(--primary-hover-color)
   );
 }
-
 #backArrow {
   position: absolute;
   bottom: 30px;
@@ -395,7 +357,6 @@ body.dark-theme #questionCounter {
   perspective: 1000px;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-
 #backArrow:hover {
   background: linear-gradient(
     135deg,
@@ -406,12 +367,10 @@ body.dark-theme #questionCounter {
   box-shadow: 0 8px 20px rgba(255, 59, 59, 0.35);
   transform: translateZ(20px) rotateY(10deg);
 }
-
 #customInput {
   animation: fadeIn 0.5s forwards;
   text-align: center;
 }
-
 #customInput input {
   width: 200px;
   padding: 12px;
@@ -420,15 +379,13 @@ body.dark-theme #questionCounter {
   border-radius: 8px;
   font-size: 1.1rem;
   transition: all 0.3s;
-  color: var(--text-color-dark); /* ADDED: Explicitly set input text color */
+  color: var(--text-color-dark);
 }
-
 #customInput input:focus {
   outline: none;
   border-color: var(--primary-hover-color);
   box-shadow: 0 0 15px rgba(51, 153, 255, 0.3);
 }
-
 #customInput button {
   margin: 10px;
   padding: 12px 24px;
@@ -444,153 +401,122 @@ body.dark-theme #questionCounter {
   cursor: pointer;
   transition: all 0.3s;
 }
-
 #customInput button:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(51, 153, 255, 0.3);
 }
-
-/* ADDED: Custom Input Labels and Title Styling */
 #customInput h2,
 #customInput label {
-  color: var(--text-color-dark); /* Set labels and title to theme text color */
+  color: var(--text-color-dark);
 }
-
-/* Media Queries for responsiveness */
 @media (max-width: 768px) {
-  /* Example breakpoint for tablets */
   .container {
-    padding: 30px; /* Reduce padding on smaller screens */
+    padding: 30px;
   }
-
   #timeDisplay {
-    font-size: 5rem; /* Slightly smaller time display */
+    font-size: 5rem;
     margin: 30px 0;
   }
-
   #sectionTitle {
     font-size: 3rem;
   }
-
   #menu button {
     padding: 15px;
     font-size: 1.3rem;
   }
 }
-
 @media (max-width: 480px) {
-  /* Example breakpoint for phones */
   .container {
-    padding: 20px; /* Even less padding on phones */
-    min-height: 98vh; /* Take up more of the viewport height on very small screens */
-    border-radius: 15px; /* Less rounded corners on small screens */
+    padding: 20px;
+    min-height: 98vh;
+    border-radius: 15px;
   }
-
   #timeDisplay {
-    font-size: 3.5rem; /* Smaller time display on phones */
+    font-size: 3.5rem;
     margin: 20px 0;
   }
-
   #sectionTitle {
-    font-size: 2.2rem; /* Smaller section title on phones */
+    font-size: 2.2rem;
     margin-bottom: 20px;
   }
-
   #menu {
-    gap: 15px; /* Less gap between menu buttons on phones */
-  }
-
-  #menu button {
-    padding: 12px;
-    font-size: 1rem; /* Smaller menu button text on phones */
-    border-radius: 30px; /* Less rounded corners for buttons on phones */
-  }
-
-  .controls {
-    flex-direction: column; /* Stack controls vertically on phones */
     gap: 15px;
   }
-
+  #menu button {
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 30px;
+  }
+  .controls {
+    flex-direction: column;
+    gap: 15px;
+  }
   .controls button {
-    width: 100%; /* Full-width control buttons on phones */
-    min-width: auto; /* Reset min-width for full width */
+    width: 100%;
+    min-width: auto;
     padding: 12px;
     font-size: 1rem;
   }
-
   #nextSectionContainer button {
     padding: 15px 30px;
     font-size: 1.2rem;
   }
-
   #customInput input {
-    width: 90%; /* Make custom input fields wider on phones */
-    max-width: 250px; /* Limit max width for input on phones */
+    width: 90%;
+    max-width: 250px;
     font-size: 1rem;
     padding: 10px;
   }
-
   #customInput button {
     font-size: 1rem;
     padding: 10px 20px;
   }
-
   #questionCounter {
-    font-size: 1.5rem; /* Slightly smaller question counter on phones */
+    font-size: 1.5rem;
     padding: 15px;
     margin: 20px 0;
   }
-
   #settingsPage h2 {
-    font-size: 2rem; /* Smaller settings title on phones */
+    font-size: 2rem;
   }
-
   #settingsPage h3,
   .settings-section > label.speed-subtitle {
-    font-size: 1.2rem; /* Smaller settings section titles/labels on phones */
+    font-size: 1.2rem;
   }
-
   #settingsPage button,
   #settingsPage select {
     padding: 12px 24px;
     font-size: 1rem;
   }
-
   #speedSelection .speed-subtitle,
   .settings-section > label.speed-subtitle {
-    font-size: 1.2rem; /* Smaller speed subtitle on phones */
+    font-size: 1.2rem;
     margin-bottom: 30px;
   }
-
   .speed-option {
     padding: 20px;
   }
-
   .speed-text h3 {
     font-size: 1.2rem;
     margin-bottom: 6px;
   }
-
   .speed-text p {
     font-size: 0.9rem;
   }
-
   .speed-emoji {
-    font-size: 2rem; /* Smaller emoji on phones */
+    font-size: 2rem;
     min-width: 50px;
   }
-
   #backArrow,
   #settingsButton {
-    bottom: 20px; /* Move back arrow and settings button closer to bottom on phones */
+    bottom: 20px;
     left: 20px;
-    right: auto; /* Reset right position for settings button if needed */
-    font-size: 1.2rem; /* Slightly smaller back arrow and settings button icons on phones */
+    right: auto;
+    font-size: 1.2rem;
     padding: 10px 15px;
     border-radius: 10px;
   }
 }
-
 @keyframes gradient {
   0% {
     background-position: 0% 50%;
@@ -602,7 +528,6 @@ body.dark-theme #questionCounter {
     background-position: 0% 50%;
   }
 }
-
 @keyframes pulse {
   0% {
     transform: scale(1);
@@ -614,7 +539,6 @@ body.dark-theme #questionCounter {
     transform: scale(1);
   }
 }
-
 @keyframes shake {
   0%,
   100% {
@@ -634,7 +558,6 @@ body.dark-theme #questionCounter {
     transform: translateX(5px);
   }
 }
-
 @keyframes glow {
   0% {
     box-shadow: 0 0 5px rgba(51, 153, 255, 0.5);
@@ -646,23 +569,18 @@ body.dark-theme #questionCounter {
     box-shadow: 0 0 5px rgba(51, 153, 255, 0.5);
   }
 }
-
 .container {
   backdrop-filter: blur(10px);
   background: rgba(248, 249, 250, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
-
-/* Dark mode container adjustments */
 body.dark-theme .container {
   background: rgba(30, 30, 30, 0.95);
 }
-
 button:focus {
   outline: none;
   animation: glow 1.5s ease-in-out infinite;
 }
-
 @media print {
   body {
     background: none;
@@ -682,17 +600,14 @@ button:focus {
     display: none;
   }
 }
-
 .counter-container {
   display: flex;
   align-items: center;
 }
-
 .question-text {
   transition: filter 0.3s ease;
   margin-right: auto;
 }
-
 .eye-toggle {
   background-color: #ddd;
   border: none;
@@ -706,11 +621,9 @@ button:focus {
   animation: float 6s ease-in-out infinite;
   margin-left: 10px;
 }
-
 .eye-toggle:hover {
   opacity: 0.7;
 }
-
 .eye-toggle svg {
   width: 16px;
   height: 16px;
@@ -719,19 +632,15 @@ button:focus {
   stroke-width: 1.5;
   display: block;
 }
-
 .counter-container.blurred .question-text {
   filter: blur(8px);
 }
-
-/* Speed Selection Styles */
 #speedSelection {
   display: none;
   text-align: center;
   padding: 30px;
   animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
 .speed-subtitle {
   font-size: 1.4rem;
   color: var(--speed-subtitle-color);
@@ -739,13 +648,11 @@ button:focus {
   font-weight: 500;
   letter-spacing: 0.5px;
 }
-
 .speed-options {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
-
 .speed-option {
   padding: 25px;
   border: none;
@@ -756,43 +663,36 @@ button:focus {
   box-shadow: 0 4px 20px var(--speed-option-shadow);
   text-align: left;
 }
-
 .speed-option:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
-
 .speed-content {
   display: flex;
   align-items: center;
   gap: 20px;
 }
-
 .speed-emoji {
   font-size: 2.5rem;
   min-width: 60px;
 }
-
 .speed-text h3 {
   font-size: 1.4rem;
   color: var(--speed-text-color);
   margin-bottom: 8px;
   font-weight: 600;
 }
-
 .speed-text p {
   color: var(--speed-subtitle-color);
   font-size: 1rem;
   line-height: 1.4;
 }
-
 .speed-note {
   margin-top: 30px;
   color: var(--speed-note-color);
   font-size: 0.9rem;
   font-style: italic;
 }
-
 @keyframes slideUp {
   from {
     opacity: 0;
@@ -803,11 +703,9 @@ button:focus {
     transform: translateY(0);
   }
 }
-
-/* Settings Page Styles */
 #settingsPage {
   display: none;
-  position: fixed; /* Changed to fixed */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -825,31 +723,26 @@ button:focus {
   border-radius: 24px;
   backdrop-filter: blur(10px);
 }
-
 #settingsPage > div {
   background-color: var(--container-bg);
   padding: 30px;
   border-radius: 20px;
   box-shadow: 0 0 30px var(--container-shadow);
 }
-
 #settingsPage h2 {
   font-size: 2.5rem;
   margin-bottom: 20px;
   color: var(--text-color-dark);
 }
-
 #settingsPage h3,
 .settings-section > label.speed-subtitle {
-  font-size: 1.4rem; /* Adjusted for label as well */
+  font-size: 1.4rem;
   margin-bottom: 15px;
   color: var(--text-color-dark);
 }
-
 .settings-section {
   margin-bottom: 30px;
 }
-
 .theme-colors {
   display: flex;
   gap: 10px;
@@ -857,7 +750,6 @@ button:focus {
   flex-wrap: wrap;
   margin-top: 20px;
 }
-
 .theme-color-option {
   width: 40px;
   height: 40px;
@@ -871,11 +763,9 @@ button:focus {
   -moz-appearance: none;
   background-image: none;
 }
-
 .theme-color-option.no-arrow {
   background-image: none !important;
 }
-
 .theme-color-option:hover,
 .theme-color-option:focus {
   opacity: 0.8;
@@ -883,12 +773,10 @@ button:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.5);
 }
-
 .theme-color-option:focus {
   box-shadow: 0 0 0 4px var(--primary-color);
   opacity: 1;
 }
-
 #settingsPage button,
 #settingsPage select {
   padding: 15px 30px;
@@ -912,30 +800,26 @@ button:focus {
   background-position-y: 8px;
   padding-right: 40px;
 }
-
 #settingsPage button:hover,
 #settingsPage select:hover {
   background: var(--primary-hover-color);
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(51, 153, 255, 0.35);
 }
-
 #settingsPage select:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(51, 153, 255, 0.5);
 }
-
-/* Settings Button Style */
 #settingsButton {
   position: absolute;
-  bottom: 20px; /* Adjusted for smaller screens */
-  left: 20px; /* Adjusted for smaller screens */
-  font-size: 1.2rem; /* Adjusted for smaller screens */
+  bottom: 20px;
+  left: 20px;
+  font-size: 1.2rem;
   text-decoration: none;
   background: transparent;
   color: var(--text-color-light);
-  padding: 10px 15px; /* Adjusted padding for smaller screens */
-  border-radius: 10px; /* Adjusted border-radius for smaller screens */
+  padding: 10px 15px;
+  border-radius: 10px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -944,15 +828,64 @@ button:focus {
   transition: all 0.3s ease;
   border: none;
 }
-
 #settingsButton:focus {
   outline: none;
   animation: none;
   box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.7);
 }
-
 #settingsButton:hover {
   background: rgba(255, 255, 255, 0.1);
   transform: scale(1.1);
   box-shadow: none;
+}
+.act-timer-title {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 3rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+#fullscreenButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 1.2rem;
+  background: transparent;
+  color: var(--text-color-light);
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+  transition: all 0.3s ease;
+  border: none;
+  z-index: 1002;
+}
+#fullscreenButton:focus {
+  outline: none;
+  animation: none;
+  box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.7);
+}
+#fullscreenButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+  box-shadow: none;
+}
+@media (max-width: 768px) {
+  .act-timer-title {
+    font-size: 2.5rem;
+    top: 30px;
+  }
+}
+@media (max-width: 480px) {
+  .act-timer-title {
+    font-size: 2rem;
+    top: 20px;
+  }
 }
