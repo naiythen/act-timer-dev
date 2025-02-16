@@ -10,9 +10,7 @@
     <title>ACT Timer</title>
     <link rel="stylesheet" href="style.css" />
   </head>
-
   <body class="dark-theme">
-    <!-- Apply dark-theme class to body by default -->
     <div class="container">
       <div id="speedSelection" style="display: none">
         <h2>⏱️ Set Your Pace</h2>
@@ -106,7 +104,6 @@
         style="display: none"
         >←</a
       >
-
       <div id="settingsPage" style="display: none">
         <h2>⚙️ Settings</h2>
         <div class="settings-section">
@@ -120,7 +117,6 @@
             <option value="2">10 Minutes Early</option>
           </select>
         </div>
-
         <div class="settings-section">
           <h3>Theme Color</h3>
           <div class="theme-colors">
@@ -194,13 +190,33 @@
         </div>
         <button onclick="closeSettings()">Back to Timer</button>
       </div>
-
       <button
         id="settingsButton"
         onclick="openSettings()"
         aria-label="Settings"
       >
         ⚙️
+      </button>
+      <button
+        id="fullscreenButton"
+        onclick="toggleFullscreen()"
+        aria-label="Toggle Fullscreen"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"
+          ></path>
+        </svg>
       </button>
     </div>
     <script src="script.js"></script>
