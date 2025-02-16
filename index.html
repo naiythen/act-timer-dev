@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="style.css" />
   </head>
 
-  <body>
+  <body class="dark-theme">
+    <!-- Apply dark-theme class to body by default -->
     <div class="container">
       <div id="speedSelection" style="display: none">
         <h2>⏱️ Set Your Pace</h2>
@@ -110,105 +111,81 @@
         <h2>⚙️ Settings</h2>
         <div class="settings-section">
           <h3>Pace</h3>
-          <p class="speed-subtitle">
-            Choose how early you want to finish sections:
-          </p>
-          <div class="speed-options">
-            <button class="speed-option" onclick="setSpeedPreference(0)">
-              <div class="speed-content">
-                <span class="speed-emoji">🕒</span>
-                <div class="speed-text">
-                  <h3>Right on Time</h3>
-                  <p>Perfect if you like to use all available time</p>
-                </div>
-              </div>
-            </button>
-            <button class="speed-option" onclick="setSpeedPreference(1)">
-              <div class="speed-content">
-                <span class="speed-emoji">⏩</span>
-                <div class="speed-text">
-                  <h3>5 Minutes Early</h3>
-                  <p>Gives you time to review answers</p>
-                </div>
-              </div>
-            </button>
-            <button class="speed-option" onclick="setSpeedPreference(2)">
-              <div class="speed-content">
-                <span class="speed-emoji">🚀</span>
-                <div class="speed-text">
-                  <h3>10 Minutes Early</h3>
-                  <p>For fast test-takers who want buffer time</p>
-                </div>
-              </div>
-            </button>
-          </div>
+          <label for="paceSelect" class="speed-subtitle"
+            >Choose how early you want to finish sections:</label
+          >
+          <select id="paceSelect" onchange="setPacePreference(this.value)">
+            <option value="0">Right on Time</option>
+            <option value="1">5 Minutes Early</option>
+            <option value="2">10 Minutes Early</option>
+          </select>
         </div>
 
         <div class="settings-section">
           <h3>Theme Color</h3>
           <div class="theme-colors">
             <button
-              class="theme-color-option"
+              class="theme-color-option no-arrow"
               style="background-color: #3498db"
               data-color="#3498db"
               onclick="setTheme('#3498db')"
             ></button>
             <button
-              class="theme-color-option"
+              class="theme-color-option no-arrow"
               style="background-color: #e74c3c"
               data-color="#e74c3c"
               onclick="setTheme('#e74c3c')"
             ></button>
             <button
-              class="theme-color-option"
+              class="theme-color-option no-arrow"
               style="background-color: #f39c12"
               data-color="#f39c12"
               onclick="setTheme('#f39c12')"
             ></button>
             <button
-              class="theme-color-option"
+              class="theme-color-option no-arrow"
               style="background-color: #f1c40f"
               data-color="#f1c40f"
               onclick="setTheme('#f1c40f')"
             ></button>
             <button
-              class="theme-color-option"
+              class="theme-color-option no-arrow"
               style="background-color: #2ecc71"
               data-color="#2ecc71"
               onclick="setTheme('#2ecc71')"
             ></button>
             <button
-              class="theme-color-option"
+              class="theme-color-option no-arrow"
               style="background-color: #1abc9c"
               data-color="#1abc9c"
               onclick="setTheme('#1abc9c')"
             ></button>
             <button
-              class="theme-color-option"
+              class="theme-color-option no-arrow"
               style="background-color: #9b59b6"
               data-color="#9b59b6"
               onclick="setTheme('#9b59b6')"
             ></button>
             <button
-              class="theme-color-option"
+              class="theme-color-option no-arrow"
               style="background-color: #34495e"
               data-color="#34495e"
               onclick="setTheme('#34495e')"
             ></button>
             <button
-              class="theme-color-option"
+              class="theme-color-option no-arrow"
               style="background-color: #e91e63"
               data-color="#e91e63"
               onclick="setTheme('#e91e63')"
             ></button>
             <button
-              class="theme-color-option"
+              class="theme-color-option no-arrow"
               style="background-color: #795548"
               data-color="#795548"
               onclick="setTheme('#795548')"
             ></button>
             <button
-              class="theme-color-option"
+              class="theme-color-option no-arrow"
               style="background-color: #95a5a6"
               data-color="#95a5a6"
               onclick="setTheme('#95a5a6')"
@@ -218,7 +195,13 @@
         <button onclick="closeSettings()">Back to Timer</button>
       </div>
 
-      <button id="settingsButton" onclick="openSettings()">⚙️</button>
+      <button
+        id="settingsButton"
+        onclick="openSettings()"
+        aria-label="Settings"
+      >
+        ⚙️
+      </button>
     </div>
     <script src="script.js"></script>
   </body>
