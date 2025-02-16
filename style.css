@@ -1,24 +1,25 @@
-* {
+/* Lock html & body to the viewport and remove scrolling */
+html,
+body {
+  width: 100vw; /* Full viewport width */
+  height: 100vh; /* Full viewport height */
+  overflow: hidden; /* Disable all scrolling */
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-html, body {
-  height: 100%;
-  overflow-x: hidden; /* Prevent horizontal scrollbars */
-}
-
+/* Body styles */
 body {
   display: flex;
-  flex-direction: column; /* Changed to column flex-direction for body */
-  justify-content: flex-start; /* Align items at the start of the body */
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
-  min-height: 100vh;
+  height: 100vh; /* Use full viewport height */
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
-  padding: 20px; /* Keep body padding */
+  padding: 20px;
   transition: background 0.5s ease;
   background: linear-gradient(
     145deg,
@@ -70,22 +71,27 @@ body.dark-theme {
   --speed-note-color: #999;
 }
 
+/* Container styles */
 .container {
-  width: 100%; /* Container takes full width */
-  max-width: 1200px; /* Still respect max-width */
-  min-height: auto; /* Changed to auto to fit content */
+  width: 100%;
+  max-width: 1200px;
+  height: calc(100vh - 40px); /* Adjust height to account for 20px top & bottom padding */
   background-color: var(--container-bg);
   border-radius: 24px;
   box-shadow: 0 0 40px var(--container-shadow);
-  padding: 30px; /* Reduced container padding */
+  padding: 30px;
   position: relative;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out,
     background-color 0.5s ease;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Align items at the start of container */
-  align-items: stretch; /* Stretch items to fill container width */
-  margin: 20px auto; /* Keep auto margin for horizontal centering, added top margin */
+  justify-content: flex-start;
+  align-items: stretch;
+  margin: 20px auto;
+  overflow: hidden; /* Prevent internal scrolling */
+  backdrop-filter: blur(10px);
+  background: rgba(248, 249, 250, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .container:hover {
@@ -93,36 +99,37 @@ body.dark-theme {
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.35);
 }
 
+/* Common element styles */
 #menu,
 #timerScreen,
 #customInput,
 #speedSelection,
 #settingsPage > div {
-  max-width: 100%; /* Take full width of container */
+  max-width: 100%;
   margin: 0 auto;
-  width: 100%; /* Ensure full width */
-  padding: 0 10px; /* Added some horizontal padding for content inside */
-  box-sizing: border-box; /* Ensure padding is inside width */
+  width: 100%;
+  padding: 0 10px;
+  box-sizing: border-box;
 }
 
 #menu {
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Reduced gap in menu */
+  gap: 15px;
 }
 
 #menu button {
-  padding: 15px; /* Reduced button padding */
-  font-size: 1.2rem; /* Slightly smaller font size for buttons */
+  padding: 15px;
+  font-size: 1.2rem;
   border: none;
-  border-radius: 40px; /* Less rounded buttons */
+  border-radius: 40px;
   cursor: pointer;
   background: var(--primary-color);
   color: var(--text-color-light);
   text-transform: uppercase;
-  letter-spacing: 1px; /* Reduced letter spacing */
+  letter-spacing: 1px;
   transition: all 0.3s ease;
-  box-shadow: 0 6px 12px var(--button-shadow); /* Reduced shadow */
+  box-shadow: 0 6px 12px var(--button-shadow);
   position: relative;
   overflow: hidden;
   border: 2px solid transparent;
@@ -155,12 +162,12 @@ body.dark-theme {
 
 #menu button:hover {
   background: var(--primary-hover-color);
-  transform: scale(1.01) translateY(-1px); /* Reduced hover effect */
-  box-shadow: 0 8px 15px rgba(51, 153, 255, 0.35); /* Reduced hover shadow */
+  transform: scale(1.01) translateY(-1px);
+  box-shadow: 0 8px 15px rgba(51, 153, 255, 0.35);
 }
 
 #menu button:active {
-  transform: scale(0.98); /* Reduced active effect */
+  transform: scale(0.98);
 }
 
 #timerScreen {
@@ -182,29 +189,29 @@ body.dark-theme {
 }
 
 #sectionTitle {
-  font-size: 3rem; /* Reduced section title size */
+  font-size: 3rem;
   color: var(--text-color-dark);
-  margin-bottom: 20px; /* Reduced margin */
+  margin-bottom: 20px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px; /* Reduced letter spacing */
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Reduced text shadow */
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 #timeDisplay {
-  font-size: 5rem; /* Reduced time display size */
-  margin: 30px 0; /* Reduced margin */
+  font-size: 5rem;
+  margin: 30px 0;
   color: var(--text-color-dark);
   font-weight: 700;
-  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.15); /* Reduced text shadow */
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.15);
   font-variant-numeric: tabular-nums;
-  letter-spacing: 1px; /* Reduced letter spacing */
+  letter-spacing: 1px;
   position: relative;
   animation: pulse 2s ease-in-out infinite;
   background: linear-gradient(45deg, #333, #666);
   -webkit-background-clip: text;
   color: transparent;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Reduced text shadow */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 body.dark-theme #timeDisplay {
@@ -221,11 +228,11 @@ body.dark-theme #timeDisplay {
 .progress-container {
   width: 100%;
   background-color: #e0e0e0;
-  border-radius: 12px; /* Less rounded progress bar */
-  margin: 20px 0; /* Reduced margin */
+  border-radius: 12px;
+  margin: 20px 0;
   overflow: hidden;
-  height: 20px; /* Reduced progress bar height */
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); /* Reduced shadow */
+  height: 20px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .progress-bar {
@@ -235,9 +242,9 @@ body.dark-theme #timeDisplay {
     var(--progress-bar-start),
     var(--progress-bar-end)
   );
-  border-radius: 12px; /* Match progress container border-radius */
+  border-radius: 12px;
   transition: width 1s ease;
-  box-shadow: 0 1px 2px rgba(51, 153, 255, 0.2); /* Reduced shadow */
+  box-shadow: 0 1px 2px rgba(51, 153, 255, 0.2);
   position: relative;
   background: linear-gradient(
     90deg,
@@ -275,13 +282,13 @@ body.dark-theme #timeDisplay {
 }
 
 #questionCounter {
-  font-size: 1.5rem; /* Reduced question counter size */
+  font-size: 1.5rem;
   color: #555;
-  margin: 20px 0; /* Reduced margin */
-  padding: 15px; /* Reduced padding */
+  margin: 20px 0;
+  padding: 15px;
   background-color: var(--question-counter-bg);
-  border-radius: 10px; /* Less rounded question counter */
-  box-shadow: 0 3px 8px var(--question-counter-shadow); /* Reduced shadow */
+  border-radius: 10px;
+  box-shadow: 0 3px 8px var(--question-counter-shadow);
   transition: transform 0.3s ease, background-color 0.5s ease,
     box-shadow 0.5s ease;
   display: flex;
@@ -296,32 +303,31 @@ body.dark-theme #questionCounter {
 }
 
 #questionCounter:hover {
-  transform: translateY(-1px); /* Reduced hover transform */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12); /* Reduced hover shadow */
-  transform: rotateX(5deg) rotateY(5deg); /* Reduced hover rotation */
+  transform: translateY(-1px) rotateX(5deg) rotateY(5deg);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
 }
 
 .controls {
   display: flex;
   justify-content: center;
-  gap: 15px; /* Reduced gap in controls */
-  margin-top: 20px; /* Reduced margin */
+  gap: 15px;
+  margin-top: 20px;
   flex-wrap: wrap;
 }
 
 .controls button {
-  padding: 12px 20px; /* Reduced button padding */
-  font-size: 1rem; /* Smaller button font size */
+  padding: 12px 20px;
+  font-size: 1rem;
   border: none;
-  border-radius: 10px; /* Less rounded buttons */
+  border-radius: 10px;
   cursor: pointer;
   background: var(--primary-color);
   color: var(--text-color-light);
   text-transform: uppercase;
-  letter-spacing: 1px; /* Reduced letter spacing */
+  letter-spacing: 1px;
   transition: all 0.3s ease;
-  box-shadow: 0 3px 8px var(--button-shadow); /* Reduced shadow */
-  min-width: 120px; /* Reduced min-width for buttons */
+  box-shadow: 0 3px 8px var(--button-shadow);
+  min-width: 120px;
   position: relative;
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -351,19 +357,19 @@ body.dark-theme #questionCounter {
 
 .controls button:hover {
   background: var(--primary-hover-color);
-  transform: translateY(-1px); /* Reduced hover transform */
-  box-shadow: 0 6px 12px rgba(51, 153, 255, 0.35); /* Reduced hover shadow */
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(51, 153, 255, 0.35);
 }
 
 #nextSectionContainer {
-  margin-top: 30px; /* Reduced margin */
+  margin-top: 30px;
 }
 
 #nextSectionContainer button {
-  padding: 15px 30px; /* Slightly reduced next section button padding */
+  padding: 15px 30px;
   font-size: 1.2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 10px var(--button-shadow); /* Reduced shadow */
+  box-shadow: 0 4px 10px var(--button-shadow);
   background: linear-gradient(
     135deg,
     var(--primary-color),
@@ -372,9 +378,9 @@ body.dark-theme #questionCounter {
 }
 
 #backArrow {
-  bottom: 20px; /* Adjusted position */
-  right: 20px;  /* Adjusted position */
-  font-size: 1.2rem; /* Reduced size */
+  bottom: 20px;
+  right: 20px;
+  font-size: 1.2rem;
   text-decoration: none;
   background: linear-gradient(
     135deg,
@@ -382,13 +388,13 @@ body.dark-theme #questionCounter {
     var(--back-arrow-end)
   );
   color: var(--text-color-light);
-  padding: 10px 15px; /* Reduced padding */
-  border-radius: 10px; /* Less rounded */
+  padding: 10px 15px;
+  border-radius: 10px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(255, 59, 59, 0.25); /* Reduced shadow */
+  box-shadow: 0 4px 10px rgba(255, 59, 59, 0.25);
   transition: all 0.3s ease;
   transform-style: preserve-3d;
   perspective: 1000px;
@@ -401,9 +407,8 @@ body.dark-theme #questionCounter {
     var(--back-arrow-end),
     var(--back-arrow-start)
   );
-  transform: scale(1.05); /* Reduced hover scale */
-  box-shadow: 0 6px 15px rgba(255, 59, 59, 0.35); /* Reduced hover shadow */
-  transform: translateZ(10px) rotateY(5deg); /* Reduced hover rotation */
+  transform: translateZ(10px) rotateY(5deg) scale(1.05);
+  box-shadow: 0 6px 15px rgba(255, 59, 59, 0.35);
 }
 
 #customInput {
@@ -412,26 +417,26 @@ body.dark-theme #questionCounter {
 }
 
 #customInput input {
-  width: 90%; /* Make inputs wider */
-  max-width: 300px; /* Limit max width */
-  padding: 10px; /* Reduced input padding */
-  margin: 8px; /* Reduced input margin */
+  width: 90%;
+  max-width: 300px;
+  padding: 10px;
+  margin: 8px;
   border: 2px solid var(--primary-color);
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.3s;
-  color: var(--text-color-dark); /* ADDED: Explicitly set input text color */
+  color: var(--text-color-dark);
 }
 
 #customInput input:focus {
   outline: none;
   border-color: var(--primary-hover-color);
-  box-shadow: 0 0 10px rgba(51, 153, 255, 0.3); /* Reduced shadow */
+  box-shadow: 0 0 10px rgba(51, 153, 255, 0.3);
 }
 
 #customInput button {
-  margin: 8px; /* Reduced button margin */
-  padding: 10px 20px; /* Reduced button padding */
+  margin: 8px;
+  padding: 10px 20px;
   font-size: 1rem;
   border: none;
   border-radius: 8px;
@@ -446,67 +451,63 @@ body.dark-theme #questionCounter {
 }
 
 #customInput button:hover {
-  transform: translateY(-1px); /* Reduced hover transform */
-  box-shadow: 0 4px 10px rgba(51, 153, 255, 0.3); /* Reduced hover shadow */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(51, 153, 255, 0.3);
 }
 
-/* ADDED: Custom Input Labels and Title Styling */
 #customInput h2,
 #customInput label {
-  color: var(--text-color-dark); /* Set labels and title to theme text color */
-  font-size: 1.2rem; /* Reduced label font size */
+  color: var(--text-color-dark);
+  font-size: 1.2rem;
 }
 
-/* Media Queries for responsiveness - further adjustments and breakpoints */
-@media (max-width: 768px) { /* Example breakpoint for tablets - already defined, keeping it */
-    /* ... tablet styles - no changes here ... */
+@media (max-width: 768px) {
+  /* Tablet styles */
 }
 
-
-@media (max-width: 480px) { /* Example breakpoint for phones - already defined, keeping it */
-    /* ... phone styles - no changes here ... */
+@media (max-width: 480px) {
+  /* Phone styles */
 }
 
-/* Very small screens - additional breakpoint */
 @media (max-width: 320px) {
   body {
-    padding: 10px; /* Even less body padding on very small screens */
+    padding: 10px;
   }
   .container {
-    padding: 15px; /* Even less container padding on very small screens */
-    border-radius: 10px; /* Even less rounded container on very small screens */
-    margin: 10px auto; /* Reduced container margin */
+    padding: 15px;
+    border-radius: 10px;
+    margin: 10px auto;
   }
   #timeDisplay {
-    font-size: 3rem; /* Even smaller time display */
+    font-size: 3rem;
     margin: 15px 0;
   }
   #sectionTitle {
-    font-size: 2rem; /* Even smaller section title */
+    font-size: 2rem;
     margin-bottom: 15px;
   }
   #questionCounter {
-    font-size: 1.3rem; /* Even smaller question counter */
+    font-size: 1.3rem;
     padding: 10px;
     margin: 15px 0;
   }
   .controls button {
-    padding: 10px; /* Even smaller control buttons */
+    padding: 10px;
     font-size: 0.9rem;
   }
   #nextSectionContainer button {
-    font-size: 1.1rem; /* Even smaller next section button */
+    font-size: 1.1rem;
     padding: 12px 25px;
   }
-  #backArrow, #settingsButton {
-    bottom: 15px; /* Move further up */
+  #backArrow,
+  #settingsButton {
+    bottom: 15px;
     left: 15px;
-    font-size: 1rem; /* Even smaller back arrow/settings icon */
+    font-size: 1rem;
     padding: 8px 12px;
-    border-radius: 8px; /* Even less rounded back arrow/settings */
+    border-radius: 8px;
   }
 }
-
 
 @keyframes gradient {
   0% {
@@ -531,7 +532,6 @@ body.dark-theme #questionCounter {
     transform: scale(1);
   }
 }
-
 
 @keyframes shake {
   0%,
@@ -563,17 +563,6 @@ body.dark-theme #questionCounter {
   100% {
     box-shadow: 0 0 5px rgba(51, 153, 255, 0.5);
   }
-}
-
-.container {
-  backdrop-filter: blur(10px);
-  background: rgba(248, 249, 250, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* Dark mode container adjustments */
-body.dark-theme .container {
-  background: rgba(30, 30, 30, 0.95);
 }
 
 button:focus {
@@ -642,7 +631,6 @@ button:focus {
   filter: blur(8px);
 }
 
-/* Speed Selection Styles */
 #speedSelection {
   display: none;
   text-align: center;
@@ -651,9 +639,9 @@ button:focus {
 }
 
 .speed-subtitle {
-  font-size: 1.2rem; /* Reduced speed subtitle size */
+  font-size: 1.2rem;
   color: var(--speed-subtitle-color);
-  margin-bottom: 30px; /* Reduced margin */
+  margin-bottom: 30px;
   font-weight: 500;
   letter-spacing: 0.5px;
 }
@@ -661,52 +649,52 @@ button:focus {
 .speed-options {
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Reduced gap in speed options */
+  gap: 15px;
 }
 
 .speed-option {
-  padding: 20px; /* Reduced padding in speed option */
+  padding: 20px;
   border: none;
-  border-radius: 15px; /* Less rounded speed options */
+  border-radius: 15px;
   background: var(--speed-option-bg);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 3px 15px var(--speed-option-shadow); /* Reduced shadow */
+  box-shadow: 0 3px 15px var(--speed-option-shadow);
   text-align: left;
 }
 
 .speed-option:hover {
-  transform: translateY(-2px); /* Reduced hover transform */
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); /* Reduced hover shadow */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .speed-content {
   display: flex;
   align-items: center;
-  gap: 15px; /* Reduced gap in speed content */
+  gap: 15px;
 }
 
 .speed-emoji {
-  font-size: 2rem; /* Reduced emoji size */
-  min-width: 50px; /* Reduced min width */
+  font-size: 2rem;
+  min-width: 50px;
 }
 
 .speed-text h3 {
   font-size: 1.2rem;
-  margin-bottom: 6px; /* Reduced margin */
+  margin-bottom: 6px;
   font-weight: 600;
 }
 
 .speed-text p {
   color: var(--speed-subtitle-color);
   font-size: 0.9rem;
-  line-height: 1.3; /* Adjusted line height */
+  line-height: 1.3;
 }
 
 .speed-note {
-  margin-top: 20px; /* Reduced margin */
+  margin-top: 20px;
   color: var(--speed-note-color);
-  font-size: 0.8rem; /* Reduced font size */
+  font-size: 0.8rem;
   font-style: italic;
 }
 
@@ -721,10 +709,9 @@ button:focus {
   }
 }
 
-/* Settings Page Styles */
 #settingsPage {
   display: none;
-  position: fixed; /* Changed to fixed */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -739,45 +726,45 @@ button:focus {
   animation: fadeIn 0.5s forwards;
   text-align: center;
   color: var(--text-color-light);
-  border-radius: 15px; /* Less rounded settings page */
+  border-radius: 15px;
   backdrop-filter: blur(10px);
 }
 
 #settingsPage > div {
   background-color: var(--container-bg);
-  padding: 20px; /* Reduced settings page div padding */
-  border-radius: 15px; /* Less rounded settings page div */
-  box-shadow: 0 0 20px var(--container-shadow); /* Reduced shadow */
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px var(--container-shadow);
 }
 
 #settingsPage h2 {
-  font-size: 2rem; /* Reduced settings page title size */
-  margin-bottom: 15px; /* Reduced margin */
+  font-size: 2rem;
+  margin-bottom: 15px;
   color: var(--text-color-dark);
 }
 
 #settingsPage h3,
 .settings-section > label.speed-subtitle {
-  font-size: 1.2rem; /* Reduced settings section title/label size */
-  margin-bottom: 10px; /* Reduced margin */
+  font-size: 1.2rem;
+  margin-bottom: 10px;
   color: var(--text-color-dark);
 }
 
 .settings-section {
-  margin-bottom: 20px; /* Reduced margin between settings sections */
+  margin-bottom: 20px;
 }
 
 .theme-colors {
   display: flex;
-  gap: 8px; /* Reduced gap in theme colors */
+  gap: 8px;
   justify-content: center;
   flex-wrap: wrap;
-  margin-top: 15px; /* Reduced margin */
+  margin-top: 15px;
 }
 
 .theme-color-option {
-  width: 35px; /* Smaller theme color options */
-  height: 35px; /* Smaller theme color options */
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   border: none;
   cursor: pointer;
@@ -796,23 +783,23 @@ button:focus {
 .theme-color-option:hover,
 .theme-color-option:focus {
   opacity: 0.8;
-  transform: scale(1.05); /* Reduced hover scale */
+  transform: scale(1.05);
   outline: none;
-  box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.5); /* Reduced shadow */
+  box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.5);
 }
 
 .theme-color-option:focus {
-  box-shadow: 0 0 0 3px var(--primary-color); /* Reduced focus shadow */
+  box-shadow: 0 0 0 3px var(--primary-color);
   opacity: 1;
 }
 
 #settingsPage button,
 #settingsPage select {
-  padding: 12px 24px; /* Reduced settings page button/select padding */
-  font-size: 1rem; /* Smaller settings page button/select font size */
-  border-radius: 10px; /* Less rounded settings page buttons/select */
-  box-shadow: 0 3px 8px var(--button-shadow); /* Reduced shadow */
-  margin-top: 10px; /* Reduced margin */
+  padding: 12px 24px;
+  font-size: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px var(--button-shadow);
+  margin-top: 10px;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -820,30 +807,29 @@ button:focus {
   background-repeat: no-repeat;
   background-position-x: 100%;
   background-position-y: 8px;
-  padding-right: 35px; /* Slightly reduced padding right */
+  padding-right: 35px;
 }
 
 #settingsPage button:hover,
 #settingsPage select:hover {
-  transform: translateY(-1px); /* Reduced hover transform */
-  box-shadow: 0 6px 12px rgba(51, 153, 255, 0.35); /* Reduced hover shadow */
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(51, 153, 255, 0.35);
 }
 
 #settingsPage select:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(51, 153, 255, 0.5); /* Reduced focus shadow */
+  box-shadow: 0 0 0 2px rgba(51, 153, 255, 0.5);
 }
 
-/* Settings Button Style */
 #settingsButton {
-  bottom: 20px; /* Adjusted position - already defined, keeping it */
-  left: 20px;   /* Adjusted position - already defined, keeping it */
-  font-size: 1.2rem; /* Adjusted size - already defined, keeping it */
+  bottom: 20px;
+  left: 20px;
+  font-size: 1.2rem;
   text-decoration: none;
   background: transparent;
   color: var(--text-color-light);
-  padding: 10px 15px; /* Adjusted padding for smaller screens - already defined, keeping it */
-  border-radius: 10px; /* Adjusted border-radius for smaller screens - already defined, keeping it */
+  padding: 10px 15px;
+  border-radius: 10px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -856,11 +842,11 @@ button:focus {
 #settingsButton:focus {
   outline: none;
   animation: none;
-  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.7); /* Reduced focus shadow */
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.7);
 }
 
 #settingsButton:hover {
   background: rgba(255, 255, 255, 0.1);
-  transform: scale(1.05); /* Reduced hover scale */
+  transform: scale(1.05);
   box-shadow: none;
 }
