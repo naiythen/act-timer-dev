@@ -1,22 +1,22 @@
-/* Lock html & body to the viewport and remove scrolling */
-html,
-body {
-  width: 100vw; /* Full viewport width */
-  height: 100vh; /* Full viewport height */
-  overflow: hidden; /* Disable all scrolling */
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Body styles */
+html,
+body {
+  /* Updated html and body styles */
+  height: 100%; /* Ensure html and body take full viewport height */
+  overflow-x: hidden; /* Prevent horizontal scrollbars */
+}
+
 body {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
-  height: 100vh; /* Use full viewport height */
+  min-height: 100vh; /* Ensure body is at least viewport height */
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
   padding: 20px;
@@ -71,27 +71,22 @@ body.dark-theme {
   --speed-note-color: #999;
 }
 
-/* Container styles */
 .container {
-  width: 100%;
+  width: 95%;
   max-width: 1200px;
-  height: calc(100vh - 40px); /* Adjust height to account for 20px top & bottom padding */
+  min-height: 80vh;
   background-color: var(--container-bg);
   border-radius: 24px;
   box-shadow: 0 0 40px var(--container-shadow);
-  padding: 30px;
+  padding: 40px;
   position: relative;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out,
     background-color 0.5s ease;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
-  margin: 20px auto;
-  overflow: hidden; /* Prevent internal scrolling */
-  backdrop-filter: blur(10px);
-  background: rgba(248, 249, 250, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  justify-content: center;
+  /* animation: float 6s ease-in-out infinite;  Removed float animation which could cause issues */
+  margin: 0 auto; /* Added to center container */
 }
 
 .container:hover {
@@ -99,37 +94,34 @@ body.dark-theme {
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.35);
 }
 
-/* Common element styles */
 #menu,
 #timerScreen,
 #customInput,
 #speedSelection,
 #settingsPage > div {
-  max-width: 100%;
+  max-width: 800px;
   margin: 0 auto;
   width: 100%;
-  padding: 0 10px;
-  box-sizing: border-box;
 }
 
 #menu {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 25px;
 }
 
 #menu button {
-  padding: 15px;
-  font-size: 1.2rem;
+  padding: 20px;
+  font-size: 1.4rem;
   border: none;
-  border-radius: 40px;
+  border-radius: 50px;
   cursor: pointer;
   background: var(--primary-color);
   color: var(--text-color-light);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   transition: all 0.3s ease;
-  box-shadow: 0 6px 12px var(--button-shadow);
+  box-shadow: 0 8px 15px var(--button-shadow);
   position: relative;
   overflow: hidden;
   border: 2px solid transparent;
@@ -162,12 +154,12 @@ body.dark-theme {
 
 #menu button:hover {
   background: var(--primary-hover-color);
-  transform: scale(1.01) translateY(-1px);
-  box-shadow: 0 8px 15px rgba(51, 153, 255, 0.35);
+  transform: scale(1.02) translateY(-2px);
+  box-shadow: 0 12px 20px rgba(51, 153, 255, 0.35);
 }
 
 #menu button:active {
-  transform: scale(0.98);
+  transform: scale(0.95);
 }
 
 #timerScreen {
@@ -189,29 +181,29 @@ body.dark-theme {
 }
 
 #sectionTitle {
-  font-size: 3rem;
+  font-size: 3.5rem;
   color: var(--text-color-dark);
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #timeDisplay {
-  font-size: 5rem;
-  margin: 30px 0;
+  font-size: 6rem;
+  margin: 40px 0;
   color: var(--text-color-dark);
   font-weight: 700;
-  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.15);
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15);
   font-variant-numeric: tabular-nums;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   position: relative;
   animation: pulse 2s ease-in-out infinite;
   background: linear-gradient(45deg, #333, #666);
   -webkit-background-clip: text;
   color: transparent;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 body.dark-theme #timeDisplay {
@@ -228,23 +220,24 @@ body.dark-theme #timeDisplay {
 .progress-container {
   width: 100%;
   background-color: #e0e0e0;
-  border-radius: 12px;
-  margin: 20px 0;
+  border-radius: 15px;
+  margin: 30px 0;
   overflow: hidden;
-  height: 20px;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  height: 25px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .progress-bar {
+  width: 0%;
   height: 100%;
   background: linear-gradient(
     90deg,
     var(--progress-bar-start),
     var(--progress-bar-end)
   );
-  border-radius: 12px;
+  border-radius: 15px;
   transition: width 1s ease;
-  box-shadow: 0 1px 2px rgba(51, 153, 255, 0.2);
+  box-shadow: 0 2px 4px rgba(51, 153, 255, 0.2);
   position: relative;
   background: linear-gradient(
     90deg,
@@ -282,13 +275,13 @@ body.dark-theme #timeDisplay {
 }
 
 #questionCounter {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   color: #555;
-  margin: 20px 0;
-  padding: 15px;
+  margin: 25px 0;
+  padding: 20px;
   background-color: var(--question-counter-bg);
-  border-radius: 10px;
-  box-shadow: 0 3px 8px var(--question-counter-shadow);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px var(--question-counter-shadow);
   transition: transform 0.3s ease, background-color 0.5s ease,
     box-shadow 0.5s ease;
   display: flex;
@@ -303,31 +296,32 @@ body.dark-theme #questionCounter {
 }
 
 #questionCounter:hover {
-  transform: translateY(-1px) rotateX(5deg) rotateY(5deg);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+  transform: rotateX(10deg) rotateY(10deg);
 }
 
 .controls {
   display: flex;
   justify-content: center;
-  gap: 15px;
-  margin-top: 20px;
+  gap: 25px;
+  margin-top: 30px;
   flex-wrap: wrap;
 }
 
 .controls button {
-  padding: 12px 20px;
-  font-size: 1rem;
+  padding: 15px 30px;
+  font-size: 1.2rem;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
   background: var(--primary-color);
   color: var(--text-color-light);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   transition: all 0.3s ease;
-  box-shadow: 0 3px 8px var(--button-shadow);
-  min-width: 120px;
+  box-shadow: 0 4px 12px var(--button-shadow);
+  min-width: 160px;
   position: relative;
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -357,19 +351,19 @@ body.dark-theme #questionCounter {
 
 .controls button:hover {
   background: var(--primary-hover-color);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 12px rgba(51, 153, 255, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(51, 153, 255, 0.35);
 }
 
 #nextSectionContainer {
-  margin-top: 30px;
+  margin-top: 40px;
 }
 
 #nextSectionContainer button {
-  padding: 15px 30px;
-  font-size: 1.2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px var(--button-shadow);
+  padding: 20px 40px;
+  font-size: 1.3rem;
+  border-radius: 15px;
+  box-shadow: 0 6px 15px var(--button-shadow);
   background: linear-gradient(
     135deg,
     var(--primary-color),
@@ -378,9 +372,10 @@ body.dark-theme #questionCounter {
 }
 
 #backArrow {
-  bottom: 20px;
-  right: 20px;
-  font-size: 1.2rem;
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  font-size: 1.4rem;
   text-decoration: none;
   background: linear-gradient(
     135deg,
@@ -388,13 +383,13 @@ body.dark-theme #questionCounter {
     var(--back-arrow-end)
   );
   color: var(--text-color-light);
-  padding: 10px 15px;
-  border-radius: 10px;
+  padding: 15px 20px;
+  border-radius: 12px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(255, 59, 59, 0.25);
+  box-shadow: 0 6px 15px rgba(255, 59, 59, 0.25);
   transition: all 0.3s ease;
   transform-style: preserve-3d;
   perspective: 1000px;
@@ -407,8 +402,9 @@ body.dark-theme #questionCounter {
     var(--back-arrow-end),
     var(--back-arrow-start)
   );
-  transform: translateZ(10px) rotateY(5deg) scale(1.05);
-  box-shadow: 0 6px 15px rgba(255, 59, 59, 0.35);
+  transform: scale(1.1);
+  box-shadow: 0 8px 20px rgba(255, 59, 59, 0.35);
+  transform: translateZ(20px) rotateY(10deg);
 }
 
 #customInput {
@@ -417,27 +413,26 @@ body.dark-theme #questionCounter {
 }
 
 #customInput input {
-  width: 90%;
-  max-width: 300px;
-  padding: 10px;
-  margin: 8px;
+  width: 200px;
+  padding: 12px;
+  margin: 10px;
   border: 2px solid var(--primary-color);
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 1.1rem;
   transition: all 0.3s;
-  color: var(--text-color-dark);
+  color: var(--text-color-dark); /* ADDED: Explicitly set input text color */
 }
 
 #customInput input:focus {
   outline: none;
   border-color: var(--primary-hover-color);
-  box-shadow: 0 0 10px rgba(51, 153, 255, 0.3);
+  box-shadow: 0 0 15px rgba(51, 153, 255, 0.3);
 }
 
 #customInput button {
-  margin: 8px;
-  padding: 10px 20px;
-  font-size: 1rem;
+  margin: 10px;
+  padding: 12px 24px;
+  font-size: 1.1rem;
   border: none;
   border-radius: 8px;
   background: linear-gradient(
@@ -451,61 +446,148 @@ body.dark-theme #questionCounter {
 }
 
 #customInput button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(51, 153, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(51, 153, 255, 0.3);
 }
 
+/* ADDED: Custom Input Labels and Title Styling */
 #customInput h2,
 #customInput label {
-  color: var(--text-color-dark);
-  font-size: 1.2rem;
+  color: var(--text-color-dark); /* Set labels and title to theme text color */
 }
 
+/* Media Queries for responsiveness */
 @media (max-width: 768px) {
-  /* Tablet styles */
+  /* Example breakpoint for tablets */
+  .container {
+    padding: 30px; /* Reduce padding on smaller screens */
+  }
+
+  #timeDisplay {
+    font-size: 5rem; /* Slightly smaller time display */
+    margin: 30px 0;
+  }
+
+  #sectionTitle {
+    font-size: 3rem;
+  }
+
+  #menu button {
+    padding: 15px;
+    font-size: 1.3rem;
+  }
 }
 
 @media (max-width: 480px) {
-  /* Phone styles */
-}
-
-@media (max-width: 320px) {
-  body {
-    padding: 10px;
-  }
+  /* Example breakpoint for phones */
   .container {
-    padding: 15px;
-    border-radius: 10px;
-    margin: 10px auto;
+    padding: 20px; /* Even less padding on phones */
+    min-height: 98vh; /* Take up more of the viewport height on very small screens */
+    border-radius: 15px; /* Less rounded corners on small screens */
   }
+
   #timeDisplay {
-    font-size: 3rem;
-    margin: 15px 0;
+    font-size: 3.5rem; /* Smaller time display on phones */
+    margin: 20px 0;
   }
+
   #sectionTitle {
-    font-size: 2rem;
-    margin-bottom: 15px;
+    font-size: 2.2rem; /* Smaller section title on phones */
+    margin-bottom: 20px;
   }
-  #questionCounter {
-    font-size: 1.3rem;
-    padding: 10px;
-    margin: 15px 0;
+
+  #menu {
+    gap: 15px; /* Less gap between menu buttons on phones */
   }
+
+  #menu button {
+    padding: 12px;
+    font-size: 1rem; /* Smaller menu button text on phones */
+    border-radius: 30px; /* Less rounded corners for buttons on phones */
+  }
+
+  .controls {
+    flex-direction: column; /* Stack controls vertically on phones */
+    gap: 15px;
+  }
+
   .controls button {
+    width: 100%; /* Full-width control buttons on phones */
+    min-width: auto; /* Reset min-width for full width */
+    padding: 12px;
+    font-size: 1rem;
+  }
+
+  #nextSectionContainer button {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+  }
+
+  #customInput input {
+    width: 90%; /* Make custom input fields wider on phones */
+    max-width: 250px; /* Limit max width for input on phones */
+    font-size: 1rem;
     padding: 10px;
+  }
+
+  #customInput button {
+    font-size: 1rem;
+    padding: 10px 20px;
+  }
+
+  #questionCounter {
+    font-size: 1.5rem; /* Slightly smaller question counter on phones */
+    padding: 15px;
+    margin: 20px 0;
+  }
+
+  #settingsPage h2 {
+    font-size: 2rem; /* Smaller settings title on phones */
+  }
+
+  #settingsPage h3,
+  .settings-section > label.speed-subtitle {
+    font-size: 1.2rem; /* Smaller settings section titles/labels on phones */
+  }
+
+  #settingsPage button,
+  #settingsPage select {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+
+  #speedSelection .speed-subtitle,
+  .settings-section > label.speed-subtitle {
+    font-size: 1.2rem; /* Smaller speed subtitle on phones */
+    margin-bottom: 30px;
+  }
+
+  .speed-option {
+    padding: 20px;
+  }
+
+  .speed-text h3 {
+    font-size: 1.2rem;
+    margin-bottom: 6px;
+  }
+
+  .speed-text p {
     font-size: 0.9rem;
   }
-  #nextSectionContainer button {
-    font-size: 1.1rem;
-    padding: 12px 25px;
+
+  .speed-emoji {
+    font-size: 2rem; /* Smaller emoji on phones */
+    min-width: 50px;
   }
+
   #backArrow,
   #settingsButton {
-    bottom: 15px;
-    left: 15px;
-    font-size: 1rem;
-    padding: 8px 12px;
-    border-radius: 8px;
+    bottom: 20px; /* Move back arrow and settings button closer to bottom on phones */
+    left: 20px;
+    right: auto; /* Reset right position for settings button if needed */
+    font-size: 1.2rem; /* Slightly smaller back arrow and settings button icons on phones */
+    padding: 10px 15px;
+    border-radius: 10px;
   }
 }
 
@@ -563,6 +645,17 @@ body.dark-theme #questionCounter {
   100% {
     box-shadow: 0 0 5px rgba(51, 153, 255, 0.5);
   }
+}
+
+.container {
+  backdrop-filter: blur(10px);
+  background: rgba(248, 249, 250, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Dark mode container adjustments */
+body.dark-theme .container {
+  background: rgba(30, 30, 30, 0.95);
 }
 
 button:focus {
@@ -631,6 +724,7 @@ button:focus {
   filter: blur(8px);
 }
 
+/* Speed Selection Styles */
 #speedSelection {
   display: none;
   text-align: center;
@@ -639,9 +733,9 @@ button:focus {
 }
 
 .speed-subtitle {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   color: var(--speed-subtitle-color);
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   font-weight: 500;
   letter-spacing: 0.5px;
 }
@@ -649,52 +743,53 @@ button:focus {
 .speed-options {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
 }
 
 .speed-option {
-  padding: 20px;
+  padding: 25px;
   border: none;
-  border-radius: 15px;
+  border-radius: 18px;
   background: var(--speed-option-bg);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 3px 15px var(--speed-option-shadow);
+  box-shadow: 0 4px 20px var(--speed-option-shadow);
   text-align: left;
 }
 
 .speed-option:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
 .speed-content {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
 }
 
 .speed-emoji {
-  font-size: 2rem;
-  min-width: 50px;
+  font-size: 2.5rem;
+  min-width: 60px;
 }
 
 .speed-text h3 {
-  font-size: 1.2rem;
-  margin-bottom: 6px;
+  font-size: 1.4rem;
+  color: var(--speed-text-color);
+  margin-bottom: 8px;
   font-weight: 600;
 }
 
 .speed-text p {
   color: var(--speed-subtitle-color);
-  font-size: 0.9rem;
-  line-height: 1.3;
+  font-size: 1rem;
+  line-height: 1.4;
 }
 
 .speed-note {
-  margin-top: 20px;
+  margin-top: 30px;
   color: var(--speed-note-color);
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-style: italic;
 }
 
@@ -709,9 +804,10 @@ button:focus {
   }
 }
 
+/* Settings Page Styles */
 #settingsPage {
   display: none;
-  position: fixed;
+  position: fixed; /* Changed to fixed */
   top: 0;
   left: 0;
   width: 100%;
@@ -726,45 +822,45 @@ button:focus {
   animation: fadeIn 0.5s forwards;
   text-align: center;
   color: var(--text-color-light);
-  border-radius: 15px;
+  border-radius: 24px;
   backdrop-filter: blur(10px);
 }
 
 #settingsPage > div {
   background-color: var(--container-bg);
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 0 20px var(--container-shadow);
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 0 30px var(--container-shadow);
 }
 
 #settingsPage h2 {
-  font-size: 2rem;
-  margin-bottom: 15px;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
   color: var(--text-color-dark);
 }
 
 #settingsPage h3,
 .settings-section > label.speed-subtitle {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
+  font-size: 1.4rem; /* Adjusted for label as well */
+  margin-bottom: 15px;
   color: var(--text-color-dark);
 }
 
 .settings-section {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .theme-colors {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   justify-content: center;
   flex-wrap: wrap;
-  margin-top: 15px;
+  margin-top: 20px;
 }
 
 .theme-color-option {
-  width: 35px;
-  height: 35px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: none;
   cursor: pointer;
@@ -783,23 +879,30 @@ button:focus {
 .theme-color-option:hover,
 .theme-color-option:focus {
   opacity: 0.8;
-  transform: scale(1.05);
+  transform: scale(1.1);
   outline: none;
-  box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.5);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.5);
 }
 
 .theme-color-option:focus {
-  box-shadow: 0 0 0 3px var(--primary-color);
+  box-shadow: 0 0 0 4px var(--primary-color);
   opacity: 1;
 }
 
 #settingsPage button,
 #settingsPage select {
-  padding: 12px 24px;
-  font-size: 1rem;
-  border-radius: 10px;
-  box-shadow: 0 3px 8px var(--button-shadow);
-  margin-top: 10px;
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  background: var(--primary-color);
+  color: var(--text-color-light);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px var(--button-shadow);
+  margin-top: 15px;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -807,29 +910,32 @@ button:focus {
   background-repeat: no-repeat;
   background-position-x: 100%;
   background-position-y: 8px;
-  padding-right: 35px;
+  padding-right: 40px;
 }
 
 #settingsPage button:hover,
 #settingsPage select:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 12px rgba(51, 153, 255, 0.35);
+  background: var(--primary-hover-color);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(51, 153, 255, 0.35);
 }
 
 #settingsPage select:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(51, 153, 255, 0.5);
+  box-shadow: 0 0 0 3px rgba(51, 153, 255, 0.5);
 }
 
+/* Settings Button Style */
 #settingsButton {
-  bottom: 20px;
-  left: 20px;
-  font-size: 1.2rem;
+  position: absolute;
+  bottom: 20px; /* Adjusted for smaller screens */
+  left: 20px; /* Adjusted for smaller screens */
+  font-size: 1.2rem; /* Adjusted for smaller screens */
   text-decoration: none;
   background: transparent;
   color: var(--text-color-light);
-  padding: 10px 15px;
-  border-radius: 10px;
+  padding: 10px 15px; /* Adjusted padding for smaller screens */
+  border-radius: 10px; /* Adjusted border-radius for smaller screens */
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -842,11 +948,11 @@ button:focus {
 #settingsButton:focus {
   outline: none;
   animation: none;
-  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.7);
+  box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.7);
 }
 
 #settingsButton:hover {
   background: rgba(255, 255, 255, 0.1);
-  transform: scale(1.05);
+  transform: scale(1.1);
   box-shadow: none;
 }
