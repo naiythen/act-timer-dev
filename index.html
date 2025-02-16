@@ -1,208 +1,352 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="icon" type="image/webp" href="/favico.png" />
     <meta charset="UTF-8" />
-    <meta
-      name="description"
-      content="Ace your ACT with this efficient ACT Timer! Practice time management with customizable timers for each section, full tests, and personalized settings. Improve your pacing and conquer the ACT."
-    />
-    <title>ACT Timer</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real-Time Speech Transcription</title>
+    <style>
+      /* Global Styles */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        color: #333;
+        padding: 20px;
+      }
+      .container {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 30px 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 800px;
+        text-align: center;
+      }
+      h1 {
+        margin-bottom: 20px;
+        font-size: 2.5em;
+        color: #2c3e50;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+      /* Transcription Box */
+      #transcript {
+        margin-top: 20px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        height: 200px;
+        overflow-y: auto;
+        border: 2px solid #ddd;
+        font-size: 1.2em;
+        text-align: left;
+        line-height: 1.5;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+      }
+      /* Buttons */
+      .btn {
+        background: #3498db;
+        color: #fff;
+        border: none;
+        padding: 15px 30px;
+        font-size: 1em;
+        border-radius: 50px;
+        cursor: pointer;
+        margin: 10px 5px;
+        transition: background 0.3s ease, transform 0.2s ease;
+      }
+      .btn:hover {
+        background: #2980b9;
+        transform: scale(1.03);
+      }
+      .btn:disabled {
+        background: #95a5a6;
+        cursor: not-allowed;
+        transform: none;
+      }
+      footer {
+        margin-top: 20px;
+        font-size: 0.8em;
+        color: #666;
+      }
+    </style>
   </head>
-
-  <body class="dark-theme">
-    <!-- Apply dark-theme class to body by default -->
+  <body>
     <div class="container">
-      <div id="speedSelection" style="display: none">
-        <h2>⏱️ Set Your Pace</h2>
-        <p class="speed-subtitle">
-          Choose how early you want to finish sections:
-        </p>
-        <div class="speed-options">
-          <button class="speed-option" onclick="setSpeedPreference(0)">
-            <div class="speed-content">
-              <span class="speed-emoji">🕒</span>
-              <div class="speed-text">
-                <h3>Right on Time</h3>
-                <p>Perfect if you like to use all available time</p>
-              </div>
-            </div>
-          </button>
-          <button class="speed-option" onclick="setSpeedPreference(1)">
-            <div class="speed-content">
-              <span class="speed-emoji">⏩</span>
-              <div class="speed-text">
-                <h3>5 Minutes Early</h3>
-                <p>Gives you time to review answers</p>
-              </div>
-            </div>
-          </button>
-          <button class="speed-option" onclick="setSpeedPreference(2)">
-            <div class="speed-content">
-              <span class="speed-emoji">🚀</span>
-              <div class="speed-text">
-                <h3>10 Minutes Early</h3>
-                <p>For fast test-takers who want buffer time</p>
-              </div>
-            </div>
-          </button>
-        </div>
-        <p class="speed-note">You can change this later in settings</p>
-      </div>
-      <div id="menu">
-        <button onclick="startTimer('English', 45, 75)">
-          English (45 min)
+      <h1>Real-Time Speech Transcription</h1>
+      <div>
+        <button id="start-btn" class="btn">Start Transcription</button>
+        <button id="stop-btn" class="btn" disabled>Stop Transcription</button>
+        <button id="fix-btn" class="btn" disabled>Fix Text</button>
+        <button id="clear-btn" class="btn" disabled>Clear Transcript</button>
+        <button id="copy-btn" class="btn" disabled>Copy Transcript</button>
+        <button id="fix-copy-btn" class="btn" disabled>
+          Fix &amp; Copy Transcript
         </button>
-        <button onclick="startTimer('Math', 60, 60)">Math (60 min)</button>
-        <button onclick="startTimer('Reading', 35, 40)">
-          Reading (35 min)
-        </button>
-        <button onclick="startTimer('Science', 35, 40)">
-          Science (35 min)
-        </button>
-        <button onclick="startFullTest()">Full ACT Test</button>
-        <button onclick="showCustomInput()">Custom</button>
       </div>
-      <div id="customInput" style="display: none; text-align: center">
-        <h2>Custom Timer</h2>
-        <label for="customTime">Time (minutes):</label>
-        <input
-          type="number"
-          id="customTime"
-          placeholder="Enter time in minutes"
-        />
-        <br /><br />
-        <label for="customQuestions">Number of Questions:</label>
-        <input
-          type="number"
-          id="customQuestions"
-          placeholder="Enter number of questions"
-        />
-        <br /><br />
-        <button onclick="startCustomTimer()">Start</button>
-        <button onclick="goBack()">Cancel</button>
-      </div>
-      <div id="timerScreen">
-        <h1 id="sectionTitle"></h1>
-        <div id="timeDisplay">00:00</div>
-        <div class="progress-container">
-          <div class="progress-bar" id="progressBar"></div>
-        </div>
-        <div id="questionCounter"></div>
-        <div class="controls">
-          <button id="pauseBtn" onclick="pauseTimer()">Pause</button>
-          <button id="resumeBtn" onclick="resumeTimer()">Resume</button>
-          <button id="resetBtn" onclick="resetTimer()">Reset</button>
-        </div>
-        <div id="nextSectionContainer" style="display: none">
-          <button onclick="nextSection()">Next Section</button>
-        </div>
-      </div>
-      <a
-        id="backArrow"
-        href="javascript:void(0)"
-        onclick="goBack()"
-        style="display: none"
-        >←</a
-      >
-
-      <div id="settingsPage" style="display: none">
-        <h2>⚙️ Settings</h2>
-        <div class="settings-section">
-          <h3>Pace</h3>
-          <label for="paceSelect" class="speed-subtitle"
-            >Choose how early you want to finish sections:</label
-          >
-          <select id="paceSelect" onchange="setPacePreference(this.value)">
-            <option value="0">Right on Time</option>
-            <option value="1">5 Minutes Early</option>
-            <option value="2">10 Minutes Early</option>
-          </select>
-        </div>
-
-        <div class="settings-section">
-          <h3>Theme Color</h3>
-          <div class="theme-colors">
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #3498db"
-              data-color="#3498db"
-              onclick="setTheme('#3498db')"
-            ></button>
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #e74c3c"
-              data-color="#e74c3c"
-              onclick="setTheme('#e74c3c')"
-            ></button>
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #f39c12"
-              data-color="#f39c12"
-              onclick="setTheme('#f39c12')"
-            ></button>
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #f1c40f"
-              data-color="#f1c40f"
-              onclick="setTheme('#f1c40f')"
-            ></button>
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #2ecc71"
-              data-color="#2ecc71"
-              onclick="setTheme('#2ecc71')"
-            ></button>
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #1abc9c"
-              data-color="#1abc9c"
-              onclick="setTheme('#1abc9c')"
-            ></button>
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #9b59b6"
-              data-color="#9b59b6"
-              onclick="setTheme('#9b59b6')"
-            ></button>
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #34495e"
-              data-color="#34495e"
-              onclick="setTheme('#34495e')"
-            ></button>
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #e91e63"
-              data-color="#e91e63"
-              onclick="setTheme('#e91e63')"
-            ></button>
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #795548"
-              data-color="#795548"
-              onclick="setTheme('#795548')"
-            ></button>
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #95a5a6"
-              data-color="#95a5a6"
-              onclick="setTheme('#95a5a6')"
-            ></button>
-          </div>
-        </div>
-        <button onclick="closeSettings()">Back to Timer</button>
-      </div>
-
-      <button
-        id="settingsButton"
-        onclick="openSettings()"
-        aria-label="Settings"
-      >
-        ⚙️
-      </button>
+      <div id="transcript" placeholder="Your speech will appear here..."></div>
+      <footer>Powered by the Web Speech API</footer>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+      // Check for browser support of SpeechRecognition
+      window.SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!window.SpeechRecognition) {
+        alert(
+          "Your browser does not support Speech Recognition. Please try Chrome."
+        );
+      }
+
+      // Global variables to store the final and interim transcripts
+      let finalTranscript = "";
+      let interimTranscript = "";
+
+      // Get UI element references
+      const startBtn = document.getElementById("start-btn");
+      const stopBtn = document.getElementById("stop-btn");
+      const fixBtn = document.getElementById("fix-btn");
+      const clearBtn = document.getElementById("clear-btn");
+      const copyBtn = document.getElementById("copy-btn");
+      const fixCopyBtn = document.getElementById("fix-copy-btn");
+      const transcriptDiv = document.getElementById("transcript");
+
+      // Function to disable all transcription-related buttons
+      function disableButtons() {
+        startBtn.disabled = true;
+        stopBtn.disabled = true;
+        fixBtn.disabled = true;
+        clearBtn.disabled = true;
+        copyBtn.disabled = true;
+        fixCopyBtn.disabled = true;
+      }
+
+      // Check microphone permissions only once on page load
+      if (navigator.permissions) {
+        navigator.permissions
+          .query({ name: "microphone" })
+          .then((permissionStatus) => {
+            if (permissionStatus.state === "denied") {
+              alert(
+                "Microphone permissions not granted. The application will not work."
+              );
+              disableButtons();
+              transcriptDiv.innerHTML =
+                "<strong>Error:</strong> Microphone permissions are required for this application.";
+            }
+          });
+      } else {
+        // Fallback: request microphone access once
+        navigator.mediaDevices
+          .getUserMedia({ audio: true })
+          .then((stream) => {
+            stream.getTracks().forEach((track) => track.stop());
+          })
+          .catch((err) => {
+            alert(
+              "Microphone permissions not granted. The application will not work."
+            );
+            disableButtons();
+            transcriptDiv.innerHTML =
+              "<strong>Error:</strong> Microphone permissions are required for this application.";
+          });
+      }
+
+      // Create a single SpeechRecognition instance
+      const recognition = new window.SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = "en-US";
+
+      // Basic formatting: Capitalize sentences, fix spacing/punctuation.
+      function fixBasicFormatting(text) {
+        text = text.trim();
+        // Replace standalone 'i' with 'I'
+        text = text.replace(/\bi\b/g, "I");
+
+        // Split text into sentences (keeping punctuation)
+        let sentences = text.match(/[^.!?]+[.!?]*/g);
+        if (!sentences) return text;
+        let fixedSentences = sentences.map((sentence) => {
+          sentence = sentence.trim();
+          if (sentence.length === 0) return "";
+          // Capitalize first letter
+          sentence = sentence.charAt(0).toUpperCase() + sentence.slice(1);
+          // Remove extra spaces before punctuation
+          sentence = sentence.replace(/\s+([.!?])/g, "$1");
+          // Ensure sentence ends with punctuation
+          if (!/[.!?]$/.test(sentence)) {
+            sentence += ".";
+          }
+          return sentence;
+        });
+        return fixedSentences.join(" ").replace(/\s+/g, " ");
+      }
+
+      // Enhanced smart fix: build on basic formatting and correct common misrecognitions.
+      function smartFixText(text) {
+        text = fixBasicFormatting(text);
+        const corrections = {
+          "\\bim\\b": "I'm",
+          "\\bdont\\b": "don't",
+          "\\bcant\\b": "can't",
+          "\\bwont\\b": "won't",
+          "\\bive\\b": "I've",
+          "\\bthats\\b": "that's",
+          "\\bhes\\b": "he's",
+          "\\bshes\\b": "she's",
+          "\\bits\\b": "it's",
+          "\\blets\\b": "let's",
+        };
+        for (let pattern in corrections) {
+          const regex = new RegExp(pattern, "gi");
+          text = text.replace(regex, corrections[pattern]);
+        }
+        // Adjust punctuation for interrogative sentences
+        let sentences = text.match(/[^.!?]+[.!?]*/g);
+        if (sentences) {
+          sentences = sentences.map((sentence) => {
+            sentence = sentence.trim();
+            if (
+              /^(who|what|when|where|why|how|is|are|do|does|did|can|could|would|should|will|might)\b/i.test(
+                sentence
+              )
+            ) {
+              if (sentence.endsWith(".")) {
+                sentence = sentence.slice(0, -1) + "?";
+              } else if (!sentence.endsWith("?")) {
+                sentence += "?";
+              }
+            }
+            return sentence;
+          });
+          text = sentences.join(" ");
+        }
+        return text;
+      }
+
+      // Update transcript display and enable/disable buttons based on text availability.
+      function updateDisplay() {
+        transcriptDiv.innerHTML = finalTranscript;
+        const hasText = finalTranscript.trim().length > 0;
+        fixBtn.disabled = !hasText;
+        clearBtn.disabled = !hasText;
+        copyBtn.disabled = !hasText;
+        fixCopyBtn.disabled = !hasText;
+      }
+
+      // When new results arrive from speech recognition:
+      recognition.addEventListener("result", (event) => {
+        interimTranscript = ""; // reset interim text
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcriptPiece = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcriptPiece.trim() + ". ";
+          } else {
+            interimTranscript += transcriptPiece;
+          }
+        }
+        // Show final transcript plus any live interim text in a lighter color.
+        transcriptDiv.innerHTML =
+          finalTranscript +
+          '<span style="color: #999;">' +
+          interimTranscript +
+          "</span>";
+        transcriptDiv.scrollTop = transcriptDiv.scrollHeight;
+      });
+
+      // When recognition ends (for any reason), update the display.
+      recognition.addEventListener("end", () => {
+        updateDisplay();
+      });
+
+      // Start transcription
+      startBtn.addEventListener("click", () => {
+        recognition.start();
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+        // Disable fix, clear, copy, and fix-copy buttons during active transcription.
+        fixBtn.disabled = true;
+        clearBtn.disabled = true;
+        copyBtn.disabled = true;
+        fixCopyBtn.disabled = true;
+      });
+
+      // Stop transcription & flush any interim text.
+      stopBtn.addEventListener("click", () => {
+        recognition.stop();
+        // If any interim text remains, flush it into the final transcript.
+        if (interimTranscript.trim().length > 0) {
+          finalTranscript += interimTranscript.trim() + ". ";
+          interimTranscript = "";
+        }
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+        updateDisplay();
+      });
+
+      // Fix text using the smart fix function.
+      fixBtn.addEventListener("click", () => {
+        finalTranscript = smartFixText(finalTranscript);
+        updateDisplay();
+      });
+
+      // Clear transcript.
+      clearBtn.addEventListener("click", () => {
+        finalTranscript = "";
+        updateDisplay();
+      });
+
+      // Copy transcript to clipboard.
+      copyBtn.addEventListener("click", () => {
+        if (finalTranscript.trim().length > 0) {
+          navigator.clipboard
+            .writeText(finalTranscript)
+            .then(() => {
+              alert("Transcript copied to clipboard!");
+            })
+            .catch((err) => {
+              console.error("Failed to copy text: ", err);
+            });
+        }
+      });
+
+      // Fix text and copy the fixed transcript.
+      fixCopyBtn.addEventListener("click", () => {
+        if (finalTranscript.trim().length > 0) {
+          finalTranscript = smartFixText(finalTranscript);
+          updateDisplay();
+          navigator.clipboard
+            .writeText(finalTranscript)
+            .then(() => {
+              alert("Fixed transcript copied to clipboard!");
+            })
+            .catch((err) => {
+              console.error("Failed to copy fixed text: ", err);
+            });
+        }
+      });
+
+      // Handle potential recognition errors (e.g. permission issues).
+      recognition.addEventListener("error", (event) => {
+        console.error("Speech recognition error: " + event.error);
+        if (
+          event.error === "not-allowed" ||
+          event.error === "service-not-allowed"
+        ) {
+          alert(
+            "Microphone permissions not granted. The application will not work."
+          );
+          disableButtons();
+        }
+      });
+    </script>
   </body>
 </html>
