@@ -67,22 +67,33 @@ body.dark-theme {
   width: 95%;
   max-width: 1200px;
   min-height: 80vh;
-  background-color: var(--container-bg);
+  background-color: var(--bg-color);
   border-radius: 24px;
-  box-shadow: 0 0 40px var(--container-shadow);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
   padding: 40px;
   position: relative;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out,
-    background-color 0.5s ease;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 0 auto;
+  animation: float 6s ease-in-out infinite;
 }
 .container:hover {
   transform: translateY(-2px);
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.35);
 }
+
+/* Add this keyframe animation for the floating effect if it's not already present */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
 #menu,
 #timerScreen,
 #customInput,
@@ -258,9 +269,11 @@ body.dark-theme #timeDisplay {
     box-shadow 0.5s ease;
   display: flex;
   align-items: center;
+  justify-content: center;
   transform-style: preserve-3d;
   perspective: 1000px;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  min-height: 80px;
 }
 body.dark-theme #questionCounter {
   color: var(--text-color-light);
@@ -269,6 +282,10 @@ body.dark-theme #questionCounter {
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
   transform: rotateX(10deg) rotateY(10deg);
+}
+.question-text {
+  text-align: center;
+  width: 100%;
 }
 .controls {
   display: flex;
@@ -345,8 +362,8 @@ body.dark-theme #questionCounter {
     var(--back-arrow-end)
   );
   color: var(--text-color-light);
-  padding: 15px 20px;
-  border-radius: 12px;
+  padding: 18px 24px;
+  border-radius: 14px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -365,7 +382,7 @@ body.dark-theme #questionCounter {
   );
   transform: scale(1.1);
   box-shadow: 0 8px 20px rgba(255, 59, 59, 0.35);
-  transform: translateZ(20px) rotateY(10deg);
+  transform: translateZ(24px) rotateY(10deg);
 }
 #customInput {
   animation: fadeIn 0.5s forwards;
@@ -618,7 +635,7 @@ button:focus {
   justify-content: center;
   border-radius: 50%;
   transition: opacity 0.3s ease;
-  animation: float 6s ease-in-out infinite;
+  animation: floatOpposite 6s ease-in-out infinite;
   margin-left: 10px;
 }
 .eye-toggle:hover {
