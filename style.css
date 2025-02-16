@@ -658,7 +658,7 @@ button:focus {
   padding: 30px;
   animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.speed-subtitle {
+#speedSelection .speed-subtitle {
   font-size: 1.4rem;
   color: var(--speed-subtitle-color);
   margin-bottom: 40px;
@@ -719,6 +719,11 @@ button:focus {
     opacity: 1;
     transform: translateY(0);
   }
+}
+#speedSelection h2 {
+  color: white; /* Changed to white and removed var(--text-color-dark) */
+  font-size: 2.5rem;
+  margin-bottom: 20px;
 }
 #settingsPage {
   display: none;
