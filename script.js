@@ -53,8 +53,9 @@ function setTheme(color) {
 }
 
 function applyTheme(color) {
-  if (!color) {
-    color = getCookie("theme") || "#3498db"; // Default blue if no theme cookie, fallback to blue for light theme
+  let themeColor = color;
+  if (!themeColor) {
+    themeColor = getCookie("theme") || "#3498db"; // Default blue if no theme cookie, fallback to blue for light theme
   }
   document.documentElement.style.setProperty(
     "--theme-color-dark",
@@ -149,6 +150,37 @@ function rgbToHex(r, g, b) {
 function componentToHex(c) {
   let hex = c.toString(16);
   return hex.length == 1 ? "0" + hex : hex;
+}
+
+// Fullscreen function
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    } else if (document.documentElement.mozRequestFullScreen) {
+      // Firefox
+      document.documentElement.mozRequestFullScreen();
+    } else if (document.documentElement.webkitRequestFullscreen) {
+      // Chrome, Safari and Opera
+      document.documentElement.webkitRequestFullscreen();
+    } else if (document.documentElement.msRequestFullscreen) {
+      // IE/Edge
+      document.documentElement.msRequestFullscreen();
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      // Firefox
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      // Chrome, Safari and Opera
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      // IE/Edge
+      document.msExitFullscreen();
+    }
+  }
 }
 
 // Show speed selection on first visit and apply theme on load
@@ -376,7 +408,7 @@ function showCustomInput() {
   document.getElementById("menu").style.display = "none";
   document.getElementById("customInput").style.display = "block";
   document.getElementById("settingsPage").style.display = "none"; // Hide settings if open
-  document.getElementById("speedSelection").style.display = "none"; // Hide settings if open
+  document.getElementById("speedSelection").style.display = "none"; // Hide speed selection if open
 }
 
 function startCustomTimer() {
@@ -403,7 +435,7 @@ function goBack() {
   document.getElementById("customInput").style.display = "none";
   document.getElementById("backArrow").style.display = "none";
   document.getElementById("settingsPage").style.display = "none"; // Hide settings if open
-  document.getElementById("speedSelection").style.display = "none"; // Hide settings if open
+  document.getElementById("speedSelection").style.display = "none"; // Hide speed selection if open
 }
 
 function openSettings() {
