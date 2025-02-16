@@ -6,10 +6,26 @@ let totalQuestions = 0;
 let initialTime = 0;
 let currentFullTestSection = 0;
 const fullTestSections = [
-  { name: "English", time: 45, questions: 75 },
-  { name: "Math", time: 60, questions: 60 },
-  { name: "Reading", time: 35, questions: 40 },
-  { name: "Science", time: 35, questions: 40 },
+  {
+    name: "English",
+    time: 45,
+    questions: 75,
+  },
+  {
+    name: "Math",
+    time: 60,
+    questions: 60,
+  },
+  {
+    name: "Reading",
+    time: 35,
+    questions: 40,
+  },
+  {
+    name: "Science",
+    time: 35,
+    questions: 40,
+  },
 ];
 
 // Cookie handling functions
@@ -38,7 +54,7 @@ function setTheme(color) {
 
 function applyTheme(color) {
   if (!color) {
-    color = getCookie("theme") || "#3498db"; // Default blue if no theme cookie
+    color = getCookie("theme") || "#3498db"; // Default blue if no theme cookie, fallback to blue for light theme
   }
   document.documentElement.style.setProperty(
     "--theme-color-dark",
@@ -58,16 +74,15 @@ function applyTheme(color) {
     "--progress-bar-end",
     getLighterShade(color, 0.3)
   );
-  // Calculate a slightly darker shade for back arrow start
-  const backArrowStart = getDarkerShade(color, 0.4); // Adjust darkness as needed
+  // Make back arrow theme aware
   document.documentElement.style.setProperty(
     "--back-arrow-start",
-    backArrowStart
+    getBackArrowStartColor(color)
   );
   document.documentElement.style.setProperty(
     "--back-arrow-end",
-    getDarkerShade(backArrowStart, 0.2)
-  ); // Even darker for end
+    getBackArrowEndColor(color)
+  );
 
   // Set --primary-rgb for potential rgba use if needed in CSS, using the original color
   const rgb = hexToRgb(color);
@@ -77,9 +92,27 @@ function applyTheme(color) {
   );
 }
 
+// Function to determine back arrow start color based on theme
+function getBackArrowStartColor(themeColor) {
+  const rgb = hexToRgb(themeColor);
+  const isDarkTheme = (rgb.r + rgb.g + rgb.b) / 3 < 128; // Simple darkness check
+  return isDarkTheme ? "#e63737" : "#ff3b3b"; // Dark theme: desaturated red, Light theme: bright red
+}
+
+// Function to determine back arrow end color based on theme
+function getBackArrowEndColor(themeColor) {
+  const rgb = hexToRgb(themeColor);
+  const isDarkTheme = (rgb.r + rgb.g + rgb.b) / 3 < 128; // Simple darkness check
+  return isDarkTheme ? "#cc3333" : "#e63737"; // Dark theme: darker desaturated red, Light theme: darker bright red
+}
+
 // Helper functions for color manipulation
 function getDarkerShade(color, factor) {
-  let [r, g, b] = hexToRgb(color);
+  const rgb = hexToRgb(color); // Get RGB object
+  let r = rgb.r;
+  let g = rgb.g;
+  let b = rgb.b;
+
   r = Math.max(0, Math.round(r * (1 - factor)));
   g = Math.max(0, Math.round(g * (1 - factor)));
   b = Math.max(0, Math.round(b * (1 - factor)));
@@ -87,7 +120,10 @@ function getDarkerShade(color, factor) {
 }
 
 function getLighterShade(color, factor) {
-  let [r, g, b] = hexToRgb(color);
+  const rgb = hexToRgb(color); // Get RGB object
+  let r = rgb.r;
+  let g = rgb.g;
+  let b = rgb.b;
   r = Math.min(255, Math.round(r + (255 - r) * factor));
   g = Math.min(255, Math.round(g + (255 - g) * factor));
   b = Math.min(255, Math.round(b + (255 - b) * factor));
@@ -99,7 +135,11 @@ function hexToRgb(hex) {
   let r = parseInt(hex.substring(0, 2), 16);
   let g = parseInt(hex.substring(2, 4), 16);
   let b = parseInt(hex.substring(4, 6), 16);
-  return { r: r, g: g, b: b };
+  return {
+    r: r,
+    g: g,
+    b: b,
+  };
 }
 
 function rgbToHex(r, g, b) {
@@ -118,11 +158,12 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("menu").style.display = "none";
     document.getElementById("speedSelection").style.display = "block";
   }
-  // Initialize pace setting in settings page if settings is already open on refresh
+  // Initialize settings page
   initializeSettingsPage();
 });
 
 function setSpeedPreference(speedValue) {
+  console.log("setSpeedPreference called with speedValue:", speedValue); // Debugging Log
   setCookie("speed", speedValue);
   document.getElementById("speedSelection").style.display = "none";
   document.getElementById("menu").style.display = "flex";
@@ -133,7 +174,8 @@ function setSpeedPreference(speedValue) {
   // Show visual confirmation
   const confirmation = document.createElement("div");
   confirmation.textContent = "⏱️ Pace preference saved!";
-  confirmation.style.position = "fixed";
+  confirmation.style.position = "absolute"; // Changed to absolute
+  confirmation.style.top = "auto"; // Reset top property
   confirmation.style.bottom = "20px";
   confirmation.style.right = "20px";
   confirmation.style.background = "#3399ff";
@@ -141,10 +183,16 @@ function setSpeedPreference(speedValue) {
   confirmation.style.padding = "15px 25px";
   confirmation.style.borderRadius = "8px";
   confirmation.style.boxShadow = "0 4px 15px rgba(51, 153, 255, 0.3)";
-  confirmation.style.zIndex = "1000";
+  confirmation.style.zIndex = "1002"; // Increased z-index
   confirmation.style.fontWeight = "500";
-  document.body.appendChild(confirmation);
+  document.querySelector(".container").appendChild(confirmation); // Append to container
   setTimeout(() => confirmation.remove(), 2000);
+}
+
+// Pace preference from settings page dropdown
+function setPacePreference(speedValue) {
+  console.log("setPacePreference called with speedValue:", speedValue); // Debugging Log
+  setSpeedPreference(parseInt(speedValue)); // Reuse the original setSpeedPreference
 }
 
 function startTimer(sectionName, durationMinutes, numQuestions) {
@@ -328,7 +376,7 @@ function showCustomInput() {
   document.getElementById("menu").style.display = "none";
   document.getElementById("customInput").style.display = "block";
   document.getElementById("settingsPage").style.display = "none"; // Hide settings if open
-  document.getElementById("speedSelection").style.display = "none"; // Hide speed selection if open
+  document.getElementById("speedSelection").style.display = "none"; // Hide settings if open
 }
 
 function startCustomTimer() {
@@ -355,15 +403,15 @@ function goBack() {
   document.getElementById("customInput").style.display = "none";
   document.getElementById("backArrow").style.display = "none";
   document.getElementById("settingsPage").style.display = "none"; // Hide settings if open
-  document.getElementById("speedSelection").style.display = "none"; // Hide speed selection if open
+  document.getElementById("speedSelection").style.display = "none"; // Hide settings if open
 }
 
 function openSettings() {
   document.getElementById("settingsPage").style.display = "flex";
-  document.getElementById("menu").style.display = "none";
+  // document.getElementById("menu").style.display = "none"; // <-- COMMENTED OUT THIS LINE
   document.getElementById("timerScreen").style.display = "none";
   document.getElementById("customInput").style.display = "none";
-  document.getElementById("speedSelection").style.display = "none"; // Hide speed selection if open
+  document.getElementById("speedSelection").style.display = "none"; // Hide settings if open
   document.getElementById("backArrow").style.display = "none";
 
   initializeSettingsPage();
@@ -381,17 +429,11 @@ function initializeSettingsPage() {
 
 function populatePaceSettings() {
   const savedSpeed = getCookie("speed");
+  const paceSelect = document.getElementById("paceSelect");
   if (savedSpeed !== null) {
-    const speedOptions = document.querySelectorAll(
-      "#settingsPage .speed-options button"
-    );
-    speedOptions.forEach((option, index) => {
-      if (index === parseInt(savedSpeed)) {
-        option.classList.add("selected"); // Or however you want to visually indicate selection
-      } else {
-        option.classList.remove("selected");
-      }
-    });
+    paceSelect.value = savedSpeed;
+  } else {
+    paceSelect.value = "0"; // Default to "Right on Time" if no cookie
   }
 }
 
