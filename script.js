@@ -57,50 +57,59 @@ function applyTheme(color) {
   if (!themeColor) {
     themeColor = getCookie("theme") || "#3498db"; // Default blue if no theme cookie, fallback to blue for light theme
   }
+  // Debugging log to check the value of themeColor
+  console.log("applyTheme - themeColor:", themeColor);
+  if (!themeColor) {
+    console.error("applyTheme - themeColor is still falsy after fallback!");
+    return; // Exit if themeColor is still not set
+  }
   document.documentElement.style.setProperty(
     "--theme-color-dark",
-    getDarkerShade(color, 0.3)
+    getDarkerShade(themeColor, 0.3)
   );
   document.documentElement.style.setProperty(
     "--theme-color-light",
-    getLighterShade(color, 0.1)
+    getLighterShade(themeColor, 0.1)
   );
-  document.documentElement.style.setProperty("--primary-color", color);
+  document.documentElement.style.setProperty("--primary-color", themeColor);
   document.documentElement.style.setProperty(
     "--primary-hover-color",
-    getDarkerShade(color, 0.2)
+    getDarkerShade(themeColor, 0.2)
   );
-  document.documentElement.style.setProperty("--progress-bar-start", color);
+  document.documentElement.style.setProperty(
+    "--progress-bar-start",
+    themeColor
+  );
   document.documentElement.style.setProperty(
     "--progress-bar-end",
-    getLighterShade(color, 0.3)
+    getLighterShade(themeColor, 0.3)
   );
   // Make back arrow theme aware
   document.documentElement.style.setProperty(
     "--back-arrow-start",
-    getBackArrowStartColor(color)
+    getBackArrowStartColor(themeColor)
   );
   document.documentElement.style.setProperty(
     "--back-arrow-end",
-    getBackArrowEndColor(color)
+    getBackArrowEndColor(themeColor)
   );
 
-  // Set --primary-rgb for potential rgba use if needed in CSS, using the original color
-  const rgb = hexToRgb(color);
+  // Set --primary-rgb for potential rgba use if needed in CSS, using the original themeColor
+  const rgb = hexToRgb(themeColor);
   document.documentElement.style.setProperty(
     "--primary-rgb",
     `${rgb.r}, ${rgb.g}, ${rgb.b}`
   );
 }
 
-// Function to determine back arrow start color based on theme
+// Function to determine back arrow start color based on themeColor
 function getBackArrowStartColor(themeColor) {
   const rgb = hexToRgb(themeColor);
   const isDarkTheme = (rgb.r + rgb.g + rgb.b) / 3 < 128; // Simple darkness check
   return isDarkTheme ? "#e63737" : "#ff3b3b"; // Dark theme: desaturated red, Light theme: bright red
 }
 
-// Function to determine back arrow end color based on theme
+// Function to determine back arrow end color based on themeColor
 function getBackArrowEndColor(themeColor) {
   const rgb = hexToRgb(themeColor);
   const isDarkTheme = (rgb.r + rgb.g + rgb.b) / 3 < 128; // Simple darkness check
@@ -132,6 +141,11 @@ function getLighterShade(color, factor) {
 }
 
 function hexToRgb(hex) {
+  // Defensive check: Ensure hex is a string and not empty
+  if (typeof hex !== "string" || !hex) {
+    console.error("hexToRgb - Invalid hex value:", hex);
+    return { r: 0, g: 0, b: 0 }; // Return default black or handle as needed
+  }
   hex = hex.replace("#", "");
   let r = parseInt(hex.substring(0, 2), 16);
   let g = parseInt(hex.substring(2, 4), 16);
@@ -228,7 +242,7 @@ function setSpeedPreference(speedValue) {
 // Pace preference from settings page dropdown
 function setPacePreference(speedValue) {
   console.log("setPacePreference called with speedValue:", speedValue); // Debugging Log
-  setSpeedPreference(parseInt(speedValue)); // Reuse the original setSpeedPreference
+  setPacePreference(parseInt(speedValue)); // Reuse the original setSpeedPreference
 }
 
 function startTimer(sectionName, durationMinutes, numQuestions) {
