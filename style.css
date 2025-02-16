@@ -10,20 +10,42 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  padding: 20px;
+  transition: background 0.5s ease;
   background: linear-gradient(
     145deg,
     var(--theme-color-dark),
     var(--theme-color-light)
   );
-  padding: 20px;
-  transition: background 0.5s ease; /* Smooth theme transition */
 }
 
+/* Dark theme by default */
+body.dark-theme {
+  --theme-color-light: #2c3e50;
+  --theme-color-dark: #1a1a1a;
+  --container-bg: rgba(30, 30, 30, 0.95);
+  --container-shadow: rgba(255, 255, 255, 0.1);
+  --text-color-light: #fff;
+  --text-color-dark: #fff;
+  --question-counter-bg: rgba(40, 40, 40, 0.9);
+  --question-counter-shadow: rgba(255, 255, 255, 0.08);
+  --speed-option-bg: rgba(40, 40, 40, 0.9);
+  --speed-option-shadow: rgba(255, 255, 255, 0.1);
+  --speed-text-color: #fff;
+  --speed-subtitle-color: #fff;
+  --speed-note-color: #999;
+  --back-arrow-start: #e63737;
+  --back-arrow-end: #cc3333;
+}
+
+/* Light theme variables */
 :root {
-  --theme-color-light: #0d151b; /* Default blue theme - light part */
-  --theme-color-dark: #37507b; /* Default blue theme - dark part */
-  --primary-color: #3399ff; /* Default primary button color */
-  --primary-hover-color: #1e7bcc; /* Default button hover color */
+  --theme-color-light: #0d151b;
+  --theme-color-dark: #37507b;
+  --primary-color: #3399ff;
+  --primary-hover-color: #1e7bcc;
   --text-color-light: #f8f9fa;
   --text-color-dark: #999;
   --container-bg: #f8f9fa;
@@ -42,24 +64,6 @@ body {
   --speed-note-color: #999;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --theme-color-light: #2c3e50; /* Dark mode - light part */
-    --theme-color-dark: #1a1a1a; /* Dark mode - dark part */
-    --container-bg: rgba(30, 30, 30, 0.95);
-    --container-shadow: rgba(255, 255, 255, 0.1);
-    --text-color-light: #fff;
-    --text-color-dark: #fff;
-    --question-counter-bg: rgba(40, 40, 40, 0.9);
-    --question-counter-shadow: rgba(255, 255, 255, 0.08);
-    --speed-option-bg: rgba(40, 40, 40, 0.9);
-    --speed-option-shadow: rgba(255, 255, 255, 0.1);
-    --speed-text-color: #fff;
-    --speed-subtitle-color: #fff;
-    --speed-note-color: #999;
-  }
-}
-
 .container {
   width: 95%;
   max-width: 1200px;
@@ -74,7 +78,8 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  animation: float 6s ease-in-out infinite;
+  /* animation: float 6s ease-in-out infinite;  Commented out for testing */
+  margin: 0 auto; /* Added to center container */
 }
 
 .container:hover {
@@ -82,13 +87,20 @@ body {
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.35);
 }
 
+#menu,
+#timerScreen,
+#customInput,
+#speedSelection,
+#settingsPage > div {
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
 #menu {
   display: flex;
   flex-direction: column;
   gap: 25px;
-  max-width: 800px;
-  margin: 0 auto;
-  width: 100%;
 }
 
 #menu button {
@@ -103,6 +115,34 @@ body {
   letter-spacing: 1.5px;
   transition: all 0.3s ease;
   box-shadow: 0 8px 15px var(--button-shadow);
+  position: relative;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background: linear-gradient(
+    145deg,
+    var(--primary-color),
+    var(--primary-hover-color)
+  );
+}
+
+#menu button:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: all 0.6s;
+}
+
+#menu button:hover:before {
+  left: 100%;
 }
 
 #menu button:hover {
@@ -111,14 +151,15 @@ body {
   box-shadow: 0 12px 20px rgba(51, 153, 255, 0.35);
 }
 
+#menu button:active {
+  transform: scale(0.95);
+}
+
 #timerScreen {
   text-align: center;
   display: none;
   padding: 20px;
   animation: fadeIn 0.5s forwards;
-  max-width: 1000px;
-  margin: 0 auto;
-  width: 100%;
 }
 
 @keyframes fadeIn {
@@ -150,6 +191,23 @@ body {
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15);
   font-variant-numeric: tabular-nums;
   letter-spacing: 2px;
+  position: relative;
+  animation: pulse 2s ease-in-out infinite;
+  background: linear-gradient(45deg, #333, #666);
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-theme #timeDisplay {
+  background: linear-gradient(45deg, #fff, #ccc);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+#timeDisplay.warning {
+  color: #ff3b3b;
+  animation: shake 0.5s ease-in-out;
 }
 
 .progress-container {
@@ -173,6 +231,40 @@ body {
   border-radius: 15px;
   transition: width 1s ease;
   box-shadow: 0 2px 4px rgba(51, 153, 255, 0.2);
+  position: relative;
+  background: linear-gradient(
+    90deg,
+    var(--progress-bar-start),
+    var(--progress-bar-end),
+    var(--progress-bar-start)
+  );
+  background-size: 200% 100%;
+  animation: gradient 3s linear infinite;
+}
+
+.progress-bar:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: progressShine 2s infinite;
+}
+
+@keyframes progressShine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 #questionCounter {
@@ -187,17 +279,19 @@ body {
     box-shadow 0.5s ease;
   display: flex;
   align-items: center;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-@media (prefers-color-scheme: dark) {
-  #questionCounter {
-    color: var(--text-color-light);
-  }
+body.dark-theme #questionCounter {
+  color: var(--text-color-light);
 }
 
 #questionCounter:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+  transform: rotateX(10deg) rotateY(10deg);
 }
 
 .controls {
@@ -221,6 +315,31 @@ body {
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px var(--button-shadow);
   min-width: 160px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.controls button:after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.2) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.3s;
+}
+
+.controls button:hover:after {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .controls button:hover {
@@ -258,59 +377,96 @@ body {
   );
   color: var(--text-color-light);
   padding: 15px 20px;
-  border-radius: 50%;
+  border-radius: 12px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 6px 15px rgba(255, 59, 59, 0.25);
   transition: all 0.3s ease;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 #backArrow:hover {
-  background: linear-gradient(135deg, #e63737, #cc3333);
+  background: linear-gradient(
+    135deg,
+    var(--back-arrow-end),
+    var(--back-arrow-start)
+  );
   transform: scale(1.1);
   box-shadow: 0 8px 20px rgba(255, 59, 59, 0.35);
+  transform: translateZ(20px) rotateY(10deg);
 }
 
-@media (max-width: 768px) {
-  .container {
-    padding: 20px;
-    min-height: 90vh;
-  }
-  #sectionTitle {
-    font-size: 2.5rem;
-  }
-  #timeDisplay {
-    font-size: 4rem;
-  }
-  #questionCounter {
-    font-size: 1.4rem;
-  }
-  .controls button {
-    padding: 12px 24px;
-    font-size: 1rem;
-    min-width: 140px;
-  }
+#customInput {
+  animation: fadeIn 0.5s forwards;
+  text-align: center;
 }
 
-@media (min-width: 2000px) {
+#customInput input {
+  width: 200px;
+  padding: 12px;
+  margin: 10px;
+  border: 2px solid var(--primary-color);
+  border-radius: 8px;
+  font-size: 1.1rem;
+  transition: all 0.3s;
+  color: var(--text-color-dark); /* ADDED: Explicitly set input text color */
+}
+
+#customInput input:focus {
+  outline: none;
+  border-color: var(--primary-hover-color);
+  box-shadow: 0 0 15px rgba(51, 153, 255, 0.3);
+}
+
+#customInput button {
+  margin: 10px;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(
+    145deg,
+    var(--primary-color),
+    var(--primary-hover-color)
+  );
+  color: var(--text-color-light);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+#customInput button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(51, 153, 255, 0.3);
+}
+
+/* ADDED: Custom Input Labels and Title Styling */
+#customInput h2,
+#customInput label {
+  color: var(--text-color-dark); /* Set labels and title to theme text color */
+}
+
+@media (max-width: 480px) {
   .container {
-    max-width: 1600px;
+    padding: 15px;
+    min-height: 95vh;
   }
-  #sectionTitle {
-    font-size: 4.5rem;
+  #menu button {
+    padding: 15px;
+    font-size: 1.1rem;
   }
   #timeDisplay {
-    font-size: 8rem;
+    font-size: 3.5rem;
   }
-  #questionCounter {
-    font-size: 2.2rem;
+  .controls {
+    flex-direction: column;
+    gap: 15px;
   }
   .controls button {
-    padding: 25px 50px;
-    font-size: 1.6rem;
-    min-width: 200px;
+    width: 100%;
   }
 }
 
@@ -382,243 +538,15 @@ body {
   }
 }
 
-body {
-  background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
-}
-
 .container {
   backdrop-filter: blur(10px);
   background: rgba(248, 249, 250, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-#menu button {
-  position: relative;
-  overflow: hidden;
-  border: 2px solid transparent;
-  background: linear-gradient(
-    145deg,
-    var(--primary-color),
-    var(--primary-hover-color)
-  );
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-#menu button:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  transition: all 0.6s;
-}
-
-#menu button:hover:before {
-  left: 100%;
-}
-
-#menu button:active {
-  transform: scale(0.95);
-}
-
-#timeDisplay {
-  position: relative;
-  animation: pulse 2s ease-in-out infinite;
-  background: linear-gradient(45deg, #333, #666);
-  -webkit-background-clip: text;
-  color: transparent;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-#timeDisplay.warning {
-  color: #ff3b3b;
-  animation: shake 0.5s ease-in-out;
-}
-
-.progress-container {
-  position: relative;
-  overflow: hidden;
-}
-
-.progress-bar {
-  position: relative;
-  background: linear-gradient(
-    90deg,
-    var(--progress-bar-start),
-    var(--progress-bar-end),
-    var(--progress-bar-start)
-  );
-  background-size: 200% 100%;
-  animation: gradient 3s linear infinite;
-}
-
-.progress-bar:after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.4),
-    transparent
-  );
-  animation: progressShine 2s infinite;
-}
-
-@keyframes progressShine {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-#questionCounter {
-  transform-style: preserve-3d;
-  perspective: 1000px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-
-#questionCounter:hover {
-  transform: rotateX(10deg) rotateY(10deg);
-}
-
-.controls button {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.controls button:after {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.2) 0%,
-    transparent 70%
-  );
-  opacity: 0;
-  transform: scale(0.5);
-  transition: all 0.3s;
-}
-
-.controls button:hover:after {
-  opacity: 1;
-  transform: scale(1);
-}
-
-#backArrow {
-  transform-style: preserve-3d;
-  perspective: 1000px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-#backArrow:hover {
-  transform: translateZ(20px) rotateY(10deg);
-}
-
-#customInput {
-  animation: fadeIn 0.5s forwards;
-}
-
-#customInput input {
-  width: 200px;
-  padding: 12px;
-  margin: 10px;
-  border: 2px solid var(--primary-color);
-  border-radius: 8px;
-  font-size: 1.1rem;
-  transition: all 0.3s;
-}
-
-#customInput input:focus {
-  outline: none;
-  border-color: var(--primary-hover-color);
-  box-shadow: 0 0 15px rgba(51, 153, 255, 0.3);
-}
-
-#customInput button {
-  margin: 10px;
-  padding: 12px 24px;
-  font-size: 1.1rem;
-  border: none;
-  border-radius: 8px;
-  background: linear-gradient(
-    145deg,
-    var(--primary-color),
-    var(--primary-hover-color)
-  );
-  color: var(--text-color-light);
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-#customInput button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(51, 153, 255, 0.3);
-}
-
-@media (max-width: 480px) {
-  .container {
-    padding: 15px;
-    min-height: 95vh;
-  }
-  #menu button {
-    padding: 15px;
-    font-size: 1.1rem;
-  }
-  #timeDisplay {
-    font-size: 3.5rem;
-  }
-  .controls {
-    flex-direction: column;
-    gap: 15px;
-  }
-  .controls button {
-    width: 100%;
-  }
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.loading {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 50px;
-  height: 50px;
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid var(--primary-color);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+/* Dark mode container adjustments */
+body.dark-theme .container {
+  background: rgba(30, 30, 30, 0.95);
 }
 
 button:focus {
@@ -637,7 +565,11 @@ button:focus {
   .controls,
   #backArrow,
   #settingsButton,
-  #settingsPage {
+  #settingsPage,
+  #speedSelection,
+  #customInput,
+  #timerScreen,
+  #menu {
     display: none;
   }
 }
@@ -683,9 +615,9 @@ button:focus {
   filter: blur(8px);
 }
 
-/* Speed Selection Styles (Moved to Settings but keeping styles for reuse) */
+/* Speed Selection Styles */
 #speedSelection {
-  display: none; /* Initially hidden, controlled by JS */
+  display: none;
   text-align: center;
   padding: 30px;
   animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -703,8 +635,6 @@ button:focus {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  max-width: 600px;
-  margin: 0 auto;
 }
 
 .speed-option {
@@ -767,19 +697,14 @@ button:focus {
 
 /* Settings Page Styles */
 #settingsPage {
-  display: none; /* Hidden by default, toggled by JS */
-  position: absolute;
+  display: none;
+  position: fixed; /* Changed to fixed */
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(
-    0,
-    0,
-    0,
-    0.5
-  ); /* Semi-transparent background overlay */
-  z-index: 1001; /* Ensure it's on top of other content */
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1001;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -787,17 +712,15 @@ button:focus {
   padding: 20px;
   animation: fadeIn 0.5s forwards;
   text-align: center;
-  color: var(--text-color-light); /* Default text color for settings page */
+  color: var(--text-color-light);
+  border-radius: 24px;
+  backdrop-filter: blur(10px);
 }
 
 #settingsPage > div {
-  background-color: var(
-    --container-bg
-  ); /* Use container background for settings content area */
+  background-color: var(--container-bg);
   padding: 30px;
   border-radius: 20px;
-  max-width: 800px;
-  width: 95%;
   box-shadow: 0 0 30px var(--container-shadow);
 }
 
@@ -807,8 +730,9 @@ button:focus {
   color: var(--text-color-dark);
 }
 
-#settingsPage h3 {
-  font-size: 1.8rem;
+#settingsPage h3,
+.settings-section > label.speed-subtitle {
+  font-size: 1.4rem; /* Adjusted for label as well */
   margin-bottom: 15px;
   color: var(--text-color-dark);
 }
@@ -831,26 +755,33 @@ button:focus {
   border-radius: 50%;
   border: none;
   cursor: pointer;
-  opacity: 0.8;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 1;
+  transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: none;
+}
+
+.theme-color-option.no-arrow {
+  background-image: none !important;
 }
 
 .theme-color-option:hover,
 .theme-color-option:focus {
-  opacity: 1;
+  opacity: 0.8;
   transform: scale(1.1);
-  outline: none; /* Remove default focus outline */
-  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.5); /* Example focus highlight, adjust --primary-rgb */
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.5);
 }
 
-/* Ensure --primary-rgb is set if you want to use rgba with --primary-color.
-   For now, a simpler highlight might be better. */
 .theme-color-option:focus {
-  box-shadow: 0 0 0 3px rgba(51, 153, 255, 0.5); /* Example focus highlight */
+  box-shadow: 0 0 0 4px var(--primary-color);
+  opacity: 1;
 }
 
 #settingsPage button,
-#settingsPage .speed-options button {
+#settingsPage select {
   padding: 15px 30px;
   font-size: 1.2rem;
   border: none;
@@ -862,14 +793,27 @@ button:focus {
   letter-spacing: 1.5px;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px var(--button-shadow);
-  margin-top: 15px; /* Add some margin above the "Back" button */
+  margin-top: 15px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+  background-repeat: no-repeat;
+  background-position-x: 100%;
+  background-position-y: 8px;
+  padding-right: 40px;
 }
 
 #settingsPage button:hover,
-#settingsPage .speed-options button:hover {
+#settingsPage select:hover {
   background: var(--primary-hover-color);
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(51, 153, 255, 0.35);
+}
+
+#settingsPage select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(51, 153, 255, 0.5);
 }
 
 /* Settings Button Style */
@@ -879,21 +823,27 @@ button:focus {
   left: 30px;
   font-size: 1.6rem;
   text-decoration: none;
-  background: var(--primary-color);
+  background: transparent;
   color: var(--text-color-light);
-  padding: 15px;
-  border-radius: 50%;
+  padding: 10px;
+  border-radius: 12px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 6px 15px var(--button-shadow);
+  box-shadow: none;
   transition: all 0.3s ease;
-  border: none; /* Remove default button border */
+  border: none;
+}
+
+#settingsButton:focus {
+  outline: none;
+  animation: none;
+  box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.7);
 }
 
 #settingsButton:hover {
-  background: var(--primary-hover-color);
+  background: rgba(255, 255, 255, 0.1);
   transform: scale(1.1);
-  box-shadow: 0 8px 20px rgba(51, 153, 255, 0.35);
+  box-shadow: none;
 }
