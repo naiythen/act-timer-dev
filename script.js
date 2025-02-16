@@ -186,7 +186,11 @@ function toggleFullscreen() {
 // Show speed selection on first visit and apply theme on load
 document.addEventListener("DOMContentLoaded", function () {
   applyTheme(); // Apply theme on load
-  if (!getCookie("speed") && window.location.pathname === "/") {
+  if (
+    !getCookie("speed") ||
+    getCookie("speed") === null ||
+    getCookie("speed") === undefined
+  ) {
     document.getElementById("menu").style.display = "none";
     document.getElementById("speedSelection").style.display = "block";
   }
@@ -247,6 +251,7 @@ function showTimerScreen(sectionName) {
   document.getElementById("settingsPage").style.display = "none"; // Hide settings if open
   document.getElementById("speedSelection").style.display = "none"; // Hide speed selection if open
   document.getElementById("sectionTitle").textContent = sectionName;
+  document.getElementById("fullscreenButton").style.display = "none"; // Hide full screen icon
 }
 
 function updateDisplay() {
