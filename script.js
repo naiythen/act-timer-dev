@@ -28,7 +28,6 @@ const fullTestSections = [
   },
 ];
 
-// Cookie handling functions
 function getCookie(name) {
   const cookies = document.cookie.split(";");
   for (let cookie of cookies) {
@@ -46,7 +45,6 @@ function setCookie(name, value, days = 365) {
   document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/;SameSite=Lax`;
 }
 
-// Theme handling
 function setTheme(color) {
   setCookie("theme", color);
   applyTheme(color);
@@ -55,13 +53,13 @@ function setTheme(color) {
 function applyTheme(color) {
   let themeColor = color;
   if (!themeColor) {
-    themeColor = getCookie("theme") || "#3498db"; // Default blue if no theme cookie, fallback to blue for light theme
+    themeColor = getCookie("theme") || "#3498db";
   }
-  // Debugging log to check the value of themeColor
+
   console.log("applyTheme - themeColor:", themeColor);
   if (!themeColor) {
     console.error("applyTheme - themeColor is still falsy after fallback!");
-    return; // Exit if themeColor is still not set
+    return;
   }
   document.documentElement.style.setProperty(
     "--theme-color-dark",
@@ -84,7 +82,7 @@ function applyTheme(color) {
     "--progress-bar-end",
     getLighterShade(themeColor, 0.3)
   );
-  // Make back arrow theme aware
+
   document.documentElement.style.setProperty(
     "--back-arrow-start",
     getBackArrowStartColor(themeColor)
@@ -94,7 +92,6 @@ function applyTheme(color) {
     getBackArrowEndColor(themeColor)
   );
 
-  // Set --primary-rgb for potential rgba use if needed in CSS, using the original themeColor
   const rgb = hexToRgb(themeColor);
   document.documentElement.style.setProperty(
     "--primary-rgb",
@@ -102,23 +99,20 @@ function applyTheme(color) {
   );
 }
 
-// Function to determine back arrow start color based on themeColor
 function getBackArrowStartColor(themeColor) {
   const rgb = hexToRgb(themeColor);
-  const isDarkTheme = (rgb.r + rgb.g + rgb.b) / 3 < 128; // Simple darkness check
-  return isDarkTheme ? "#e63737" : "#ff3b3b"; // Dark theme: desaturated red, Light theme: bright red
+  const isDarkTheme = (rgb.r + rgb.g + rgb.b) / 3 < 128;
+  return isDarkTheme ? "#e63737" : "#ff3b3b";
 }
 
-// Function to determine back arrow end color based on themeColor
 function getBackArrowEndColor(themeColor) {
   const rgb = hexToRgb(themeColor);
-  const isDarkTheme = (rgb.r + rgb.g + rgb.b) / 3 < 128; // Simple darkness check
-  return isDarkTheme ? "#cc3333" : "#e63737"; // Dark theme: darker desaturated red, Light theme: darker bright red
+  const isDarkTheme = (rgb.r + rgb.g + rgb.b) / 3 < 128;
+  return isDarkTheme ? "#cc3333" : "#e63737";
 }
 
-// Helper functions for color manipulation
 function getDarkerShade(color, factor) {
-  const rgb = hexToRgb(color); // Get RGB object
+  const rgb = hexToRgb(color);
   let r = rgb.r;
   let g = rgb.g;
   let b = rgb.b;
@@ -130,7 +124,7 @@ function getDarkerShade(color, factor) {
 }
 
 function getLighterShade(color, factor) {
-  const rgb = hexToRgb(color); // Get RGB object
+  const rgb = hexToRgb(color);
   let r = rgb.r;
   let g = rgb.g;
   let b = rgb.b;
@@ -141,10 +135,9 @@ function getLighterShade(color, factor) {
 }
 
 function hexToRgb(hex) {
-  // Defensive check: Ensure hex is a string and not empty
   if (typeof hex !== "string" || !hex) {
     console.error("hexToRgb - Invalid hex value:", hex);
-    return { r: 0, g: 0, b: 0 }; // Return default black or handle as needed
+    return { r: 0, g: 0, b: 0 };
   }
   hex = hex.replace("#", "");
   let r = parseInt(hex.substring(0, 2), 16);
@@ -166,40 +159,32 @@ function componentToHex(c) {
   return hex.length == 1 ? "0" + hex : hex;
 }
 
-// Fullscreen function
 function toggleFullscreen() {
   if (!document.fullscreenElement) {
     if (document.documentElement.requestFullscreen) {
       document.documentElement.requestFullscreen();
     } else if (document.documentElement.mozRequestFullScreen) {
-      // Firefox
       document.documentElement.mozRequestFullScreen();
     } else if (document.documentElement.webkitRequestFullscreen) {
-      // Chrome, Safari and Opera
       document.documentElement.webkitRequestFullscreen();
     } else if (document.documentElement.msRequestFullscreen) {
-      // IE/Edge
       document.documentElement.msRequestFullscreen();
     }
   } else {
     if (document.exitFullscreen) {
       document.exitFullscreen();
     } else if (document.mozCancelFullScreen) {
-      // Firefox
       document.mozCancelFullScreen();
     } else if (document.webkitExitFullscreen) {
-      // Chrome, Safari and Opera
       document.webkitExitFullscreen();
     } else if (document.msExitFullscreen) {
-      // IE/Edge
       document.msExitFullscreen();
     }
   }
 }
 
-// Show speed selection on first visit and apply theme on load
 document.addEventListener("DOMContentLoaded", function () {
-  applyTheme(); // Apply theme on load
+  applyTheme();
   if (
     !getCookie("speed") ||
     getCookie("speed") === null ||
@@ -208,24 +193,23 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("menu").style.display = "none";
     document.getElementById("speedSelection").style.display = "block";
   }
-  // Initialize settings page
+
   initializeSettingsPage();
 });
 
 function setSpeedPreference(speedValue) {
-  console.log("setSpeedPreference called with speedValue:", speedValue); // Debugging Log
+  console.log("setSpeedPreference called with speedValue:", speedValue);
   setCookie("speed", speedValue);
   document.getElementById("speedSelection").style.display = "none";
   document.getElementById("menu").style.display = "flex";
   if (document.getElementById("settingsPage").style.display === "block") {
-    populatePaceSettings(); // Update pace selection in settings if settings page is open
+    populatePaceSettings();
   }
 
-  // Show visual confirmation
   const confirmation = document.createElement("div");
   confirmation.textContent = "⏱️ Pace preference saved!";
-  confirmation.style.position = "absolute"; // Changed to absolute
-  confirmation.style.top = "auto"; // Reset top property
+  confirmation.style.position = "absolute";
+  confirmation.style.top = "auto";
   confirmation.style.bottom = "20px";
   confirmation.style.right = "20px";
   confirmation.style.background = "#3399ff";
@@ -233,16 +217,33 @@ function setSpeedPreference(speedValue) {
   confirmation.style.padding = "15px 25px";
   confirmation.style.borderRadius = "8px";
   confirmation.style.boxShadow = "0 4px 15px rgba(51, 153, 255, 0.3)";
-  confirmation.style.zIndex = "1002"; // Increased z-index
+  confirmation.style.zIndex = "1002";
   confirmation.style.fontWeight = "500";
-  document.querySelector(".container").appendChild(confirmation); // Append to container
+  document.querySelector(".container").appendChild(confirmation);
   setTimeout(() => confirmation.remove(), 2000);
 }
 
-// Pace preference from settings page dropdown
 function setPacePreference(speedValue) {
-  console.log("setPacePreference called with speedValue:", speedValue); // Debugging Log
-  setPacePreference(parseInt(speedValue)); // Reuse the original setSpeedPreference
+
+  console.log("setPacePreference called with speedValue:", speedValue);
+  setCookie("speed", speedValue);
+  populatePaceSettings(); 
+
+  const confirmation = document.createElement("div");
+  confirmation.textContent = "⏱️ Pace preference saved!";
+  confirmation.style.position = "absolute";
+  confirmation.style.top = "auto";
+  confirmation.style.bottom = "20px";
+  confirmation.style.right = "20px";
+  confirmation.style.background = "#3399ff";
+  confirmation.style.color = "white";
+  confirmation.style.padding = "15px 25px";
+  confirmation.style.borderRadius = "8px";
+  confirmation.style.boxShadow = "0 4px 15px rgba(51, 153, 255, 0.3)";
+  confirmation.style.zIndex = "1002";
+  confirmation.style.fontWeight = "500";
+  document.querySelector(".container").appendChild(confirmation);
+  setTimeout(() => confirmation.remove(), 2000);
 }
 
 function startTimer(sectionName, durationMinutes, numQuestions) {
@@ -262,10 +263,10 @@ function showTimerScreen(sectionName) {
   document.getElementById("customInput").style.display = "none";
   document.getElementById("timerScreen").style.display = "block";
   document.getElementById("backArrow").style.display = "flex";
-  document.getElementById("settingsPage").style.display = "none"; // Hide settings if open
-  document.getElementById("speedSelection").style.display = "none"; // Hide speed selection if open
+  document.getElementById("settingsPage").style.display = "none";
+  document.getElementById("speedSelection").style.display = "none";
   document.getElementById("sectionTitle").textContent = sectionName;
-  document.getElementById("fullscreenButton").style.display = "none"; // Hide full screen icon
+  document.getElementById("fullscreenButton").style.display = "none";
 }
 
 function updateDisplay() {
@@ -288,11 +289,9 @@ function updateQuestionGuidance() {
     return;
   }
 
-  // Get speed preference
   const speed = parseInt(getCookie("speed")) || 0;
-  const speedOffset = speed * 5 * 60; // Convert to seconds
+  const speedOffset = speed * 5 * 60;
 
-  // Calculate adjusted time
   const adjustedTime = Math.max(initialTime - speedOffset, 1);
   const timePerQuestion = adjustedTime / totalQuestions;
   const elapsedTime = initialTime - remainingTime;
@@ -426,8 +425,8 @@ function nextSection() {
 function showCustomInput() {
   document.getElementById("menu").style.display = "none";
   document.getElementById("customInput").style.display = "block";
-  document.getElementById("settingsPage").style.display = "none"; // Hide settings if open
-  document.getElementById("speedSelection").style.display = "none"; // Hide speed selection if open
+  document.getElementById("settingsPage").style.display = "none";
+  document.getElementById("speedSelection").style.display = "none";
 }
 
 function startCustomTimer() {
@@ -453,16 +452,16 @@ function goBack() {
   document.getElementById("timerScreen").style.display = "none";
   document.getElementById("customInput").style.display = "none";
   document.getElementById("backArrow").style.display = "none";
-  document.getElementById("settingsPage").style.display = "none"; // Hide settings if open
-  document.getElementById("speedSelection").style.display = "none"; // Hide speed selection if open
+  document.getElementById("settingsPage").style.display = "none";
+  document.getElementById("speedSelection").style.display = "none";
 }
 
 function openSettings() {
   document.getElementById("settingsPage").style.display = "flex";
-  // document.getElementById("menu").style.display = "none"; // <-- COMMENTED OUT THIS LINE
+
   document.getElementById("timerScreen").style.display = "none";
   document.getElementById("customInput").style.display = "none";
-  document.getElementById("speedSelection").style.display = "none"; // Hide settings if open
+  document.getElementById("speedSelection").style.display = "none";
   document.getElementById("backArrow").style.display = "none";
 
   initializeSettingsPage();
@@ -484,7 +483,7 @@ function populatePaceSettings() {
   if (savedSpeed !== null) {
     paceSelect.value = savedSpeed;
   } else {
-    paceSelect.value = "0"; // Default to "Right on Time" if no cookie
+    paceSelect.value = "0";
   }
 }
 
@@ -494,7 +493,7 @@ function populateThemeSettings() {
     const themeOptions = document.querySelectorAll(".theme-color-option");
     themeOptions.forEach((option) => {
       if (option.getAttribute("data-color") === savedTheme) {
-        option.classList.add("selected-theme"); // Optional visual feedback for selected theme
+        option.classList.add("selected-theme");
       } else {
         option.classList.remove("selected-theme");
       }
