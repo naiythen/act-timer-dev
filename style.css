@@ -10,7 +10,6 @@
 html,
 body {
   height: 100%;
-  /* Removed overflow: hidden to allow scrolling if content exceeds viewport */
 }
 
 /* Body layout and background */
@@ -163,7 +162,7 @@ body.dark-theme {
     var(--primary-hover-color)
   );
   width: 95%;
-  max-width: 750px; /* Increased max-width further */
+  max-width: 750px;
   text-align: center;
   font-weight: 500;
 }
@@ -299,12 +298,35 @@ body.dark-theme #timeDisplay {
   box-shadow: 0 4px 10px var(--question-pacing-shadow);
   transition: transform 0.3s ease, background-color 0.5s ease,
     box-shadow 0.5s ease;
-  display: inline-block;
+  display: inline-flex; /* Use inline-flex to align items */
+  align-items: center; /* Vertically align items */
   min-width: 300px;
   text-align: center;
 }
 #questionPacing .separator {
   margin: 0 5px;
+}
+/* Style for the text content wrapper */
+#pacingTextContent {
+  transition: filter 0.3s ease; /* Smooth transition for blur */
+}
+/* Style for the visibility toggle icon */
+.pacing-visibility-toggle {
+  font-size: 1.2em; /* Adjust icon size */
+  margin-left: 10px; /* Space between text and icon */
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  user-select: none; /* Prevent text selection */
+}
+/* Style for blurred text */
+#questionPacing.blurred #pacingTextContent {
+  filter: blur(4px);
+  user-select: none; /* Prevent selecting blurred text */
+  pointer-events: none; /* Prevent interaction with blurred text */
+}
+/* Style for the icon when text is blurred */
+#questionPacing.blurred .pacing-visibility-toggle {
+  opacity: 0.6; /* Dim the icon slightly */
 }
 
 /* Timer control buttons container */
