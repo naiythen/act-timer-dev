@@ -48,6 +48,7 @@
         </div>
         <p class="speed-note">You can change this later in settings</p>
       </div>
+
       <div id="menu">
         <button onclick="startTimer('English', 45, 75)">
           English (45 min)
@@ -62,134 +63,117 @@
         <button onclick="startFullTest()">Full ACT Test</button>
         <button onclick="showCustomInput()">Custom</button>
       </div>
+
       <div id="customInput" style="display: none; text-align: center">
         <h2>Custom Timer</h2>
         <label for="customTime">Time (minutes):</label>
-        <input
-          type="number"
-          id="customTime"
-          placeholder="Enter time in minutes"
-        />
-        <br /><br />
-        <label for="customQuestions">Number of Questions:</label>
-        <input
-          type="number"
-          id="customQuestions"
-          placeholder="Enter number of questions"
-        />
-        <br /><br />
-        <button onclick="startCustomTimer()">Start</button>
-        <button onclick="goBack()">Cancel</button>
+        <input type="number" id="customTime" placeholder="e.g., 10" />
+        <label for="customQuestions">Questions (optional):</label>
+        <input type="number" id="customQuestions" placeholder="e.g., 15" />
+        <div class="custom-buttons">
+          <button onclick="startCustomTimer()">Start Custom Timer</button>
+          <button onclick="backToMenu()">Cancel</button>
+        </div>
       </div>
-      <div id="timerScreen">
-        <h1 id="sectionTitle"></h1>
+
+      <div id="timerScreen" style="display: none">
+        <h1 id="sectionTitle">Section</h1>
         <div id="timeDisplay">00:00</div>
         <div class="progress-container">
-          <div class="progress-bar" id="progressBar"></div>
+          <div class="progress-bar"></div>
         </div>
-        <div id="questionCounter"></div>
-        <div class="controls">
-          <button id="pauseBtn" onclick="pauseTimer()">Pause</button>
-          <button id="resumeBtn" onclick="resumeTimer()">Resume</button>
-          <button id="resetBtn" onclick="resetTimer()">Reset</button>
+        <div id="questionCounter">Questions: 0 | Pace: 0s/q</div>
+        <div class="timer-controls">
+          <button id="pauseResumeButton" onclick="pauseResumeTimer()">
+            Pause
+          </button>
+          <button onclick="stopTimer()">Stop</button>
         </div>
-        <div id="nextSectionContainer" style="display: none">
-          <button onclick="nextSection()">Next Section</button>
+        <div id="fullTestProgress" style="display: none">
+          Section 1 of 4
         </div>
       </div>
-      <a
-        id="backArrow"
-        href="javascript:void(0)"
-        onclick="goBack()"
-        style="display: none"
-        >←</a
-      >
+
+      <button id="backArrow" onclick="stopTimer()" style="display: none">
+        ← Back
+      </button>
+
       <div id="settingsPage" style="display: none">
-        <h2>⚙️ Settings</h2>
-        <div class="settings-section">
-          <h3>Pace</h3>
-          <label for="paceSelect" class="speed-subtitle"
-            >Choose how early you want to finish sections:</label
-          >
-          <select id="paceSelect" onchange="setPacePreference(this.value)">
-            <option value="0">Right on Time</option>
-            <option value="1">5 Minutes Early</option>
-            <option value="2">10 Minutes Early</option>
-          </select>
-        </div>
-        <div class="settings-section">
-          <h3>Theme Color</h3>
-          <div class="theme-colors">
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #3498db"
-              data-color="#3498db"
-              onclick="setTheme('#3498db')"
-            ></button>
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #e74c3c"
-              data-color="#e74c3c"
-              onclick="setTheme('#e74c3c')"
-            ></button>
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #f39c12"
-              data-color="#f39c12"
-              onclick="setTheme('#f39c12')"
-            ></button>
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #f1c40f"
-              data-color="#f1c40f"
-              onclick="setTheme('#f1c40f')"
-            ></button>
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #2ecc71"
-              data-color="#2ecc71"
-              onclick="setTheme('#2ecc71')"
-            ></button>
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #1abc9c"
-              data-color="#1abc9c"
-              onclick="setTheme('#1abc9c')"
-            ></button>
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #9b59b6"
-              data-color="#9b59b6"
-              onclick="setTheme('#9b59b6')"
-            ></button>
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #34495e"
-              data-color="#34495e"
-              onclick="setTheme('#34495e')"
-            ></button>
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #e91e63"
-              data-color="#e91e63"
-              onclick="setTheme('#e91e63')"
-            ></button>
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #795548"
-              data-color="#795548"
-              onclick="setTheme('#795548')"
-            ></button>
-            <button
-              class="theme-color-option no-arrow"
-              style="background-color: #95a5a6"
-              data-color="#95a5a6"
-              onclick="setTheme('#95a5a6')"
-            ></button>
+        <div class="settings-content">
+          <h2>Settings</h2>
+
+          <div class="setting-item">
+            <label for="paceSelect">Pace Preference:</label>
+            <select id="paceSelect" onchange="updatePaceSetting(this.value)">
+              <option value="0">Right on Time</option>
+              <option value="1">5 Minutes Early</option>
+              <option value="2">10 Minutes Early</option>
+            </select>
           </div>
+
+          <div class="setting-item">
+            <label>Theme Color:</label>
+            <div class="theme-color-options">
+              <button
+                class="theme-color-option no-arrow"
+                style="background-color: #3498db"
+                data-color="#3498db"
+                onclick="setTheme('#3498db')"
+              ></button>
+              <button
+                class="theme-color-option no-arrow"
+                style="background-color: #2ecc71"
+                data-color="#2ecc71"
+                onclick="setTheme('#2ecc71')"
+              ></button>
+              <button
+                class="theme-color-option no-arrow"
+                style="background-color: #e74c3c"
+                data-color="#e74c3c"
+                onclick="setTheme('#e74c3c')"
+              ></button>
+              <button
+                class="theme-color-option no-arrow"
+                style="background-color: #f1c40f"
+                data-color="#f1c40f"
+                onclick="setTheme('#f1c40f')"
+              ></button>
+              <button
+                class="theme-color-option no-arrow"
+                style="background-color: #9b59b6"
+                data-color="#9b59b6"
+                onclick="setTheme('#9b59b6')"
+              ></button>
+              <button
+                class="theme-color-option no-arrow"
+                style="background-color: #1abc9c"
+                data-color="#1abc9c"
+                onclick="setTheme('#1abc9c')"
+              ></button>
+              <button
+                class="theme-color-option no-arrow"
+                style="background-color: #e91e63"
+                data-color="#e91e63"
+                onclick="setTheme('#e91e63')"
+              ></button>
+              <button
+                class="theme-color-option no-arrow"
+                style="background-color: #795548"
+                data-color="#795548"
+                onclick="setTheme('#795548')"
+              ></button>
+              <button
+                class="theme-color-option no-arrow"
+                style="background-color: #95a5a6"
+                data-color="#95a5a6"
+                onclick="setTheme('#95a5a6')"
+              ></button>
+            </div>
+          </div>
+          <button onclick="closeSettings()">Back to Menu</button>
         </div>
-        <button onclick="closeSettings()">Back to Timer</button>
       </div>
+
       <button
         id="settingsButton"
         onclick="openSettings()"
@@ -197,6 +181,7 @@
       >
         ⚙️
       </button>
+
       <button
         id="fullscreenButton"
         onclick="toggleFullscreen()"
@@ -215,10 +200,13 @@
         >
           <path
             d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"
-          ></path>
+          />
         </svg>
       </button>
     </div>
+
+    <audio id="alarmSound" src="chime.mp3" preload="auto"></audio>
+
     <script src="script.js"></script>
   </body>
 </html>

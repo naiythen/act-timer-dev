@@ -1,20 +1,25 @@
+/* General Reset and Font */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
+
+/* Body and HTML base styles */
 html,
 body {
   height: 100%;
-  overflow-x: hidden;
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
+
+/* Body layout and background */
 body {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-size: 400% 400%;
+  background-size: 400% 400%; /* For gradient animation */
   animation: gradient 15s ease infinite;
   padding: 20px;
   transition: background 0.5s ease;
@@ -22,68 +27,93 @@ body {
     145deg,
     var(--theme-color-dark),
     var(--theme-color-light)
-  );
+  ); /* Default gradient */
 }
+
+/* Dark Theme Specific Variables */
 body.dark-theme {
-  --theme-color-light: #2c3e50;
-  --theme-color-dark: #1a1a1a;
-  --container-bg: rgba(30, 30, 30, 0.95);
-  --container-shadow: rgba(255, 255, 255, 0.1);
-  --text-color-light: #fff;
-  --text-color-dark: #fff;
-  --question-counter-bg: rgba(40, 40, 40, 0.9);
-  --question-counter-shadow: rgba(255, 255, 255, 0.08);
-  --speed-option-bg: rgba(40, 40, 40, 0.9);
-  --speed-option-shadow: rgba(255, 255, 255, 0.1);
-  --speed-text-color: #fff;
-  --speed-subtitle-color: #fff;
-  --speed-note-color: #999;
-  --back-arrow-start: #e63737;
-  --back-arrow-end: #cc3333;
+  --theme-color-light: #2c3e50; /* Lighter shade for dark theme gradient */
+  --theme-color-dark: #1a1a1a; /* Darker shade for dark theme gradient */
+  --container-bg: rgba(30, 30, 30, 0.95); /* Dark container background */
+  --container-shadow: rgba(255, 255, 255, 0.1); /* Lighter shadow for dark */
+  --text-color-light: #fff; /* Light text for dark theme */
+  --text-color-dark: #fff; /* Consistent light text */
+  --question-counter-bg: rgba(40, 40, 40, 0.9); /* Darker counter background */
+  --question-counter-shadow: rgba(255, 255, 255, 0.08); /* Subtle light shadow */
+  --speed-option-bg: rgba(40, 40, 40, 0.9); /* Dark speed option background */
+  --speed-option-shadow: rgba(255, 255, 255, 0.1); /* Light shadow */
+  --speed-text-color: #fff; /* Light text */
+  --speed-subtitle-color: #bbb; /* Slightly dimmer subtitle */
+  --speed-note-color: #999; /* Dim note text */
+  --back-arrow-start: #e63737; /* Red gradient start */
+  --back-arrow-end: #cc3333; /* Red gradient end */
+  --settings-bg: rgba(40, 40, 40, 0.98); /* Dark settings background */
+  --settings-text: #eee; /* Light settings text */
+  --settings-label: #bbb; /* Dimmer settings label */
+  --select-bg: #555; /* Dark select background */
+  --select-text: #fff; /* Light select text */
+  --select-border: #777; /* Border for select */
+  --theme-option-border: #555; /* Border for theme options */
+  --theme-option-selected-border: #fff; /* White border for selected theme */
 }
+
+/* Default Theme Variables (Light Theme) */
 :root {
-  --theme-color-light: #0d151b;
-  --theme-color-dark: #37507b;
-  --primary-color: #3399ff;
-  --primary-hover-color: #1e7bcc;
-  --text-color-light: #f8f9fa;
-  --text-color-dark: #999;
-  --container-bg: #f8f9fa;
-  --container-shadow: rgba(0, 0, 0, 0.25);
-  --button-shadow: rgba(51, 153, 255, 0.25);
-  --question-counter-bg: #fff;
-  --question-counter-shadow: rgba(0, 0, 0, 0.08);
-  --progress-bar-start: #3399ff;
-  --progress-bar-end: #66b3ff;
-  --back-arrow-start: #ff3b3b;
-  --back-arrow-end: #e63737;
-  --speed-option-bg: #fff;
-  --speed-option-shadow: rgba(0, 0, 0, 0.1);
-  --speed-text-color: #333;
-  --speed-subtitle-color: #666;
-  --speed-note-color: #999;
+  --theme-color-light: #e0eafc; /* Lighter shade for light theme gradient */
+  --theme-color-dark: #769fcd; /* Darker shade for light theme gradient */
+  --primary-color: #3399ff; /* Primary blue */
+  --primary-hover-color: #1e7bcc; /* Darker blue on hover */
+  --text-color-light: #f8f9fa; /* Very light text (often for buttons) */
+  --text-color-dark: #333; /* Dark text for content */
+  --container-bg: rgba(255, 255, 255, 0.95); /* Light container background */
+  --container-shadow: rgba(0, 0, 0, 0.15); /* Subtle dark shadow */
+  --button-shadow: rgba(51, 153, 255, 0.25); /* Shadow for primary buttons */
+  --question-counter-bg: #fff; /* White counter background */
+  --question-counter-shadow: rgba(0, 0, 0, 0.08); /* Subtle shadow */
+  --progress-bar-start: #3399ff; /* Progress bar gradient start */
+  --progress-bar-end: #66b3ff; /* Progress bar gradient end */
+  --back-arrow-start: #ff3b3b; /* Red gradient start */
+  --back-arrow-end: #e63737; /* Red gradient end */
+  --speed-option-bg: #fff; /* White speed option background */
+  --speed-option-shadow: rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  --speed-text-color: #333; /* Dark text */
+  --speed-subtitle-color: #666; /* Medium gray subtitle */
+  --speed-note-color: #999; /* Light gray note */
+  --settings-bg: rgba(245, 245, 245, 0.98); /* Light settings background */
+  --settings-text: #333; /* Dark settings text */
+  --settings-label: #555; /* Medium gray settings label */
+  --select-bg: #fff; /* White select background */
+  --select-text: #333; /* Dark select text */
+  --select-border: #ccc; /* Light border for select */
+  --theme-option-border: #ddd; /* Light border for theme options */
+  --theme-option-selected-border: #3399ff; /* Primary color border for selected */
+  --primary-rgb: 51, 153, 255; /* RGB for primary color (used in rgba) */
 }
+
+/* Main content container */
 .container {
   width: 95%;
   max-width: 1200px;
-  min-height: 80vh;
-  background-color: var(--bg-color);
+  min-height: 80vh; /* Ensure it takes up significant vertical space */
+  background-color: var(--container-bg); /* Use theme variable */
   border-radius: 24px;
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 40px var(--container-shadow); /* Use theme variable */
   padding: 40px;
   position: relative;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out,
+    background-color 0.5s ease; /* Smooth transitions */
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  animation: float 6s ease-in-out infinite;
-}
-.container:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.35);
+  justify-content: center; /* Center content vertically */
+  animation: float 6s ease-in-out infinite; /* Subtle floating animation */
 }
 
-/* Add this keyframe animation for the floating effect if it's not already present */
+.container:hover {
+  transform: translateY(-2px); /* Slight lift on hover */
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.35); /* Enhanced shadow on hover */
+}
+
+/* Floating animation */
 @keyframes float {
   0%,
   100% {
@@ -94,41 +124,61 @@ body.dark-theme {
   }
 }
 
+/* Background gradient animation */
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Max width for content sections */
 #menu,
 #timerScreen,
 #customInput,
 #speedSelection,
-#settingsPage > div {
+#settingsPage > .settings-content {
+  /* Target the inner div */
   max-width: 800px;
-  margin: 0 auto;
+  margin: 0 auto; /* Center horizontally */
   width: 100%;
 }
+
+/* Menu layout */
 #menu {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 25px; /* Space between buttons */
 }
+
+/* Menu button styling */
 #menu button {
   padding: 20px;
   font-size: 1.4rem;
   border: none;
-  border-radius: 50px;
+  border-radius: 50px; /* Rounded buttons */
   cursor: pointer;
-  background: var(--primary-color);
-  color: var(--text-color-light);
+  color: var(--text-color-light); /* Light text */
   text-transform: uppercase;
   letter-spacing: 1.5px;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 15px var(--button-shadow);
+  box-shadow: 0 8px 15px var(--button-shadow); /* Button shadow */
   position: relative;
-  overflow: hidden;
+  overflow: hidden; /* For hover effect */
   border: 2px solid transparent;
   background: linear-gradient(
     145deg,
     var(--primary-color),
     var(--primary-hover-color)
-  );
+  ); /* Gradient background */
 }
+
+/* Menu button hover shine effect */
 #menu button:before {
   content: "";
   position: absolute;
@@ -144,23 +194,32 @@ body.dark-theme {
   );
   transition: all 0.6s;
 }
+
 #menu button:hover:before {
-  left: 100%;
+  left: 100%; /* Move shine across */
 }
+
+/* Menu button hover state */
 #menu button:hover {
-  background: var(--primary-hover-color);
-  transform: scale(1.02) translateY(-2px);
-  box-shadow: 0 12px 20px rgba(51, 153, 255, 0.35);
+  background: var(--primary-hover-color); /* Darker background */
+  transform: scale(1.02) translateY(-2px); /* Slight scale and lift */
+  box-shadow: 0 12px 20px rgba(51, 153, 255, 0.35); /* Enhanced shadow */
 }
+
+/* Menu button active state */
 #menu button:active {
-  transform: scale(0.95);
+  transform: scale(0.95); /* Shrink slightly when clicked */
 }
+
+/* Timer screen layout and animation */
 #timerScreen {
   text-align: center;
-  display: none;
+  display: none; /* Initially hidden */
   padding: 20px;
-  animation: fadeIn 0.5s forwards;
+  animation: fadeIn 0.5s forwards; /* Fade in animation */
 }
+
+/* Fade in animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -171,6 +230,8 @@ body.dark-theme {
     transform: translateY(0);
   }
 }
+
+/* Section title styling */
 #sectionTitle {
   font-size: 3.5rem;
   color: var(--text-color-dark);
@@ -180,51 +241,86 @@ body.dark-theme {
   letter-spacing: 2px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+/* Time display styling */
 #timeDisplay {
   font-size: 6rem;
   margin: 40px 0;
   color: var(--text-color-dark);
   font-weight: 700;
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15);
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: tabular-nums; /* Ensures numbers align */
   letter-spacing: 2px;
   position: relative;
-  animation: pulse 2s ease-in-out infinite;
-  background: linear-gradient(45deg, #333, #666);
-  -webkit-background-clip: text;
-  color: transparent;
+  /* Removed pulse animation for less distraction */
+  /* animation: pulse 2s ease-in-out infinite; */
+  /* Gradient text effect (commented out for better theme consistency) */
+  /* background: linear-gradient(45deg, #333, #666);
+    -webkit-background-clip: text;
+    color: transparent; */
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  transition: color 0.3s ease; /* Smooth color transition for warning */
 }
+
+/* Dark theme time display override */
 body.dark-theme #timeDisplay {
-  background: linear-gradient(45deg, #fff, #ccc);
-  -webkit-background-clip: text;
-  color: transparent;
+  /* background: linear-gradient(45deg, #fff, #ccc);
+    -webkit-background-clip: text;
+    color: transparent; */
+  color: var(--text-color-dark); /* Use dark theme text color */
 }
+
+/* Warning style for low time */
 #timeDisplay.warning {
-  color: #ff3b3b;
-  animation: shake 0.5s ease-in-out;
+  color: #ff3b3b; /* Bright red */
+  animation: shake 0.5s ease-in-out; /* Shake animation */
 }
+
+/* Shake animation */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+}
+
+/* Progress bar container */
 .progress-container {
   width: 100%;
-  background-color: #e0e0e0;
+  background-color: rgba(
+    var(--primary-rgb),
+    0.1
+  ); /* Lighter shade of primary */
   border-radius: 15px;
   margin: 30px 0;
   overflow: hidden;
   height: 25px;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+/* Progress bar fill */
 .progress-bar {
-  width: 0%;
+  width: 100%; /* Start full, controlled by JS */
   height: 100%;
   background: linear-gradient(
     90deg,
     var(--progress-bar-start),
     var(--progress-bar-end)
-  );
+  ); /* Gradient fill */
   border-radius: 15px;
-  transition: width 1s ease;
+  transition: width 0.5s linear; /* Smooth width transition */
   box-shadow: 0 2px 4px rgba(51, 153, 255, 0.2);
   position: relative;
+  /* Animated gradient background */
   background: linear-gradient(
     90deg,
     var(--progress-bar-start),
@@ -232,8 +328,20 @@ body.dark-theme #timeDisplay {
     var(--progress-bar-start)
   );
   background-size: 200% 100%;
-  animation: gradient 3s linear infinite;
+  animation: gradientShift 3s linear infinite;
 }
+
+/* Animated gradient for progress bar */
+@keyframes gradientShift {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Shine effect on progress bar */
 .progress-bar:after {
   content: "";
   position: absolute;
@@ -249,6 +357,8 @@ body.dark-theme #timeDisplay {
   );
   animation: progressShine 2s infinite;
 }
+
+/* Shine animation */
 @keyframes progressShine {
   0% {
     transform: translateX(-100%);
@@ -257,591 +367,370 @@ body.dark-theme #timeDisplay {
     transform: translateX(100%);
   }
 }
+
+/* Question counter styling */
 #questionCounter {
   font-size: 1.8rem;
-  color: #555;
+  color: var(--text-color-dark); /* Use theme text color */
   margin: 25px 0;
   padding: 20px;
-  background-color: var(--question-counter-bg);
+  background-color: var(--question-counter-bg); /* Use theme variable */
   border-radius: 12px;
-  box-shadow: 0 4px 12px var(--question-counter-shadow);
+  box-shadow: 0 4px 12px var(--question-counter-shadow); /* Use theme variable */
   transition: transform 0.3s ease, background-color 0.5s ease,
     box-shadow 0.5s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform-style: preserve-3d;
-  perspective: 1000px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  min-height: 80px;
+  display: inline-block; /* Allow centering */
+  min-width: 300px; /* Ensure minimum width */
 }
-body.dark-theme #questionCounter {
-  color: var(--text-color-light);
-}
-#questionCounter:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
-  transform: rotateX(10deg) rotateY(10deg);
-}
-.question-text {
-  text-align: center;
-  width: 100%;
-}
-.controls {
-  display: flex;
-  justify-content: center;
-  gap: 25px;
+
+/* Timer control buttons container */
+.timer-controls {
   margin-top: 30px;
-  flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* Space between buttons */
 }
-.controls button {
+
+/* Timer control buttons styling */
+.timer-controls button {
   padding: 15px 30px;
   font-size: 1.2rem;
   border: none;
-  border-radius: 12px;
+  border-radius: 30px;
   cursor: pointer;
-  background: var(--primary-color);
   color: var(--text-color-light);
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px var(--button-shadow);
-  min-width: 160px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
-.controls button:after {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.2) 0%,
-    transparent 70%
-  );
-  opacity: 0;
-  transform: scale(0.5);
-  transition: all 0.3s;
+
+/* Pause/Resume button specific style */
+.timer-controls button#pauseResumeButton {
+  background: linear-gradient(145deg, #ffae42, #ff8c00); /* Orange gradient */
 }
-.controls button:hover:after {
-  opacity: 1;
-  transform: scale(1);
+.timer-controls button#pauseResumeButton:hover {
+  background: linear-gradient(145deg, #ffc16b, #ffa533); /* Lighter orange */
+  box-shadow: 0 8px 15px rgba(255, 140, 0, 0.3);
 }
-.controls button:hover {
-  background: var(--primary-hover-color);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(51, 153, 255, 0.35);
+
+/* Stop button specific style */
+.timer-controls button:last-child {
+  background: linear-gradient(145deg, #ff6b6b, #ee4d4d); /* Red gradient */
 }
-#nextSectionContainer {
-  margin-top: 40px;
+.timer-controls button:last-child:hover {
+  background: linear-gradient(145deg, #ff8787, #ff6b6b); /* Lighter red */
+  box-shadow: 0 8px 15px rgba(238, 77, 77, 0.3);
 }
-#nextSectionContainer button {
-  padding: 20px 40px;
+
+/* Timer control button active state */
+.timer-controls button:active {
+  transform: scale(0.96);
+}
+
+/* Full test progress indicator */
+#fullTestProgress {
+  margin-top: 25px;
   font-size: 1.3rem;
-  border-radius: 15px;
-  box-shadow: 0 6px 15px var(--button-shadow);
-  background: linear-gradient(
-    135deg,
-    var(--primary-color),
-    var(--primary-hover-color)
-  );
+  color: var(--text-color-dark);
+  font-weight: 500;
 }
+
+/* Back arrow button */
 #backArrow {
   position: absolute;
-  bottom: 30px;
-  right: 30px;
-  font-size: 1.4rem;
-  text-decoration: none;
-  background: linear-gradient(
-    135deg,
-    var(--back-arrow-start),
-    var(--back-arrow-end)
-  );
-  color: var(--text-color-light);
-  padding: 18px 24px;
-  border-radius: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 6px 15px rgba(255, 59, 59, 0.25);
-  transition: all 0.3s ease;
-  transform-style: preserve-3d;
-  perspective: 1000px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-#backArrow:hover {
-  background: linear-gradient(
-    135deg,
-    var(--back-arrow-end),
-    var(--back-arrow-start)
-  );
-  transform: scale(1.1);
-  box-shadow: 0 8px 20px rgba(255, 59, 59, 0.35);
-  transform: translateZ(24px) rotateY(10deg);
-}
-#customInput {
-  animation: fadeIn 0.5s forwards;
-  text-align: center;
-}
-#customInput input {
-  width: 200px;
-  padding: 12px;
-  margin: 10px;
-  border: 2px solid var(--primary-color);
-  border-radius: 8px;
-  font-size: 1.1rem;
-  transition: all 0.3s;
-  color: var(--text-color-dark);
-}
-#customInput input:focus {
-  outline: none;
-  border-color: var(--primary-hover-color);
-  box-shadow: 0 0 15px rgba(51, 153, 255, 0.3);
-}
-#customInput button {
-  margin: 10px;
-  padding: 12px 24px;
+  top: 25px;
+  left: 25px;
+  padding: 12px 20px;
   font-size: 1.1rem;
   border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  color: var(--text-color-light);
+  background: linear-gradient(
+    145deg,
+    var(--back-arrow-start),
+    var(--back-arrow-end)
+  ); /* Red gradient */
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 10px rgba(255, 59, 59, 0.25);
+  z-index: 10; /* Ensure it's above other content */
+}
+
+#backArrow:hover {
+  transform: translateX(-3px); /* Move slightly left on hover */
+  box-shadow: 0 7px 14px rgba(255, 59, 59, 0.35);
+}
+
+/* Custom input screen layout */
+#customInput {
+  display: none; /* Initially hidden */
+  text-align: center;
+  animation: fadeIn 0.5s forwards;
+  color: var(--text-color-dark);
+}
+
+#customInput h2 {
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+}
+
+#customInput label {
+  display: block;
+  margin: 15px 0 5px 0;
+  font-size: 1.2rem;
+}
+
+#customInput input[type="number"] {
+  padding: 12px;
+  font-size: 1.1rem;
   border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 80%;
+  max-width: 300px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.custom-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.custom-buttons button {
+  padding: 12px 25px;
+  font-size: 1.1rem;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  color: var(--text-color-light);
+  transition: all 0.3s ease;
+}
+
+.custom-buttons button:first-child {
+  /* Start button */
   background: linear-gradient(
     145deg,
     var(--primary-color),
     var(--primary-hover-color)
   );
-  color: var(--text-color-light);
-  cursor: pointer;
-  transition: all 0.3s;
+  box-shadow: 0 5px 10px var(--button-shadow);
 }
-#customInput button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(51, 153, 255, 0.3);
+.custom-buttons button:first-child:hover {
+  background: linear-gradient(
+    145deg,
+    var(--primary-hover-color),
+    var(--primary-color)
+  ); /* Swap gradient */
+  box-shadow: 0 7px 14px rgba(51, 153, 255, 0.35);
 }
-#customInput h2,
-#customInput label {
+
+.custom-buttons button:last-child {
+  /* Cancel button */
+  background: linear-gradient(145deg, #aaa, #888); /* Gray gradient */
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+.custom-buttons button:last-child:hover {
+  background: linear-gradient(145deg, #bbb, #999); /* Lighter gray */
+  box-shadow: 0 7px 14px rgba(0, 0, 0, 0.2);
+}
+
+/* Speed selection screen styling */
+#speedSelection {
+  display: none; /* Initially hidden */
+  text-align: center;
+  animation: fadeIn 0.5s forwards;
   color: var(--text-color-dark);
 }
-@media (max-width: 768px) {
-  .container {
-    padding: 30px;
-  }
-  #timeDisplay {
-    font-size: 5rem;
-    margin: 30px 0;
-  }
-  #sectionTitle {
-    font-size: 3rem;
-  }
-  #menu button {
-    padding: 15px;
-    font-size: 1.3rem;
-  }
+
+#speedSelection h2 {
+  font-size: 2.8rem;
+  margin-bottom: 15px;
+  color: var(--text-color-dark);
 }
-@media (max-width: 480px) {
-  .container {
-    padding: 20px;
-    min-height: 98vh;
-    border-radius: 15px;
-  }
-  #timeDisplay {
-    font-size: 3.5rem;
-    margin: 20px 0;
-  }
-  #sectionTitle {
-    font-size: 2.2rem;
-    margin-bottom: 20px;
-  }
-  #menu {
-    gap: 15px;
-  }
-  #menu button {
-    padding: 12px;
-    font-size: 1rem;
-    border-radius: 30px;
-  }
-  .controls {
-    flex-direction: column;
-    gap: 15px;
-  }
-  .controls button {
-    width: 100%;
-    min-width: auto;
-    padding: 12px;
-    font-size: 1rem;
-  }
-  #nextSectionContainer button {
-    padding: 15px 30px;
-    font-size: 1.2rem;
-  }
-  #customInput input {
-    width: 90%;
-    max-width: 250px;
-    font-size: 1rem;
-    padding: 10px;
-  }
-  #customInput button {
-    font-size: 1rem;
-    padding: 10px 20px;
-  }
-  #questionCounter {
-    font-size: 1.5rem;
-    padding: 15px;
-    margin: 20px 0;
-  }
-  #settingsPage h2 {
-    font-size: 2rem;
-  }
-  #settingsPage h3,
-  .settings-section > label.speed-subtitle {
-    font-size: 1.2rem;
-  }
-  #settingsPage button,
-  #settingsPage select {
-    padding: 12px 24px;
-    font-size: 1rem;
-  }
-  #speedSelection .speed-subtitle,
-  .settings-section > label.speed-subtitle {
-    font-size: 1.2rem;
-    margin-bottom: 30px;
-  }
-  .speed-option {
-    padding: 20px;
-  }
-  .speed-text h3 {
-    font-size: 1.2rem;
-    margin-bottom: 6px;
-  }
-  .speed-text p {
-    font-size: 0.9rem;
-  }
-  .speed-emoji {
-    font-size: 2rem;
-    min-width: 50px;
-  }
-  #backArrow,
-  #settingsButton {
-    bottom: 20px;
-    left: 20px;
-    right: auto;
-    font-size: 1.2rem;
-    padding: 10px 15px;
-    border-radius: 10px;
-  }
-}
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-@keyframes shake {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  10%,
-  30%,
-  50%,
-  70%,
-  90% {
-    transform: translateX(-5px);
-  }
-  20%,
-  40%,
-  60%,
-  80% {
-    transform: translateX(5px);
-  }
-}
-@keyframes glow {
-  0% {
-    box-shadow: 0 0 5px rgba(51, 153, 255, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(51, 153, 255, 0.8);
-  }
-  100% {
-    box-shadow: 0 0 5px rgba(51, 153, 255, 0.5);
-  }
-}
-.container {
-  backdrop-filter: blur(10px);
-  background: rgba(248, 249, 250, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-body.dark-theme .container {
-  background: rgba(30, 30, 30, 0.95);
-}
-button:focus {
-  outline: none;
-  animation: glow 1.5s ease-in-out infinite;
-}
-@media print {
-  body {
-    background: none;
-  }
-  .container {
-    box-shadow: none;
-    border: 1px solid #000;
-  }
-  .controls,
-  #backArrow,
-  #settingsButton,
-  #settingsPage,
-  #speedSelection,
-  #customInput,
-  #timerScreen,
-  #menu {
-    display: none;
-  }
-}
-.counter-container {
-  display: flex;
-  align-items: center;
-}
-.question-text {
-  transition: filter 0.3s ease;
-  margin-right: auto;
-}
-.eye-toggle {
-  background-color: #ddd;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: opacity 0.3s ease;
-  animation: floatOpposite 6s ease-in-out infinite;
-  margin-left: 10px;
-}
-.eye-toggle:hover {
-  opacity: 0.7;
-}
-.eye-toggle svg {
-  width: 16px;
-  height: 16px;
-  stroke: #333;
-  fill: none;
-  stroke-width: 1.5;
-  display: block;
-}
-.counter-container.blurred .question-text {
-  filter: blur(8px);
-}
-#speedSelection {
-  display: none;
-  text-align: center;
-  padding: 30px;
-  animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-#speedSelection .speed-subtitle {
-  font-size: 1.4rem;
+
+.speed-subtitle {
+  font-size: 1.3rem;
   color: var(--speed-subtitle-color);
-  margin-bottom: 40px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
+  margin-bottom: 30px;
 }
+
 .speed-options {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
+
 .speed-option {
-  padding: 25px;
+  background-color: var(--speed-option-bg);
   border: none;
-  border-radius: 18px;
-  background: var(--speed-option-bg);
+  border-radius: 16px;
+  padding: 25px;
+  width: 220px;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 20px var(--speed-option-shadow);
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 15px var(--speed-option-shadow);
   text-align: left;
+  border: 2px solid transparent;
 }
+
 .speed-option:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  border-color: var(--primary-color);
 }
+body.dark-theme .speed-option:hover {
+  border-color: var(--primary-color); /* Ensure border color works in dark theme */
+}
+
 .speed-content {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
 }
+
 .speed-emoji {
   font-size: 2.5rem;
-  min-width: 60px;
 }
+
 .speed-text h3 {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
+  margin-bottom: 5px;
   color: var(--speed-text-color);
-  margin-bottom: 8px;
-  font-weight: 600;
 }
+
 .speed-text p {
+  font-size: 0.95rem;
   color: var(--speed-subtitle-color);
-  font-size: 1rem;
   line-height: 1.4;
 }
+
 .speed-note {
   margin-top: 30px;
+  font-size: 1rem;
   color: var(--speed-note-color);
-  font-size: 0.9rem;
-  font-style: italic;
 }
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-#speedSelection h2 {
-  color: white; /* Changed to white and removed var(--text-color-dark) */
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-}
+
+/* Settings Page Styling */
 #settingsPage {
-  display: none;
-  position: fixed;
+  position: fixed; /* Cover the whole screen */
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1001;
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent overlay */
+  display: none; /* Initially hidden */
+  justify-content: center;
+  align-items: center;
+  z-index: 100; /* Ensure it's on top */
+  backdrop-filter: blur(5px); /* Blur background */
+  animation: fadeIn 0.3s ease;
+}
+
+.settings-content {
+  background-color: var(--settings-bg);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 600px;
+  color: var(--settings-text);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  animation: fadeIn 0.5s forwards;
+  gap: 30px; /* Space between setting items */
+}
+
+.settings-content h2 {
   text-align: center;
-  color: var(--text-color-light);
-  border-radius: 24px;
-  backdrop-filter: blur(10px);
+  margin-bottom: 10px;
+  font-size: 2.2rem;
+  color: var(--settings-text);
 }
-#settingsPage > div {
-  background-color: var(--container-bg);
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 0 30px var(--container-shadow);
-}
-#settingsPage h2 {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-  color: var(--text-color-dark);
-}
-#settingsPage h3,
-.settings-section > label.speed-subtitle {
-  font-size: 1.4rem;
-  margin-bottom: 15px;
-  color: var(--text-color-dark);
-}
-.settings-section {
-  margin-bottom: 30px;
-}
-.theme-colors {
+
+.setting-item {
   display: flex;
+  flex-direction: column;
   gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 20px;
 }
+
+.setting-item label {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--settings-label);
+}
+
+#paceSelect {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--select-border);
+  background-color: var(--select-bg);
+  color: var(--select-text);
+  cursor: pointer;
+}
+
+.theme-color-options {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap; /* Allow wrapping */
+  justify-content: center; /* Center the buttons */
+}
+
 .theme-color-option {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  border: none;
+  border-radius: 50%; /* Circular buttons */
+  border: 3px solid var(--theme-option-border);
   cursor: pointer;
-  opacity: 1;
-  transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: none;
+  transition: all 0.2s ease;
+  padding: 0; /* Remove default padding */
 }
-.theme-color-option.no-arrow {
-  background-image: none !important;
-}
-.theme-color-option:hover,
-.theme-color-option:focus {
-  opacity: 0.8;
+
+.theme-color-option:hover {
   transform: scale(1.1);
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.5);
+  border-color: var(--theme-option-selected-border);
 }
-.theme-color-option:focus {
-  box-shadow: 0 0 0 4px var(--primary-color);
-  opacity: 1;
+
+.theme-color-option.selected-theme {
+  border-color: var(--theme-option-selected-border);
+  box-shadow: 0 0 10px 2px var(--theme-option-selected-border);
 }
-#settingsPage button,
-#settingsPage select {
-  padding: 15px 30px;
-  font-size: 1.2rem;
+
+/* Settings close button */
+.settings-content > button {
+  padding: 15px;
+  font-size: 1.1rem;
   border: none;
-  border-radius: 12px;
+  border-radius: 30px;
   cursor: pointer;
-  background: var(--primary-color);
+  background: linear-gradient(145deg, #aaa, #888); /* Gray gradient */
   color: var(--text-color-light);
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px var(--button-shadow);
-  margin-top: 15px;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
-  background-repeat: no-repeat;
-  background-position-x: 100%;
-  background-position-y: 8px;
-  padding-right: 40px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  margin-top: 20px; /* Add some space above */
 }
-#settingsPage button:hover,
-#settingsPage select:hover {
-  background: var(--primary-hover-color);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(51, 153, 255, 0.35);
+
+.settings-content > button:hover {
+  background: linear-gradient(145deg, #bbb, #999); /* Lighter gray */
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 }
-#settingsPage select:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(51, 153, 255, 0.5);
-}
+
+/* Settings Button (Gear Icon) */
 #settingsButton {
   position: absolute;
-  bottom: 20px;
-  left: 20px;
-  font-size: 1.2rem;
+  top: 20px; /* Adjusted position */
+  left: 20px; /* Moved to left */
+  font-size: 1.8rem; /* Larger icon */
   text-decoration: none;
   background: transparent;
-  color: var(--text-color-light);
-  padding: 10px 15px;
-  border-radius: 10px;
+  color: var(--text-color-light); /* Use light text color */
+  padding: 10px; /* Slightly more padding */
+  border-radius: 50%; /* Make it circular */
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -849,65 +738,224 @@ button:focus {
   box-shadow: none;
   transition: all 0.3s ease;
   border: none;
+  z-index: 5; /* Ensure it's below back arrow if timer is running */
 }
+
 #settingsButton:focus {
   outline: none;
-  animation: none;
-  box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.7);
+  animation: none; /* Remove any focus animation */
+  box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.7); /* Focus ring */
 }
+
 #settingsButton:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.1); /* Subtle background on hover */
+  transform: scale(1.1) rotate(15deg); /* Scale and rotate */
   box-shadow: none;
 }
-.act-timer-title {
-  position: absolute;
-  top: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 3rem;
-  font-weight: 700;
-  color: white;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  z-index: 1000;
+
+/* Hide settings button when timer is active */
+body.timer-active #settingsButton {
+  display: none;
 }
+
+/* Fullscreen Button */
 #fullscreenButton {
   position: absolute;
   top: 20px;
   right: 20px;
   font-size: 1.2rem;
   background: transparent;
-  color: var(--text-color-light);
+  color: var(--text-color-light); /* Use light text color */
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: none;
-  transition: all 0.3s ease;
   border: none;
-  z-index: 1002;
+  transition: all 0.3s ease;
+  z-index: 5;
 }
-#fullscreenButton:focus {
-  outline: none;
-  animation: none;
-  box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.7);
+
+#fullscreenButton svg {
+  width: 28px; /* Slightly larger icon */
+  height: 28px;
 }
+
 #fullscreenButton:hover {
   background: rgba(255, 255, 255, 0.1);
   transform: scale(1.1);
-  box-shadow: none;
 }
+
+/* Hide fullscreen button when settings are open */
+#settingsPage:target ~ #fullscreenButton, /* If using target pseudo-class */
+body.settings-open #fullscreenButton {
+  /* If using body class */
+  display: none;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .act-timer-title {
+  .container {
+    padding: 20px;
+    min-height: 90vh;
+  }
+
+  #menu button {
+    font-size: 1.2rem;
+    padding: 18px;
+  }
+
+  #sectionTitle {
     font-size: 2.5rem;
-    top: 30px;
+  }
+
+  #timeDisplay {
+    font-size: 4.5rem;
+  }
+
+  #questionCounter {
+    font-size: 1.4rem;
+    padding: 15px;
+    min-width: 250px;
+  }
+
+  .timer-controls button {
+    padding: 12px 25px;
+    font-size: 1rem;
+  }
+
+  #backArrow {
+    top: 15px;
+    left: 15px;
+    padding: 10px 15px;
+    font-size: 1rem;
+  }
+
+  #settingsButton,
+  #fullscreenButton {
+    top: 15px;
+    padding: 8px;
+  }
+  #settingsButton {
+    left: 15px;
+    font-size: 1.5rem;
+  }
+  #fullscreenButton {
+    right: 15px;
+  }
+  #fullscreenButton svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .speed-options {
+    flex-direction: column; /* Stack options vertically */
+    align-items: center;
+  }
+
+  .speed-option {
+    width: 90%;
+    max-width: 300px;
+  }
+
+  .settings-content {
+    padding: 30px;
   }
 }
+
 @media (max-width: 480px) {
-  .act-timer-title {
+  body {
+    padding: 10px; /* Reduce padding on very small screens */
+  }
+
+  .container {
+    padding: 15px;
+    border-radius: 16px;
+  }
+
+  #menu button {
+    font-size: 1.1rem;
+    padding: 15px;
+    letter-spacing: 1px;
+  }
+
+  #sectionTitle {
     font-size: 2rem;
-    top: 20px;
+    margin-bottom: 20px;
+  }
+
+  #timeDisplay {
+    font-size: 3.5rem;
+    margin: 25px 0;
+  }
+
+  #questionCounter {
+    font-size: 1.2rem;
+    padding: 12px;
+    min-width: auto; /* Allow it to shrink */
+    width: 90%;
+  }
+
+  .timer-controls {
+    gap: 10px;
+  }
+
+  .timer-controls button {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+
+  #customInput h2 {
+    font-size: 2rem;
+  }
+  #customInput label {
+    font-size: 1rem;
+  }
+  #customInput input[type="number"] {
+    font-size: 1rem;
+    padding: 10px;
+  }
+  .custom-buttons button {
+    font-size: 1rem;
+    padding: 10px 20px;
+  }
+
+  #settingsButton,
+  #fullscreenButton {
+    top: 10px;
+  }
+  #settingsButton {
+    left: 10px;
+    font-size: 1.4rem;
+  }
+  #fullscreenButton {
+    right: 10px;
+  }
+  #fullscreenButton svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .settings-content {
+    padding: 20px;
+  }
+  .settings-content h2 {
+    font-size: 1.8rem;
+  }
+  .setting-item label {
+    font-size: 1rem;
+  }
+  #paceSelect {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+  .theme-color-option {
+    width: 35px;
+    height: 35px;
+  }
+  .settings-content > button {
+    font-size: 1rem;
+    padding: 12px;
   }
 }
