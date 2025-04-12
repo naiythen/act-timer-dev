@@ -18,12 +18,20 @@ const fullTestSections = [
   { name: "Science", time: 35, questions: 40 },
 ];
 
+const paceDescriptions = {
+  0: "On Time",
+  1: "5 Min Early",
+  2: "10 Min Early",
+};
+
 const timeDisplay = document.getElementById("timeDisplay");
 const progressBar = document.querySelector(".progress-bar");
 const sectionTitle = document.getElementById("sectionTitle");
 const questionPacingDisplay = document.getElementById("questionPacing");
-const questionCountSpan = document.getElementById("questionCount");
+const paceDescriptionSpan = document.getElementById("paceDescription");
 const targetQuestionSpan = document.getElementById("targetQuestion");
+const totalQuestionCountSpan = document.getElementById("totalQuestionCount");
+const separatorSpan = questionPacingDisplay.querySelector(".separator");
 const pauseResumeButton = document.getElementById("pauseResumeButton");
 const backArrow = document.getElementById("backArrow");
 const settingsButton = document.getElementById("settingsButton");
@@ -42,6 +50,7 @@ function initialize() {
   }
   applyTheme();
   document.addEventListener("visibilitychange", handleVisibilityChange);
+  document.addEventListener("fullscreenchange", handleFullscreenChange); // Add listener
   initializeSettingsPage();
 }
 
@@ -195,7 +204,7 @@ function startTimer(section, timeMinutes, questions) {
   endTime = Date.now() + initialDurationSeconds * 1000;
   pausedTime = 0;
 
-  setupTimerUI();
+  setupTimerUI(false); // isCustom = false
   startInterval();
 }
 
@@ -222,7 +231,7 @@ function startNextFullTestSection() {
   endTime = Date.now() + initialDurationSeconds * 1000;
   pausedTime = 0;
 
-  setupTimerUI();
+  setupTimerUI(false); // isCustom = false
   fullTestProgressDisplay.textContent = `Section ${
     currentFullTestSectionIndex + 1
   } of ${fullTestSections.length}: ${currentSection}`;
@@ -249,11 +258,11 @@ function startCustomTimer() {
   endTime = Date.now() + initialDurationSeconds * 1000;
   pausedTime = 0;
 
-  setupTimerUI();
+  setupTimerUI(true); // isCustom = true
   startInterval();
 }
 
-function setupTimerUI() {
+function setupTimerUI(isCustom) {
   hideAllScreens();
   document.getElementById("timerScreen").style.display = "flex";
   document.body.classList.add("timer-active");
@@ -263,6 +272,30 @@ function setupTimerUI() {
 
   sectionTitle.textContent = currentSection;
   pauseResumeButton.textContent = "Pause";
+
+  // Configure pacing display based on timer type
+  if (isCustom) {
+    paceDescriptionSpan.textContent = "Pace: Custom";
+    if (totalQuestions > 0) {
+      totalQuestionCountSpan.textContent = `Questions: ${totalQuestions}`;
+      totalQuestionCountSpan.style.display = "inline";
+      targetQuestionSpan.style.display = "none"; // Hide target Q
+      separatorSpan.style.display = "inline";
+    } else {
+      totalQuestionCountSpan.style.display = "none";
+      targetQuestionSpan.style.display = "none"; // Hide target Q
+      separatorSpan.style.display = "none"; // Hide separator if no questions
+    }
+  } else {
+    const speedPref = getCookie("speed") || "0";
+    paceDescriptionSpan.textContent = `Pace: ${
+      paceDescriptions[speedPref] || "On Time"
+    }`;
+    targetQuestionSpan.style.display = "inline"; // Show target Q
+    totalQuestionCountSpan.style.display = "none"; // Hide total Q count
+    separatorSpan.style.display = "inline"; // Show separator
+  }
+
   updateTimerDisplay();
 }
 
@@ -309,7 +342,12 @@ function updateTimerDisplay(seconds = null) {
       : 0;
   progressBar.style.width = `${progressPercent}%`;
 
-  if (totalQuestions > 0 && initialDurationSeconds > 0) {
+  // Update target question only if it's visible (not custom timer with questions)
+  if (
+    targetQuestionSpan.style.display !== "none" &&
+    totalQuestions > 0 &&
+    initialDurationSeconds > 0
+  ) {
     const elapsedSeconds = initialDurationSeconds - remainingSeconds;
     const targetQuestion = Math.min(
       totalQuestions,
@@ -318,12 +356,15 @@ function updateTimerDisplay(seconds = null) {
         Math.ceil((elapsedSeconds / initialDurationSeconds) * totalQuestions)
       )
     );
-
-    questionCountSpan.textContent = `Questions: ${totalQuestions}`;
     targetQuestionSpan.textContent = `You should be on Q: ${targetQuestion}`;
-    questionPacingDisplay.style.display = "inline-block";
-  } else {
-    questionPacingDisplay.style.display = "none";
+  }
+
+  // Update pace description for standard timers (it might change if settings are adjusted mid-timer, though not implemented yet)
+  if (currentSection !== "Custom Timer") {
+    const speedPref = getCookie("speed") || "0";
+    paceDescriptionSpan.textContent = `Pace: ${
+      paceDescriptions[speedPref] || "On Time"
+    }`;
   }
 
   if (remainingSeconds <= 10 && remainingSeconds > 0) {
@@ -395,6 +436,7 @@ function resetTimerUI() {
   questionPacingDisplay.style.display = "none";
   fullTestProgressDisplay.style.display = "none";
   document.body.classList.remove("timer-active");
+  document.body.classList.remove("fullscreen-active"); // Ensure fullscreen class removed
   backArrow.style.display = "none";
   settingsButton.style.display = "block";
   fullscreenButton.style.display = "block";
@@ -475,13 +517,27 @@ function toggleFullscreen() {
   if (!document.fullscreenElement) {
     document.documentElement
       .requestFullscreen()
+      .then(() => {
+        document.body.classList.add("fullscreen-active");
+      })
       .catch((err) =>
         showNotification(`Error enabling full-screen: ${err.message}`, "error")
       );
   } else {
     if (document.exitFullscreen) {
-      document.exitFullscreen();
+      document.exitFullscreen().then(() => {
+        document.body.classList.remove("fullscreen-active");
+      });
     }
+  }
+}
+
+// Handle fullscreen changes (like pressing ESC)
+function handleFullscreenChange() {
+  if (!document.fullscreenElement) {
+    document.body.classList.remove("fullscreen-active");
+  } else {
+    document.body.classList.add("fullscreen-active");
   }
 }
 
@@ -519,6 +575,10 @@ function updatePaceSetting(value) {
   if (value !== previousValue) {
     setCookie("speed", value);
     showNotification("Pace Preference Changed!");
+    // Update display immediately if timer is running and it's not custom
+    if (isRunning && currentSection !== "Custom Timer") {
+      updateTimerDisplay();
+    }
   }
 }
 

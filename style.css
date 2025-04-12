@@ -10,16 +10,16 @@
 html,
 body {
   height: 100%;
-  overflow: hidden; /* Prevent scrolling at the document level */
+  /* Removed overflow: hidden to allow scrolling if content exceeds viewport */
 }
 
 /* Body layout and background */
 body {
-  display: flex; /* Use flexbox for centering */
+  display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Ensure body takes full viewport height */
-  background-size: 400% 400%; /* For gradient animation */
+  min-height: 100vh;
+  background-size: 400% 400%;
   animation: gradient 15s ease infinite;
   padding: 15px;
   transition: background 0.5s ease;
@@ -27,7 +27,7 @@ body {
     145deg,
     var(--theme-color-dark),
     var(--theme-color-light)
-  ); /* Default gradient */
+  );
 }
 
 /* Dark Theme Specific Variables */
@@ -98,12 +98,12 @@ body.dark-theme {
 .container {
   width: 100%;
   max-width: 1200px;
-  height: calc(100vh - 30px);
-  max-height: 900px;
+  min-height: calc(100vh - 60px);
+  max-height: 95vh;
   background-color: var(--container-bg);
-  border-radius: 20px;
-  box-shadow: 0 0 30px var(--container-shadow);
-  padding: 30px;
+  border-radius: 24px;
+  box-shadow: 0 0 40px var(--container-shadow);
+  padding: 40px;
   position: relative;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out,
     background-color 0.5s ease;
@@ -111,7 +111,6 @@ body.dark-theme {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
 }
 
 /* Background gradient animation */
@@ -130,41 +129,31 @@ body.dark-theme {
 /* Content screens within the container */
 .content-screen {
   width: 100%;
-  max-width: 800px; /* Increased max-width for content */
+  max-width: 800px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   flex-grow: 1;
-  overflow-y: auto;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.content-screen::-webkit-scrollbar {
-  display: none;
 }
 
 /* Menu layout */
 #menu {
-  gap: max(20px, 3vh); /* Increased gap further */
+  gap: max(25px, 3.5vh);
 }
 
-/* Menu button styling - Increased Size Significantly */
+/* Menu button styling - Wider */
 #menu button {
-  padding: max(20px, 2.8vh) max(30px, 2.5vw); /* Increased padding significantly */
-  font-size: clamp(
-    1.3rem,
-    3.5vh,
-    1.8rem
-  ); /* Increased font size significantly */
-  border-radius: 60px; /* Slightly larger radius */
+  padding: max(22px, 3vh) max(35px, 3vw);
+  font-size: clamp(1.4rem, 4vh, 2rem);
+  border-radius: 60px;
   cursor: pointer;
   color: var(--text-color-light);
   text-transform: uppercase;
-  letter-spacing: 1.5px; /* Increased letter spacing */
+  letter-spacing: 1.8px;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 16px var(--button-shadow); /* Adjusted shadow */
+  box-shadow: 0 10px 20px var(--button-shadow);
   position: relative;
   overflow: hidden;
   border: 2px solid transparent;
@@ -173,25 +162,25 @@ body.dark-theme {
     var(--primary-color),
     var(--primary-hover-color)
   );
-  width: 95%; /* Use more width */
-  max-width: 550px; /* Increased max width significantly */
+  width: 95%;
+  max-width: 750px; /* Increased max-width further */
   text-align: center;
-  font-weight: 500; /* Slightly bolder */
+  font-weight: 500;
 }
 
 #menu button:hover {
   background: var(--primary-hover-color);
-  box-shadow: 0 10px 20px rgba(51, 153, 255, 0.4); /* Adjusted shadow */
+  box-shadow: 0 12px 24px rgba(51, 153, 255, 0.4);
 }
 
 #menu button:active {
-  transform: scale(0.97); /* Adjusted active scale */
+  transform: scale(0.97);
 }
 
 /* Timer screen layout and animation */
 #timerScreen {
   text-align: center;
-  padding: 15px;
+  padding: 20px;
   animation: fadeIn 0.5s forwards;
 }
 
@@ -206,26 +195,26 @@ body.dark-theme {
   }
 }
 
-/* Section title styling */
+/* Section title styling - Larger */
 #sectionTitle {
-  font-size: clamp(1.8rem, 5vh, 3rem);
+  font-size: clamp(2.2rem, 6vh, 3.5rem);
   color: var(--text-color-dark);
-  margin-bottom: max(15px, 2vh);
+  margin-bottom: max(20px, 2.5vh);
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: 1.8px;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Time display styling */
+/* Time display styling - Larger */
 #timeDisplay {
-  font-size: clamp(3.5rem, 15vh, 6rem);
-  margin: max(15px, 3vh) 0;
+  font-size: clamp(4rem, 18vh, 7rem);
+  margin: max(20px, 3.5vh) 0;
   color: var(--text-color-dark);
   font-weight: 700;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
   font-variant-numeric: tabular-nums;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   position: relative;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   transition: color 0.3s ease;
@@ -260,10 +249,10 @@ body.dark-theme #timeDisplay {
 .progress-container {
   width: 100%;
   background-color: rgba(var(--primary-rgb), 0.1);
-  border-radius: 10px;
-  margin: max(15px, 2vh) 0;
+  border-radius: 12px;
+  margin: max(20px, 2.5vh) 0;
   overflow: hidden;
-  height: 20px;
+  height: 22px;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
@@ -276,7 +265,7 @@ body.dark-theme #timeDisplay {
     var(--progress-bar-start),
     var(--progress-bar-end)
   );
-  border-radius: 10px;
+  border-radius: 12px;
   transition: width 0.5s linear;
   box-shadow: 0 1px 3px rgba(51, 153, 255, 0.2);
   position: relative;
@@ -301,40 +290,51 @@ body.dark-theme #timeDisplay {
 
 /* Question Pacing styling */
 #questionPacing {
-  font-size: clamp(1rem, 2.2vh, 1.3rem);
+  font-size: clamp(1.1rem, 2.5vh, 1.5rem);
   color: var(--text-color-dark);
-  margin: max(15px, 2vh) 0;
-  padding: max(10px, 1.5vh) max(15px, 1vw);
+  margin: max(20px, 2.5vh) 0;
+  padding: max(12px, 1.8vh) max(18px, 1.2vw);
   background-color: var(--question-pacing-bg);
-  border-radius: 8px;
-  box-shadow: 0 3px 8px var(--question-pacing-shadow);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px var(--question-pacing-shadow);
   transition: transform 0.3s ease, background-color 0.5s ease,
     box-shadow 0.5s ease;
   display: inline-block;
-  min-width: 280px;
+  min-width: 300px;
   text-align: center;
+}
+#questionPacing .separator {
+  margin: 0 5px;
 }
 
 /* Timer control buttons container */
 .timer-controls {
-  margin-top: max(15px, 2vh);
+  margin-top: max(20px, 2.5vh);
   display: flex;
   justify-content: center;
-  gap: 15px;
+  gap: 20px;
 }
 
-/* Timer control buttons styling */
+/* Timer control buttons styling - Wider */
 .timer-controls button {
-  padding: max(10px, 1.5vh) max(25px, 2vw);
-  font-size: clamp(0.9rem, 2vh, 1.1rem);
+  padding: max(12px, 1.8vh) max(30px, 2.5vw);
+  font-size: clamp(1rem, 2.2vh, 1.2rem);
+  min-width: 140px;
   border: none;
   border-radius: 30px;
   cursor: pointer;
   color: var(--text-color-light);
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 1px;
   transition: all 0.3s ease;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Wider buttons in fullscreen */
+body.fullscreen-active .timer-controls button {
+  min-width: 180px;
+  padding-left: 40px;
+  padding-right: 40px;
 }
 
 .timer-controls button#pauseResumeButton {
@@ -342,7 +342,7 @@ body.dark-theme #timeDisplay {
 }
 .timer-controls button#pauseResumeButton:hover {
   background: linear-gradient(145deg, #ffc16b, #ffa533);
-  box-shadow: 0 6px 12px rgba(255, 140, 0, 0.3);
+  box-shadow: 0 7px 14px rgba(255, 140, 0, 0.3);
 }
 
 .timer-controls button:last-child {
@@ -350,7 +350,7 @@ body.dark-theme #timeDisplay {
 }
 .timer-controls button:last-child:hover {
   background: linear-gradient(145deg, #ff8787, #ff6b6b);
-  box-shadow: 0 6px 12px rgba(238, 77, 77, 0.3);
+  box-shadow: 0 7px 14px rgba(238, 77, 77, 0.3);
 }
 
 .timer-controls button:active {
@@ -359,19 +359,19 @@ body.dark-theme #timeDisplay {
 
 /* Full test progress indicator */
 #fullTestProgress {
-  margin-top: max(10px, 1.5vh);
-  font-size: clamp(0.9rem, 1.8vh, 1.1rem);
+  margin-top: max(15px, 2vh);
+  font-size: clamp(1rem, 2vh, 1.2rem);
   color: var(--text-color-dark);
   font-weight: 500;
 }
 
-/* Back arrow button */
+/* Back arrow button - Larger */
 #backArrow {
   position: absolute;
-  top: 20px;
-  left: 20px;
-  padding: max(8px, 1vh) max(12px, 0.8vw);
-  font-size: clamp(0.9rem, 1.8vh, 1rem);
+  top: 25px;
+  left: 25px;
+  padding: max(10px, 1.2vh) max(15px, 1vw);
+  font-size: clamp(1rem, 2vh, 1.1rem);
   border: none;
   border-radius: 30px;
   cursor: pointer;
@@ -382,13 +382,13 @@ body.dark-theme #timeDisplay {
     var(--back-arrow-end)
   );
   transition: all 0.3s ease;
-  box-shadow: 0 4px 8px rgba(255, 59, 59, 0.25);
+  box-shadow: 0 5px 10px rgba(255, 59, 59, 0.25);
   z-index: 10;
 }
 
 #backArrow:hover {
   transform: translateX(-2px);
-  box-shadow: 0 5px 10px rgba(255, 59, 59, 0.35);
+  box-shadow: 0 6px 12px rgba(255, 59, 59, 0.35);
 }
 
 /* Custom input screen layout */
@@ -396,41 +396,41 @@ body.dark-theme #timeDisplay {
   text-align: center;
   animation: fadeIn 0.5s forwards;
   color: var(--text-color-dark);
-  padding: 15px;
+  padding: 20px;
 }
 
 #customInput h2 {
-  margin-bottom: max(15px, 2vh);
-  font-size: clamp(1.5rem, 4vh, 2rem);
+  margin-bottom: max(20px, 2.5vh);
+  font-size: clamp(1.8rem, 4.5vh, 2.2rem);
 }
 
 #customInput label {
   display: block;
-  margin: max(10px, 1vh) 0 max(5px, 0.5vh) 0;
-  font-size: clamp(1rem, 2vh, 1.1rem);
+  margin: max(12px, 1.2vh) 0 max(6px, 0.6vh) 0;
+  font-size: clamp(1.1rem, 2.2vh, 1.2rem);
 }
 
 #customInput input[type="number"] {
-  padding: max(8px, 1vh);
-  font-size: clamp(0.9rem, 1.8vh, 1rem);
-  border-radius: 6px;
+  padding: max(10px, 1.2vh);
+  font-size: clamp(1rem, 2vh, 1.1rem);
+  border-radius: 8px;
   border: 1px solid #ccc;
   width: 80%;
-  max-width: 250px;
-  margin-bottom: max(15px, 2vh);
+  max-width: 300px;
+  margin-bottom: max(20px, 2.5vh);
   text-align: center;
 }
 
 .custom-buttons {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-top: max(15px, 2vh);
+  gap: 15px;
+  margin-top: max(20px, 2.5vh);
 }
 
 .custom-buttons button {
-  padding: max(10px, 1.2vh) max(20px, 1.5vw);
-  font-size: clamp(0.9rem, 1.8vh, 1rem);
+  padding: max(12px, 1.5vh) max(25px, 2vw);
+  font-size: clamp(1rem, 2vh, 1.1rem);
   border-radius: 25px;
   border: none;
   cursor: pointer;
@@ -444,7 +444,7 @@ body.dark-theme #timeDisplay {
     var(--primary-color),
     var(--primary-hover-color)
   );
-  box-shadow: 0 4px 8px var(--button-shadow);
+  box-shadow: 0 5px 10px var(--button-shadow);
 }
 .custom-buttons button:first-child:hover {
   background: linear-gradient(
@@ -452,16 +452,16 @@ body.dark-theme #timeDisplay {
     var(--primary-hover-color),
     var(--primary-color)
   );
-  box-shadow: 0 5px 10px rgba(51, 153, 255, 0.35);
+  box-shadow: 0 6px 12px rgba(51, 153, 255, 0.35);
 }
 
 .custom-buttons button:last-child {
   background: linear-gradient(145deg, #aaa, #888);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
 }
 .custom-buttons button:last-child:hover {
   background: linear-gradient(145deg, #bbb, #999);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* Speed selection screen styling */
@@ -469,44 +469,44 @@ body.dark-theme #timeDisplay {
   text-align: center;
   animation: fadeIn 0.5s forwards;
   color: var(--text-color-dark);
-  padding: 15px;
+  padding: 20px;
 }
 
 #speedSelection h2 {
-  font-size: clamp(1.8rem, 4.5vh, 2.5rem);
-  margin-bottom: max(10px, 1.5vh);
+  font-size: clamp(2rem, 5vh, 2.8rem);
+  margin-bottom: max(15px, 2vh);
   color: var(--text-color-dark);
 }
 
 .speed-subtitle {
-  font-size: clamp(1rem, 2.2vh, 1.2rem);
+  font-size: clamp(1.1rem, 2.5vh, 1.3rem);
   color: var(--speed-subtitle-color);
-  margin-bottom: max(20px, 3vh);
+  margin-bottom: max(25px, 3.5vh);
 }
 
 .speed-options {
   display: flex;
   justify-content: center;
-  gap: max(15px, 1.5vw);
+  gap: max(20px, 2vw);
   flex-wrap: wrap;
 }
 
 .speed-option {
   background-color: var(--speed-option-bg);
   border: none;
-  border-radius: 12px;
-  padding: max(15px, 2vh) max(20px, 1.5vw);
-  width: clamp(180px, 30vw, 220px);
+  border-radius: 16px;
+  padding: max(20px, 2.5vh) max(25px, 2vw);
+  width: clamp(200px, 32vw, 250px);
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 5px 12px var(--speed-option-shadow);
+  box-shadow: 0 6px 15px var(--speed-option-shadow);
   text-align: left;
   border: 2px solid transparent;
 }
 
 .speed-option:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
   border-color: var(--primary-color);
 }
 body.dark-theme .speed-option:hover {
@@ -516,28 +516,28 @@ body.dark-theme .speed-option:hover {
 .speed-content {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
 }
 
 .speed-emoji {
-  font-size: clamp(1.8rem, 4vh, 2.2rem);
+  font-size: clamp(2rem, 4.5vh, 2.5rem);
 }
 
 .speed-text h3 {
-  font-size: clamp(1rem, 2.2vh, 1.2rem);
-  margin-bottom: 3px;
+  font-size: clamp(1.1rem, 2.5vh, 1.3rem);
+  margin-bottom: 4px;
   color: var(--speed-text-color);
 }
 
 .speed-text p {
-  font-size: clamp(0.8rem, 1.6vh, 0.9rem);
+  font-size: clamp(0.85rem, 1.8vh, 0.95rem);
   color: var(--speed-subtitle-color);
-  line-height: 1.3;
+  line-height: 1.4;
 }
 
 .speed-note {
-  margin-top: max(20px, 3vh);
-  font-size: clamp(0.85rem, 1.8vh, 1rem);
+  margin-top: max(25px, 3.5vh);
+  font-size: clamp(0.9rem, 2vh, 1.05rem);
   color: var(--speed-note-color);
 }
 
@@ -559,40 +559,40 @@ body.dark-theme .speed-option:hover {
 
 .settings-content {
   background-color: var(--settings-bg);
-  padding: max(25px, 3vh) max(30px, 2vw);
-  border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  padding: max(30px, 3.5vh) max(35px, 2.5vw);
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   width: 90%;
-  max-width: 500px;
+  max-width: 550px;
   color: var(--settings-text);
   display: flex;
   flex-direction: column;
-  gap: max(20px, 2.5vh);
+  gap: max(25px, 3vh);
 }
 
 .settings-content h2 {
   text-align: center;
-  margin-bottom: max(5px, 1vh);
-  font-size: clamp(1.5rem, 4vh, 2rem);
+  margin-bottom: max(10px, 1.5vh);
+  font-size: clamp(1.8rem, 4.5vh, 2.2rem);
   color: var(--settings-text);
 }
 
 .setting-item {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .setting-item label {
-  font-size: clamp(0.9rem, 2vh, 1.05rem);
+  font-size: clamp(1rem, 2.2vh, 1.1rem);
   font-weight: 500;
   color: var(--settings-label);
 }
 
 #paceSelect {
-  padding: max(10px, 1.2vh);
-  font-size: clamp(0.9rem, 1.8vh, 1rem);
-  border-radius: 6px;
+  padding: max(12px, 1.5vh);
+  font-size: clamp(1rem, 2vh, 1.05rem);
+  border-radius: 8px;
   border: 1px solid var(--select-border);
   background-color: var(--select-bg);
   color: var(--select-text);
@@ -601,14 +601,14 @@ body.dark-theme .speed-option:hover {
 
 .theme-color-options {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
 .theme-color-option {
-  width: 35px;
-  height: 35px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   border: 2px solid var(--theme-option-border);
   cursor: pointer;
@@ -623,40 +623,40 @@ body.dark-theme .speed-option:hover {
 
 .theme-color-option.selected-theme {
   border-color: var(--theme-option-selected-border);
-  box-shadow: 0 0 8px 1px var(--theme-option-selected-border);
+  box-shadow: 0 0 10px 2px var(--theme-option-selected-border);
 }
 
 /* Settings close button */
 .settings-content > button {
-  padding: max(12px, 1.5vh) max(20px, 1.5vw);
-  font-size: clamp(0.9rem, 2vh, 1rem);
+  padding: max(14px, 1.8vh) max(25px, 2vw);
+  font-size: clamp(1rem, 2.2vh, 1.1rem);
   border: none;
   border-radius: 30px;
   cursor: pointer;
   background: linear-gradient(145deg, #aaa, #888);
   color: var(--text-color-light);
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 1px;
   transition: all 0.3s ease;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
-  margin-top: max(15px, 2vh);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  margin-top: max(20px, 2.5vh);
 }
 
 .settings-content > button:hover {
   background: linear-gradient(145deg, #bbb, #999);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 7px 14px rgba(0, 0, 0, 0.2);
 }
 
-/* Settings Button (Gear Icon - Top Left) */
+/* Settings Button (Gear Icon - Top Left) - Larger */
 #settingsButton {
   position: absolute;
-  top: 20px;
-  left: 20px;
-  font-size: clamp(1.5rem, 3.5vh, 1.8rem);
+  top: 25px;
+  left: 25px;
+  font-size: clamp(1.8rem, 4vh, 2.2rem);
   text-decoration: none;
   background: transparent;
-  color: var(--text-color-light); /* Icon color */
-  padding: max(8px, 1vh);
+  color: var(--text-color-light);
+  padding: max(10px, 1.2vh);
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -671,7 +671,7 @@ body.dark-theme .speed-option:hover {
 #settingsButton:focus {
   outline: none;
   animation: none;
-  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.7);
+  box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.7);
 }
 
 #settingsButton:hover {
@@ -684,15 +684,15 @@ body.timer-active #settingsButton {
   display: none;
 }
 
-/* Fullscreen Button (Top Right) */
+/* Fullscreen Button (Top Right) - Larger */
 #fullscreenButton {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  font-size: clamp(1.2rem, 3vh, 1.5rem);
+  top: 25px;
+  right: 25px;
+  font-size: clamp(1.5rem, 3.5vh, 1.8rem);
   background: transparent;
-  color: #adadad; /* Changed icon color to gray */
-  padding: max(8px, 1vh);
+  color: #adadad;
+  padding: max(10px, 1.2vh);
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -704,23 +704,18 @@ body.timer-active #settingsButton {
 }
 
 #fullscreenButton svg {
-  width: clamp(20px, 4vh, 26px);
-  height: clamp(20px, 4vh, 26px);
-  stroke: #adadad; /* Ensure SVG stroke also uses gray */
+  width: clamp(24px, 4.5vh, 30px);
+  height: clamp(24px, 4.5vh, 30px);
+  stroke: #adadad;
 }
 
 #fullscreenButton:hover {
-  background: rgba(
-    255,
-    255,
-    255,
-    0.1
-  ); /* Subtle background on hover - MATCHES settings button */
-  transform: scale(1.1); /* Keep scale effect */
-  color: #cccccc; /* Slightly lighten gray on hover */
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+  color: #cccccc;
 }
 #fullscreenButton:hover svg {
-  stroke: #cccccc; /* Slightly lighten SVG stroke on hover */
+  stroke: #cccccc;
 }
 
 #settingsPage:target ~ #fullscreenButton,
@@ -731,23 +726,23 @@ body.settings-open #fullscreenButton {
 /* Notification Area Styling */
 #notificationArea {
   position: fixed;
-  bottom: 20px;
+  bottom: 25px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1001;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .notification {
   background-color: var(--notification-bg);
   color: var(--notification-text);
-  padding: 12px 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  font-size: clamp(0.9rem, 1.8vh, 1rem);
+  padding: 14px 22px;
+  border-radius: 10px;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+  font-size: clamp(0.95rem, 2vh, 1.05rem);
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 0.4s ease, transform 0.4s ease;
@@ -769,87 +764,26 @@ body.settings-open #fullscreenButton {
   }
 }
 
-/* Responsive adjustments */
-@media (max-height: 650px) {
-  /* Styles for shorter screens */
-  .container {
-    padding: 15px;
-    border-radius: 15px;
-  }
+/* Responsive adjustments - Reduced impact */
+@media (max-height: 700px) {
+  /* Increased threshold */
+  /* Styles for shorter screens - Less aggressive reduction */
   #menu {
-    gap: 15px; /* Adjusted gap for shorter screens */
+    gap: 18px; /* Slightly smaller gap */
   }
   #menu button {
-    padding: 15px 20px; /* Adjusted padding */
-    font-size: 1.1rem; /* Adjusted font size */
-  }
-  #sectionTitle {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
+    padding: 18px 25px; /* Slightly smaller padding */
+    font-size: clamp(1.2rem, 3.2vh, 1.6rem); /* Slightly smaller font */
+    max-width: 700px; /* Adjust max-width for shorter screens */
   }
   #timeDisplay {
-    font-size: 3rem;
-    margin: 10px 0;
-  }
-  .progress-container {
-    height: 15px;
-    margin: 10px 0;
-  }
-  #questionPacing {
-    font-size: 0.9rem;
-    padding: 8px 12px;
-    margin: 10px 0;
-  }
-  .timer-controls {
-    margin-top: 10px;
-    gap: 10px;
+    font-size: clamp(3.2rem, 14vh, 5.5rem); /* Slightly smaller font */
   }
   .timer-controls button {
-    padding: 8px 18px;
-    font-size: 0.8rem;
+    min-width: 130px; /* Adjust min-width */
   }
-  #backArrow,
-  #settingsButton,
-  #fullscreenButton {
-    top: 10px;
-    padding: 6px;
-  }
-  #settingsButton {
-    left: 10px;
-    font-size: 1.3rem;
-  }
-  #fullscreenButton {
-    right: 10px;
-  }
-  #fullscreenButton svg {
-    width: 18px;
-    height: 18px;
-  }
-  #customInput h2 {
-    font-size: 1.5rem;
-  }
-  #customInput label {
-    font-size: 0.9rem;
-  }
-  #customInput input[type="number"] {
-    padding: 8px;
-    font-size: 0.9rem;
-  }
-  .custom-buttons button {
-    padding: 8px 15px;
-    font-size: 0.9rem;
-  }
-  .speed-option {
-    padding: 10px 15px;
-  }
-  .speed-emoji {
-    font-size: 1.5rem;
-  }
-  .speed-text h3 {
-    font-size: 0.9rem;
-  }
-  .speed-text p {
-    font-size: 0.75rem;
+  body.fullscreen-active .timer-controls button {
+    min-width: 160px; /* Adjust fullscreen min-width */
   }
 }
 
@@ -859,12 +793,25 @@ body.settings-open #fullscreenButton {
     padding: 10px;
   }
   .container {
-    padding: 10px;
-    height: calc(100vh - 20px);
+    padding: 15px; /* Adjusted padding */
   }
   #menu button {
-    font-size: 1.1rem; /* Adjusted font size for narrow screens */
-    padding: 15px; /* Adjusted padding */
-    max-width: 90%; /* Allow buttons to take more width */
+    font-size: clamp(1.2rem, 3.5vh, 1.6rem); /* Adjusted font size */
+    padding: 18px; /* Adjusted padding */
+    max-width: 95%;
+    max-width: 90%; /* Adjust max-width for narrow screens */
+  }
+  #timeDisplay {
+    font-size: clamp(3rem, 15vh, 5rem); /* Adjust font size */
+  }
+  .timer-controls button {
+    min-width: 120px; /* Adjust min-width */
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  body.fullscreen-active .timer-controls button {
+    min-width: 150px; /* Adjust fullscreen min-width */
+    padding-left: 30px;
+    padding-right: 30px;
   }
 }

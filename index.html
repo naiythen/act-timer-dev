@@ -3,10 +3,7 @@
   <head>
     <link rel="icon" type="image/webp" href="/favico.png" />
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
       content="Ace your ACT with this efficient ACT Timer! Practice time management with customizable timers for each section, full tests, and personalized settings. Improve your pacing and conquer the ACT."
@@ -91,8 +88,12 @@
           <div class="progress-bar"></div>
         </div>
         <div id="questionPacing">
-          <span id="questionCount">Questions: 0</span> |
+          <span id="paceDescription">Pace: On Time</span>
+          <span class="separator"> | </span>
           <span id="targetQuestion">You should be on Q: 1</span>
+          <span id="totalQuestionCount" style="display: none"
+            >Questions: 0</span
+          >
         </div>
         <div class="timer-controls">
           <button id="pauseResumeButton" onclick="pauseResumeTimer()">
@@ -110,7 +111,6 @@
       <div id="settingsPage" style="display: none">
         <div class="settings-content">
           <h2>Settings</h2>
-
           <div class="setting-item">
             <label for="paceSelect">Pace Preference:</label>
             <select id="paceSelect" onchange="updatePaceSetting(this.value)">
@@ -119,7 +119,6 @@
               <option value="2">10 Minutes Early</option>
             </select>
           </div>
-
           <div class="setting-item">
             <label>Theme Color:</label>
             <div class="theme-color-options">
