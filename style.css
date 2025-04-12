@@ -57,6 +57,7 @@ body.dark-theme {
   --notification-bg: rgba(50, 50, 50, 0.9);
   --notification-text: #fff;
   --icon-color: #ffffff; /* Icon color for dark theme */
+  --settings-note-color: #aaa; /* Color for the settings note */
 }
 
 /* Default Theme Variables (Light Theme) */
@@ -93,6 +94,7 @@ body.dark-theme {
   --notification-bg: rgba(240, 240, 240, 0.95);
   --notification-text: #333;
   --icon-color: #000000; /* Icon color for light theme */
+  --settings-note-color: #666; /* Color for the settings note */
 }
 
 /* Main content container */
@@ -642,6 +644,14 @@ body.dark-theme .speed-option:hover {
   background-color: var(--select-bg);
   color: var(--select-text);
   cursor: pointer;
+}
+
+/* Style for the note below pace setting */
+.settings-note {
+  font-size: clamp(0.8rem, 1.6vh, 0.9rem);
+  color: var(--settings-note-color);
+  margin-top: 5px; /* Space above the note */
+  text-align: left; /* Align with label */
 }
 
 .theme-color-options {
