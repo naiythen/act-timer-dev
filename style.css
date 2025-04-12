@@ -130,7 +130,7 @@ body.dark-theme {
 /* Content screens within the container */
 .content-screen {
   width: 100%;
-  max-width: 700px;
+  max-width: 800px; /* Increased max-width for content */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -147,20 +147,24 @@ body.dark-theme {
 
 /* Menu layout */
 #menu {
-  gap: max(18px, 2.5vh); /* Increased gap slightly */
+  gap: max(20px, 3vh); /* Increased gap further */
 }
 
-/* Menu button styling - Increased Size */
+/* Menu button styling - Increased Size Significantly */
 #menu button {
-  padding: max(16px, 2.2vh) max(25px, 2vw); /* Increased padding */
-  font-size: clamp(1.1rem, 2.8vh, 1.5rem); /* Increased font size */
-  border-radius: 50px;
+  padding: max(20px, 2.8vh) max(30px, 2.5vw); /* Increased padding significantly */
+  font-size: clamp(
+    1.3rem,
+    3.5vh,
+    1.8rem
+  ); /* Increased font size significantly */
+  border-radius: 60px; /* Slightly larger radius */
   cursor: pointer;
   color: var(--text-color-light);
   text-transform: uppercase;
-  letter-spacing: 1.2px; /* Slightly increased letter spacing */
+  letter-spacing: 1.5px; /* Increased letter spacing */
   transition: all 0.3s ease;
-  box-shadow: 0 7px 14px var(--button-shadow); /* Adjusted shadow */
+  box-shadow: 0 8px 16px var(--button-shadow); /* Adjusted shadow */
   position: relative;
   overflow: hidden;
   border: 2px solid transparent;
@@ -169,18 +173,19 @@ body.dark-theme {
     var(--primary-color),
     var(--primary-hover-color)
   );
-  width: 90%;
-  max-width: 450px; /* Increased max width */
+  width: 95%; /* Use more width */
+  max-width: 550px; /* Increased max width significantly */
   text-align: center;
+  font-weight: 500; /* Slightly bolder */
 }
 
 #menu button:hover {
   background: var(--primary-hover-color);
-  box-shadow: 0 9px 18px rgba(51, 153, 255, 0.35); /* Adjusted shadow */
+  box-shadow: 0 10px 20px rgba(51, 153, 255, 0.4); /* Adjusted shadow */
 }
 
 #menu button:active {
-  transform: scale(0.98);
+  transform: scale(0.97); /* Adjusted active scale */
 }
 
 /* Timer screen layout and animation */
@@ -670,7 +675,7 @@ body.dark-theme .speed-option:hover {
 }
 
 #settingsButton:hover {
-  background: rgba(255, 255, 255, 0.1); /* Subtle background on hover */
+  background: rgba(255, 255, 255, 0.1);
   transform: scale(1.1) rotate(15deg);
   box-shadow: none;
 }
@@ -686,7 +691,7 @@ body.timer-active #settingsButton {
   right: 20px;
   font-size: clamp(1.2rem, 3vh, 1.5rem);
   background: transparent;
-  color: var(--text-color-light); /* Icon color */
+  color: #adadad; /* Changed icon color to gray */
   padding: max(8px, 1vh);
   border-radius: 50%;
   cursor: pointer;
@@ -701,6 +706,7 @@ body.timer-active #settingsButton {
 #fullscreenButton svg {
   width: clamp(20px, 4vh, 26px);
   height: clamp(20px, 4vh, 26px);
+  stroke: #adadad; /* Ensure SVG stroke also uses gray */
 }
 
 #fullscreenButton:hover {
@@ -711,6 +717,10 @@ body.timer-active #settingsButton {
     0.1
   ); /* Subtle background on hover - MATCHES settings button */
   transform: scale(1.1); /* Keep scale effect */
+  color: #cccccc; /* Slightly lighten gray on hover */
+}
+#fullscreenButton:hover svg {
+  stroke: #cccccc; /* Slightly lighten SVG stroke on hover */
 }
 
 #settingsPage:target ~ #fullscreenButton,
@@ -767,11 +777,11 @@ body.settings-open #fullscreenButton {
     border-radius: 15px;
   }
   #menu {
-    gap: 12px; /* Adjusted gap for shorter screens */
+    gap: 15px; /* Adjusted gap for shorter screens */
   }
   #menu button {
-    padding: 12px 18px; /* Adjusted padding */
-    font-size: 1rem; /* Adjusted font size */
+    padding: 15px 20px; /* Adjusted padding */
+    font-size: 1.1rem; /* Adjusted font size */
   }
   #sectionTitle {
     font-size: 1.5rem;
@@ -853,7 +863,8 @@ body.settings-open #fullscreenButton {
     height: calc(100vh - 20px);
   }
   #menu button {
-    font-size: 1rem; /* Adjusted font size for narrow screens */
-    padding: 12px; /* Adjusted padding */
+    font-size: 1.1rem; /* Adjusted font size for narrow screens */
+    padding: 15px; /* Adjusted padding */
+    max-width: 90%; /* Allow buttons to take more width */
   }
 }
