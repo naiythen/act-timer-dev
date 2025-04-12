@@ -4,6 +4,10 @@
     <link rel="icon" type="image/webp" href="/favico.png" />
     <meta charset="UTF-8" />
     <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta
       name="description"
       content="Ace your ACT with this efficient ACT Timer! Practice time management with customizable timers for each section, full tests, and personalized settings. Improve your pacing and conquer the ACT."
     />
@@ -12,7 +16,7 @@
   </head>
   <body class="dark-theme">
     <div class="container">
-      <div id="speedSelection" style="display: none">
+      <div id="speedSelection" class="content-screen" style="display: none">
         <h2>⏱️ Set Your Pace</h2>
         <p class="speed-subtitle">
           Choose how early you want to finish sections:
@@ -49,7 +53,7 @@
         <p class="speed-note">You can change this later in settings</p>
       </div>
 
-      <div id="menu">
+      <div id="menu" class="content-screen">
         <button onclick="startTimer('English', 45, 75)">
           English (45 min)
         </button>
@@ -64,7 +68,11 @@
         <button onclick="showCustomInput()">Custom</button>
       </div>
 
-      <div id="customInput" style="display: none; text-align: center">
+      <div
+        id="customInput"
+        class="content-screen"
+        style="display: none; text-align: center"
+      >
         <h2>Custom Timer</h2>
         <label for="customTime">Time (minutes):</label>
         <input type="number" id="customTime" placeholder="e.g., 10" />
@@ -76,22 +84,23 @@
         </div>
       </div>
 
-      <div id="timerScreen" style="display: none">
+      <div id="timerScreen" class="content-screen" style="display: none">
         <h1 id="sectionTitle">Section</h1>
         <div id="timeDisplay">00:00</div>
         <div class="progress-container">
           <div class="progress-bar"></div>
         </div>
-        <div id="questionCounter">Questions: 0 | Pace: 0s/q</div>
+        <div id="questionPacing">
+          <span id="questionCount">Questions: 0</span> |
+          <span id="targetQuestion">You should be on Q: 1</span>
+        </div>
         <div class="timer-controls">
           <button id="pauseResumeButton" onclick="pauseResumeTimer()">
             Pause
           </button>
           <button onclick="stopTimer()">Stop</button>
         </div>
-        <div id="fullTestProgress" style="display: none">
-          Section 1 of 4
-        </div>
+        <div id="fullTestProgress" style="display: none">Section 1 of 4</div>
       </div>
 
       <button id="backArrow" onclick="stopTimer()" style="display: none">
@@ -170,7 +179,7 @@
               ></button>
             </div>
           </div>
-          <button onclick="closeSettings()">Back to Menu</button>
+          <button onclick="closeSettings()">Back</button>
         </div>
       </div>
 
@@ -204,6 +213,7 @@
         </svg>
       </button>
     </div>
+    <div id="notificationArea"></div>
 
     <audio id="alarmSound" src="chime.mp3" preload="auto"></audio>
 
