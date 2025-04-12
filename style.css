@@ -56,6 +56,7 @@ body.dark-theme {
   --theme-option-selected-border: #fff;
   --notification-bg: rgba(50, 50, 50, 0.9);
   --notification-text: #fff;
+  --icon-color: #ffffff; /* Icon color for dark theme */
 }
 
 /* Default Theme Variables (Light Theme) */
@@ -91,6 +92,7 @@ body.dark-theme {
   --primary-rgb: 51, 153, 255;
   --notification-bg: rgba(240, 240, 240, 0.95);
   --notification-text: #333;
+  --icon-color: #000000; /* Icon color for light theme */
 }
 
 /* Main content container */
@@ -302,6 +304,7 @@ body.dark-theme #timeDisplay {
   align-items: center; /* Vertically align items */
   min-width: 300px;
   text-align: center;
+  position: relative; /* Needed for pseudo-element */
 }
 #questionPacing .separator {
   margin: 0 5px;
@@ -312,21 +315,41 @@ body.dark-theme #timeDisplay {
 }
 /* Style for the visibility toggle icon */
 .pacing-visibility-toggle {
-  font-size: 1.2em; /* Adjust icon size */
-  margin-left: 10px; /* Space between text and icon */
+  margin-left: 12px; /* Space between text and icon */
   cursor: pointer;
   transition: opacity 0.3s ease;
   user-select: none; /* Prevent text selection */
+  line-height: 1; /* Adjust line height for SVG alignment */
+  position: relative; /* Needed for pseudo-element */
+  display: inline-block; /* Needed for pseudo-element */
 }
-/* Style for blurred text */
+.pacing-visibility-toggle svg {
+  width: clamp(1.1em, 2.5vh, 1.5em); /* Size relative to parent font size */
+  height: clamp(1.1em, 2.5vh, 1.5em);
+  display: block; /* Remove extra space below SVG */
+  fill: none; /* Use stroke for B&W look */
+  stroke: var(--icon-color); /* Use theme variable for icon color */
+  stroke-width: 1.5; /* Adjust stroke width */
+}
+
+/* Style for blurred text - STRONGER BLUR */
 #questionPacing.blurred #pacingTextContent {
-  filter: blur(4px);
-  user-select: none; /* Prevent selecting blurred text */
-  pointer-events: none; /* Prevent interaction with blurred text */
+  filter: blur(7px); /* Increased blur */
+  user-select: none;
+  pointer-events: none;
 }
-/* Style for the icon when text is blurred */
-#questionPacing.blurred .pacing-visibility-toggle {
-  opacity: 0.6; /* Dim the icon slightly */
+
+/* Style for the icon when text is blurred - Line through */
+#questionPacing.blurred .pacing-visibility-toggle::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -5%; /* Start slightly left */
+  width: 110%; /* Extend slightly past edges */
+  height: 1.5px; /* Line thickness */
+  background-color: var(--icon-color); /* Use icon color for line */
+  transform: translateY(-50%) rotate(-45deg); /* Position and rotate line */
+  transform-origin: center;
 }
 
 /* Timer control buttons container */

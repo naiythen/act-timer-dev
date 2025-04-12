@@ -32,6 +32,9 @@ const paceDescriptionSpan = document.getElementById("paceDescription");
 const targetQuestionSpan = document.getElementById("targetQuestion");
 const totalQuestionCountSpan = document.getElementById("totalQuestionCount");
 const separatorSpan = questionPacingDisplay.querySelector(".separator");
+const togglePacingVisibilityButton = document.getElementById(
+  "togglePacingVisibility"
+); // Get eye button ref
 const pauseResumeButton = document.getElementById("pauseResumeButton");
 const backArrow = document.getElementById("backArrow");
 const settingsButton = document.getElementById("settingsButton");
@@ -50,8 +53,18 @@ function initialize() {
   }
   applyTheme();
   document.addEventListener("visibilitychange", handleVisibilityChange);
-  document.addEventListener("fullscreenchange", handleFullscreenChange); // Add listener
+  document.addEventListener("fullscreenchange", handleFullscreenChange);
   initializeSettingsPage();
+
+  // Add event listener for the pacing visibility toggle here in initialize
+  if (togglePacingVisibilityButton) {
+    togglePacingVisibilityButton.addEventListener("click", () => {
+      // Ensure questionPacingDisplay is the element containing the class
+      if (questionPacingDisplay) {
+        questionPacingDisplay.classList.toggle("blurred");
+      }
+    });
+  }
 }
 
 function getCookie(name) {
@@ -204,7 +217,7 @@ function startTimer(section, timeMinutes, questions) {
   endTime = Date.now() + initialDurationSeconds * 1000;
   pausedTime = 0;
 
-  setupTimerUI(false); // isCustom = false
+  setupTimerUI(false);
   startInterval();
 }
 
@@ -231,7 +244,7 @@ function startNextFullTestSection() {
   endTime = Date.now() + initialDurationSeconds * 1000;
   pausedTime = 0;
 
-  setupTimerUI(false); // isCustom = false
+  setupTimerUI(false);
   fullTestProgressDisplay.textContent = `Section ${
     currentFullTestSectionIndex + 1
   } of ${fullTestSections.length}: ${currentSection}`;
@@ -258,7 +271,7 @@ function startCustomTimer() {
   endTime = Date.now() + initialDurationSeconds * 1000;
   pausedTime = 0;
 
-  setupTimerUI(true); // isCustom = true
+  setupTimerUI(true);
   startInterval();
 }
 
@@ -273,27 +286,34 @@ function setupTimerUI(isCustom) {
   sectionTitle.textContent = currentSection;
   pauseResumeButton.textContent = "Pause";
 
-  // Configure pacing display based on timer type
+  // Explicitly show the pacing display container
+  if (questionPacingDisplay) {
+    questionPacingDisplay.style.display = "inline-flex"; // Use inline-flex as per CSS
+    questionPacingDisplay.classList.remove("blurred"); // Ensure not blurred initially
+  }
+
   if (isCustom) {
     paceDescriptionSpan.textContent = "Pace: Custom";
+    paceDescriptionSpan.style.display = "inline"; // Ensure pace description is visible
     if (totalQuestions > 0) {
       totalQuestionCountSpan.textContent = `Questions: ${totalQuestions}`;
       totalQuestionCountSpan.style.display = "inline";
-      targetQuestionSpan.style.display = "none"; // Hide target Q
+      targetQuestionSpan.style.display = "none";
       separatorSpan.style.display = "inline";
     } else {
       totalQuestionCountSpan.style.display = "none";
-      targetQuestionSpan.style.display = "none"; // Hide target Q
-      separatorSpan.style.display = "none"; // Hide separator if no questions
+      targetQuestionSpan.style.display = "none";
+      separatorSpan.style.display = "none";
     }
   } else {
     const speedPref = getCookie("speed") || "0";
     paceDescriptionSpan.textContent = `Pace: ${
       paceDescriptions[speedPref] || "On Time"
     }`;
-    targetQuestionSpan.style.display = "inline"; // Show target Q
-    totalQuestionCountSpan.style.display = "none"; // Hide total Q count
-    separatorSpan.style.display = "inline"; // Show separator
+    paceDescriptionSpan.style.display = "inline"; // Ensure pace description is visible
+    targetQuestionSpan.style.display = "inline";
+    totalQuestionCountSpan.style.display = "none";
+    separatorSpan.style.display = "inline";
   }
 
   updateTimerDisplay();
@@ -342,7 +362,6 @@ function updateTimerDisplay(seconds = null) {
       : 0;
   progressBar.style.width = `${progressPercent}%`;
 
-  // Update target question only if it's visible (not custom timer with questions)
   if (
     targetQuestionSpan.style.display !== "none" &&
     totalQuestions > 0 &&
@@ -359,7 +378,6 @@ function updateTimerDisplay(seconds = null) {
     targetQuestionSpan.textContent = `You should be on Q: ${targetQuestion}`;
   }
 
-  // Update pace description for standard timers (it might change if settings are adjusted mid-timer, though not implemented yet)
   if (currentSection !== "Custom Timer") {
     const speedPref = getCookie("speed") || "0";
     paceDescriptionSpan.textContent = `Pace: ${
@@ -433,10 +451,11 @@ function resetTimerUI() {
   timeDisplay.textContent = "00:00";
   progressBar.style.width = "100%";
   timeDisplay.classList.remove("warning");
-  questionPacingDisplay.style.display = "none";
+  if (questionPacingDisplay) questionPacingDisplay.style.display = "none"; // Hide pacing display on reset
+  if (questionPacingDisplay) questionPacingDisplay.classList.remove("blurred"); // Remove blur on reset
   fullTestProgressDisplay.style.display = "none";
   document.body.classList.remove("timer-active");
-  document.body.classList.remove("fullscreen-active"); // Ensure fullscreen class removed
+  document.body.classList.remove("fullscreen-active");
   backArrow.style.display = "none";
   settingsButton.style.display = "block";
   fullscreenButton.style.display = "block";
@@ -518,7 +537,7 @@ function toggleFullscreen() {
     document.documentElement
       .requestFullscreen()
       .then(() => {
-        document.body.classList.add("fullscreen-active");
+        // Class added by handleFullscreenChange listener
       })
       .catch((err) =>
         showNotification(`Error enabling full-screen: ${err.message}`, "error")
@@ -526,13 +545,12 @@ function toggleFullscreen() {
   } else {
     if (document.exitFullscreen) {
       document.exitFullscreen().then(() => {
-        document.body.classList.remove("fullscreen-active");
+        // Class removed by handleFullscreenChange listener
       });
     }
   }
 }
 
-// Handle fullscreen changes (like pressing ESC)
 function handleFullscreenChange() {
   if (!document.fullscreenElement) {
     document.body.classList.remove("fullscreen-active");
@@ -575,7 +593,6 @@ function updatePaceSetting(value) {
   if (value !== previousValue) {
     setCookie("speed", value);
     showNotification("Pace Preference Changed!");
-    // Update display immediately if timer is running and it's not custom
     if (isRunning && currentSection !== "Custom Timer") {
       updateTimerDisplay();
     }
