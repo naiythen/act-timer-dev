@@ -1,4 +1,3 @@
-// --- Global Variables ---
 let timerInterval = null;
 let isRunning = false;
 let currentSection = "";
@@ -9,21 +8,19 @@ let pausedTime = 0;
 let wakeLock = null;
 let isFullTest = false;
 let currentFullTestSectionIndex = 0;
-let notificationTimeout = null; // To manage notification removal
+let notificationTimeout = null;
 
 const fullTestSections = [
   { name: "English", time: 45, questions: 75 },
   { name: "Math", time: 60, questions: 60 },
-  { name: "Break", time: 10, questions: 0 }, // Standard 10-minute break
+  { name: "Break", time: 10, questions: 0 },
   { name: "Reading", time: 35, questions: 40 },
   { name: "Science", time: 35, questions: 40 },
 ];
 
-// DOM Element References
 const timeDisplay = document.getElementById("timeDisplay");
 const progressBar = document.querySelector(".progress-bar");
 const sectionTitle = document.getElementById("sectionTitle");
-// Updated DOM references for question pacing
 const questionPacingDisplay = document.getElementById("questionPacing");
 const questionCountSpan = document.getElementById("questionCount");
 const targetQuestionSpan = document.getElementById("targetQuestion");
@@ -33,9 +30,8 @@ const settingsButton = document.getElementById("settingsButton");
 const fullscreenButton = document.getElementById("fullscreenButton");
 const alarmSound = document.getElementById("alarmSound");
 const fullTestProgressDisplay = document.getElementById("fullTestProgress");
-const notificationArea = document.getElementById("notificationArea"); // Reference to notification area
+const notificationArea = document.getElementById("notificationArea");
 
-// --- Initialization ---
 function initialize() {
   const savedSpeed = getCookie("speed");
   if (savedSpeed === null && !getCookie("speedPromptShown")) {
@@ -46,10 +42,9 @@ function initialize() {
   }
   applyTheme();
   document.addEventListener("visibilitychange", handleVisibilityChange);
-  initializeSettingsPage(); // Apply settings on load
+  initializeSettingsPage();
 }
 
-// --- Cookie Management ---
 function getCookie(name) {
   const cookies = document.cookie.split(";");
   for (let cookie of cookies) {
@@ -68,7 +63,6 @@ function setCookie(name, value, days = 365) {
   document.cookie = `${name}=${encodedValue};expires=${date.toUTCString()};path=/;SameSite=Lax`;
 }
 
-// --- Theme Management ---
 function setTheme(color) {
   setCookie("theme", color);
   applyTheme(color);
@@ -175,17 +169,14 @@ function rgbToHex(r, g, b) {
   );
 }
 
-// --- Speed Preference ---
 function showSpeedSelection() {
   hideAllScreens();
-  document.getElementById("speedSelection").style.display = "flex"; // Use flex
+  document.getElementById("speedSelection").style.display = "flex";
 }
 
 function setSpeedPreference(speedValue) {
   setCookie("speed", speedValue);
   showMenu();
-  // Optional: Show notification here too if desired when set initially
-  // showNotification("Pace Preference Set!");
 }
 
 function getSpeedAdjustmentMinutes() {
@@ -195,7 +186,6 @@ function getSpeedAdjustmentMinutes() {
   return 0;
 }
 
-// --- Timer Logic ---
 function startTimer(section, timeMinutes, questions) {
   isFullTest = false;
   currentSection = section;
@@ -218,7 +208,7 @@ function startFullTest() {
 function startNextFullTestSection() {
   if (currentFullTestSectionIndex >= fullTestSections.length) {
     stopTimer();
-    showNotification("Full ACT Test Completed!"); // Use notification
+    showNotification("Full ACT Test Completed!");
     showMenu();
     return;
   }
@@ -248,7 +238,7 @@ function startCustomTimer() {
   const questions = parseInt(questionsInput.value, 10) || 0;
 
   if (isNaN(timeMinutes) || timeMinutes <= 0) {
-    showNotification("Please enter a valid time in minutes.", "error"); // Use notification for error
+    showNotification("Please enter a valid time in minutes.", "error");
     return;
   }
 
@@ -265,23 +255,23 @@ function startCustomTimer() {
 
 function setupTimerUI() {
   hideAllScreens();
-  document.getElementById("timerScreen").style.display = "flex"; // Use flex
+  document.getElementById("timerScreen").style.display = "flex";
   document.body.classList.add("timer-active");
   backArrow.style.display = "block";
   settingsButton.style.display = "none";
-  fullscreenButton.style.display = "block"; // Ensure fullscreen is visible
+  fullscreenButton.style.display = "block";
 
   sectionTitle.textContent = currentSection;
   pauseResumeButton.textContent = "Pause";
-  updateTimerDisplay(); // Initial display update
+  updateTimerDisplay();
 }
 
 function startInterval() {
   clearInterval(timerInterval);
   isRunning = true;
-  timerInterval = setInterval(updateTimer, 100); // Update frequently
+  timerInterval = setInterval(updateTimer, 100);
   requestWakeLock();
-  updateTimer(); // Immediate update
+  updateTimer();
 }
 
 function updateTimer() {
@@ -297,7 +287,6 @@ function updateTimer() {
   }
 }
 
-// Updated function to handle the new question pacing display
 function updateTimerDisplay(seconds = null) {
   let remainingSeconds;
   if (seconds !== null) {
@@ -308,25 +297,20 @@ function updateTimerDisplay(seconds = null) {
       : Math.max(0, Math.round(pausedTime / 1000));
   }
 
-  // Format time MM:SS
   const minutes = Math.floor(remainingSeconds / 60);
   const displaySeconds = remainingSeconds % 60;
   timeDisplay.textContent = `${String(minutes).padStart(2, "0")}:${String(
     displaySeconds
   ).padStart(2, "0")}`;
 
-  // Update progress bar
   const progressPercent =
     initialDurationSeconds > 0
       ? (remainingSeconds / initialDurationSeconds) * 100
       : 0;
   progressBar.style.width = `${progressPercent}%`;
 
-  // Update question pacing display
   if (totalQuestions > 0 && initialDurationSeconds > 0) {
     const elapsedSeconds = initialDurationSeconds - remainingSeconds;
-    // Calculate which question the user *should* be on based on time elapsed
-    // Ensure targetQuestion is at least 1 and not more than totalQuestions
     const targetQuestion = Math.min(
       totalQuestions,
       Math.max(
@@ -337,12 +321,11 @@ function updateTimerDisplay(seconds = null) {
 
     questionCountSpan.textContent = `Questions: ${totalQuestions}`;
     targetQuestionSpan.textContent = `You should be on Q: ${targetQuestion}`;
-    questionPacingDisplay.style.display = "inline-block"; // Show the display
+    questionPacingDisplay.style.display = "inline-block";
   } else {
-    questionPacingDisplay.style.display = "none"; // Hide if no questions or duration
+    questionPacingDisplay.style.display = "none";
   }
 
-  // Warning style
   if (remainingSeconds <= 10 && remainingSeconds > 0) {
     timeDisplay.classList.add("warning");
   } else {
@@ -370,11 +353,9 @@ function handleTimerEnd() {
     setTimeout(() => {
       timeDisplay.classList.remove("warning");
       startNextFullTestSection();
-    }, 3000); // 3-second delay
+    }, 3000);
   } else {
     showNotification(`${currentSection} Timer Finished!`);
-    // Optional: Add a delay before automatically stopping or going to menu
-    // setTimeout(stopTimer, 3000);
   }
 }
 
@@ -411,7 +392,7 @@ function resetTimerUI() {
   timeDisplay.textContent = "00:00";
   progressBar.style.width = "100%";
   timeDisplay.classList.remove("warning");
-  questionPacingDisplay.style.display = "none"; // Hide pacing display
+  questionPacingDisplay.style.display = "none";
   fullTestProgressDisplay.style.display = "none";
   document.body.classList.remove("timer-active");
   backArrow.style.display = "none";
@@ -419,16 +400,12 @@ function resetTimerUI() {
   fullscreenButton.style.display = "block";
 }
 
-// --- Screen Wake Lock API ---
 async function requestWakeLock() {
   if ("wakeLock" in navigator) {
     try {
       wakeLock = await navigator.wakeLock.request("screen");
-      console.log("Screen Wake Lock acquired.");
       wakeLock.addEventListener("release", () => {
-        console.log("Screen Wake Lock released.");
         if (isRunning && document.visibilityState === "visible") {
-          console.log("Re-acquiring wake lock due to release while visible.");
           requestWakeLock();
         } else {
           wakeLock = null;
@@ -449,7 +426,6 @@ function releaseWakeLock() {
       .release()
       .then(() => {
         wakeLock = null;
-        console.log("Screen Wake Lock released by function call.");
       })
       .catch((err) => {
         console.error("Error releasing wake lock:", err);
@@ -463,25 +439,21 @@ function handleVisibilityChange() {
     isRunning &&
     wakeLock === null
   ) {
-    console.log("Tab became visible, re-acquiring wake lock.");
     requestWakeLock();
   }
 }
 
-// --- UI Navigation and Display ---
 function hideAllScreens() {
-  // Hide all content screens
   document
     .querySelectorAll(".content-screen")
     .forEach((screen) => (screen.style.display = "none"));
-  // Hide settings overlay specifically
   document.getElementById("settingsPage").style.display = "none";
 }
 
 function showMenu() {
   hideAllScreens();
-  resetTimerUI(); // Ensure timer UI is reset
-  document.getElementById("menu").style.display = "flex"; // Use flex
+  resetTimerUI();
+  document.getElementById("menu").style.display = "flex";
   document.body.classList.remove("timer-active");
   backArrow.style.display = "none";
   settingsButton.style.display = "block";
@@ -490,7 +462,7 @@ function showMenu() {
 
 function showCustomInput() {
   hideAllScreens();
-  document.getElementById("customInput").style.display = "flex"; // Use flex
+  document.getElementById("customInput").style.display = "flex";
   backArrow.style.display = "none";
   settingsButton.style.display = "block";
 }
@@ -499,7 +471,6 @@ function backToMenu() {
   showMenu();
 }
 
-// --- Fullscreen API ---
 function toggleFullscreen() {
   if (!document.fullscreenElement) {
     document.documentElement
@@ -514,9 +485,7 @@ function toggleFullscreen() {
   }
 }
 
-// --- Settings Page ---
 function openSettings() {
-  // Don't hide the current screen, just show the overlay
   document.getElementById("settingsPage").style.display = "flex";
   document.body.classList.add("settings-open");
   initializeSettingsPage();
@@ -525,7 +494,6 @@ function openSettings() {
 function closeSettings() {
   document.getElementById("settingsPage").style.display = "none";
   document.body.classList.remove("settings-open");
-  // No need to call showMenu or anything, just close the overlay
 }
 
 function initializeSettingsPage() {
@@ -546,15 +514,11 @@ function populateThemeSettings() {
   }
 }
 
-// Updated function to show notification
 function updatePaceSetting(value) {
   const previousValue = getCookie("speed") || "0";
   if (value !== previousValue) {
     setCookie("speed", value);
-    showNotification("Pace Preference Changed!"); // Show notification on change
-    // If a timer is running, you might want to update its duration immediately
-    // This requires more complex logic to adjust endTime if isRunning is true.
-    // For now, the change will apply the *next* time a timer starts.
+    showNotification("Pace Preference Changed!");
   }
 }
 
@@ -569,12 +533,9 @@ function updateSelectedThemeUI(selectedColor) {
   });
 }
 
-// --- Notification System ---
 function showNotification(message, type = "info") {
-  // Clear any existing timeout to remove previous notification immediately
   if (notificationTimeout) {
     clearTimeout(notificationTimeout);
-    // Optionally remove the existing notification element instantly
     const existingNotif = notificationArea.querySelector(".notification");
     if (existingNotif) {
       existingNotif.remove();
@@ -582,21 +543,17 @@ function showNotification(message, type = "info") {
   }
 
   const notification = document.createElement("div");
-  notification.className = `notification notification-${type}`; // Add type class (e.g., notification-error)
+  notification.className = `notification notification-${type}`;
   notification.textContent = message;
 
   notificationArea.appendChild(notification);
 
-  // Trigger fade in/out animation defined in CSS
-  // Set timeout to remove the element after animation completes (3s total duration)
   notificationTimeout = setTimeout(() => {
-    // Check if the notification still exists before trying to remove
     if (notificationArea.contains(notification)) {
       notification.remove();
     }
-    notificationTimeout = null; // Reset timeout ID
-  }, 3000); // Matches CSS animation total duration (0.4s fade in + 2.6s visible + 0.4s fade out)
+    notificationTimeout = null;
+  }, 3000);
 }
 
-// --- Run Initialization ---
 initialize();
