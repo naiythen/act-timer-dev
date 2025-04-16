@@ -31,10 +31,10 @@ const questionPacingDisplay = document.getElementById("questionPacing");
 const paceDescriptionSpan = document.getElementById("paceDescription");
 const targetQuestionSpan = document.getElementById("targetQuestion");
 const totalQuestionCountSpan = document.getElementById("totalQuestionCount");
-const separatorSpan = questionPacingDisplay.querySelector(".separator");
+const separatorSpan = questionPacingDisplay?.querySelector(".separator"); // Added optional chaining
 const togglePacingVisibilityButton = document.getElementById(
   "togglePacingVisibility"
-); // Get eye button ref
+);
 const pauseResumeButton = document.getElementById("pauseResumeButton");
 const backArrow = document.getElementById("backArrow");
 const settingsButton = document.getElementById("settingsButton");
@@ -42,27 +42,36 @@ const fullscreenButton = document.getElementById("fullscreenButton");
 const alarmSound = document.getElementById("alarmSound");
 const fullTestProgressDisplay = document.getElementById("fullTestProgress");
 const notificationArea = document.getElementById("notificationArea");
+const settingsScreen = document.getElementById("settingsScreen");
+const modeToggleButton = document.getElementById("modeToggle");
 
 function initialize() {
+  const savedMode = getCookie("uiMode") || "light";
+  const savedTheme = getCookie("theme");
   const savedSpeed = getCookie("speed");
+
+  applyMode(savedMode);
+  if (savedTheme) {
+    applyTheme(savedTheme);
+  } else {
+    applyTheme("#3498db");
+  }
+
   if (savedSpeed === null && !getCookie("speedPromptShown")) {
     showSpeedSelection();
     setCookie("speedPromptShown", "true", 1);
   } else {
     showMenu();
   }
-  applyTheme();
+
   document.addEventListener("visibilitychange", handleVisibilityChange);
   document.addEventListener("fullscreenchange", handleFullscreenChange);
   initializeSettingsPage();
 
-  // Add event listener for the pacing visibility toggle here in initialize
-  if (togglePacingVisibilityButton) {
+  if (togglePacingVisibilityButton && questionPacingDisplay) {
+    // Check both exist
     togglePacingVisibilityButton.addEventListener("click", () => {
-      // Ensure questionPacingDisplay is the element containing the class
-      if (questionPacingDisplay) {
-        questionPacingDisplay.classList.toggle("blurred");
-      }
+      questionPacingDisplay.classList.toggle("blurred");
     });
   }
 }
@@ -92,56 +101,18 @@ function setTheme(color) {
 }
 
 function applyTheme(color) {
-  let themeColor = color || getCookie("theme");
-
-  if (!themeColor) {
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    themeColor = prefersDark ? "#3498db" : "#3498db";
-    setCookie("theme", themeColor);
-  }
-
-  const rgb = hexToRgb(themeColor);
-  const luminance = 0.2126 * rgb.r + 0.7159 * rgb.g + 0.0721 * rgb.b;
-  const isDarkColor = luminance < 128;
-
-  if (isDarkColor) {
-    document.body.classList.add("dark-theme");
-    document.documentElement.style.setProperty(
-      "--theme-color-dark",
-      getDarkerShade(themeColor, 0.4)
-    );
-    document.documentElement.style.setProperty(
-      "--theme-color-light",
-      getDarkerShade(themeColor, 0.1)
-    );
-  } else {
-    document.body.classList.remove("dark-theme");
-    document.documentElement.style.setProperty(
-      "--theme-color-dark",
-      getDarkerShade(themeColor, 0.2)
-    );
-    document.documentElement.style.setProperty(
-      "--theme-color-light",
-      getLighterShade(themeColor, 0.3)
-    );
-  }
-
-  document.documentElement.style.setProperty("--primary-color", themeColor);
+  const rgb = hexToRgb(color);
+  document.documentElement.style.setProperty("--primary-color", color);
   document.documentElement.style.setProperty(
     "--primary-hover-color",
-    isDarkColor
-      ? getLighterShade(themeColor, 0.2)
-      : getDarkerShade(themeColor, 0.2)
+    0.2126 * rgb.r + 0.7159 * rgb.g + 0.0721 * rgb.b < 128
+      ? getLighterShade(color, 0.2)
+      : getDarkerShade(color, 0.2)
   );
-  document.documentElement.style.setProperty(
-    "--progress-bar-start",
-    themeColor
-  );
+  document.documentElement.style.setProperty("--progress-bar-start", color);
   document.documentElement.style.setProperty(
     "--progress-bar-end",
-    getLighterShade(themeColor, 0.3)
+    getLighterShade(color, 0.3)
   );
   document.documentElement.style.setProperty(
     "--button-shadow",
@@ -151,6 +122,31 @@ function applyTheme(color) {
     "--primary-rgb",
     `${rgb.r}, ${rgb.g}, ${rgb.b}`
   );
+  document.documentElement.style.setProperty(
+    "--theme-option-selected-border",
+    color
+  );
+}
+
+function applyMode(mode) {
+  if (mode === "dark") {
+    document.body.classList.add("dark-theme");
+  } else {
+    document.body.classList.remove("dark-theme");
+  }
+}
+
+function setMode(mode) {
+  applyMode(mode);
+  setCookie("uiMode", mode);
+  if (modeToggleButton) {
+    modeToggleButton.checked = mode === "dark";
+  }
+}
+
+function toggleMode(isDarkModeChecked) {
+  const newMode = isDarkModeChecked ? "dark" : "light";
+  setMode(newMode);
 }
 
 function getDarkerShade(color, factor) {
@@ -286,34 +282,33 @@ function setupTimerUI(isCustom) {
   sectionTitle.textContent = currentSection;
   pauseResumeButton.textContent = "Pause";
 
-  // Explicitly show the pacing display container
   if (questionPacingDisplay) {
-    questionPacingDisplay.style.display = "inline-flex"; // Use inline-flex as per CSS
-    questionPacingDisplay.classList.remove("blurred"); // Ensure not blurred initially
+    questionPacingDisplay.style.display = "inline-flex";
+    questionPacingDisplay.classList.remove("blurred");
   }
 
   if (isCustom) {
-    paceDescriptionSpan.textContent = "Pace: Custom";
-    paceDescriptionSpan.style.display = "inline"; // Ensure pace description is visible
+    paceDescriptionSpan.textContent = "Pace: On Time";
+    paceDescriptionSpan.style.display = "inline";
     if (totalQuestions > 0) {
       totalQuestionCountSpan.textContent = `Questions: ${totalQuestions}`;
       totalQuestionCountSpan.style.display = "inline";
       targetQuestionSpan.style.display = "none";
-      separatorSpan.style.display = "inline";
+      if (separatorSpan) separatorSpan.style.display = "inline";
     } else {
       totalQuestionCountSpan.style.display = "none";
       targetQuestionSpan.style.display = "none";
-      separatorSpan.style.display = "none";
+      if (separatorSpan) separatorSpan.style.display = "none";
     }
   } else {
     const speedPref = getCookie("speed") || "0";
     paceDescriptionSpan.textContent = `Pace: ${
       paceDescriptions[speedPref] || "On Time"
     }`;
-    paceDescriptionSpan.style.display = "inline"; // Ensure pace description is visible
+    paceDescriptionSpan.style.display = "inline";
     targetQuestionSpan.style.display = "inline";
     totalQuestionCountSpan.style.display = "none";
-    separatorSpan.style.display = "inline";
+    if (separatorSpan) separatorSpan.style.display = "inline";
   }
 
   updateTimerDisplay();
@@ -451,14 +446,14 @@ function resetTimerUI() {
   timeDisplay.textContent = "00:00";
   progressBar.style.width = "100%";
   timeDisplay.classList.remove("warning");
-  if (questionPacingDisplay) questionPacingDisplay.style.display = "none"; // Hide pacing display on reset
-  if (questionPacingDisplay) questionPacingDisplay.classList.remove("blurred"); // Remove blur on reset
+  if (questionPacingDisplay) questionPacingDisplay.style.display = "none";
+  if (questionPacingDisplay) questionPacingDisplay.classList.remove("blurred");
   fullTestProgressDisplay.style.display = "none";
   document.body.classList.remove("timer-active");
   document.body.classList.remove("fullscreen-active");
   backArrow.style.display = "none";
-  settingsButton.style.display = "block";
-  fullscreenButton.style.display = "block";
+  settingsButton.style.display = "block"; // Ensure visible on reset
+  fullscreenButton.style.display = "block"; // Ensure visible on reset
 }
 
 async function requestWakeLock() {
@@ -505,27 +500,25 @@ function handleVisibilityChange() {
 }
 
 function hideAllScreens() {
-  document
-    .querySelectorAll(".content-screen")
-    .forEach((screen) => (screen.style.display = "none"));
-  document.getElementById("settingsPage").style.display = "none";
+  document.getElementById("menu").style.display = "none";
+  document.getElementById("timerScreen").style.display = "none";
+  document.getElementById("customInput").style.display = "none";
+  document.getElementById("speedSelection").style.display = "none";
+  if (settingsScreen) settingsScreen.style.display = "none";
 }
 
 function showMenu() {
   hideAllScreens();
   resetTimerUI();
   document.getElementById("menu").style.display = "flex";
-  document.body.classList.remove("timer-active");
-  backArrow.style.display = "none";
-  settingsButton.style.display = "block";
-  fullscreenButton.style.display = "block";
 }
 
 function showCustomInput() {
   hideAllScreens();
   document.getElementById("customInput").style.display = "flex";
-  backArrow.style.display = "none";
   settingsButton.style.display = "block";
+  fullscreenButton.style.display = "block";
+  backArrow.style.display = "none";
 }
 
 function backToMenu() {
@@ -536,17 +529,13 @@ function toggleFullscreen() {
   if (!document.fullscreenElement) {
     document.documentElement
       .requestFullscreen()
-      .then(() => {
-        // Class added by handleFullscreenChange listener
-      })
+      .then(() => {})
       .catch((err) =>
         showNotification(`Error enabling full-screen: ${err.message}`, "error")
       );
   } else {
     if (document.exitFullscreen) {
-      document.exitFullscreen().then(() => {
-        // Class removed by handleFullscreenChange listener
-      });
+      document.exitFullscreen().then(() => {});
     }
   }
 }
@@ -560,25 +549,37 @@ function handleFullscreenChange() {
 }
 
 function openSettings() {
-  document.getElementById("settingsPage").style.display = "flex";
-  document.body.classList.add("settings-open");
+  // Check if settings are already open
+  if (settingsScreen && settingsScreen.style.display === "flex") {
+    closeSettings(); // If open, close it
+    return; // Stop execution here
+  }
+  // Otherwise, open settings
+  hideAllScreens();
+  if (settingsScreen) settingsScreen.style.display = "flex";
   initializeSettingsPage();
+  settingsButton.style.display = "block";
+  fullscreenButton.style.display = "block";
+  backArrow.style.display = "none";
 }
 
 function closeSettings() {
-  document.getElementById("settingsPage").style.display = "none";
-  document.body.classList.remove("settings-open");
+  showMenu(); // Always go back to menu when closing settings
 }
 
 function initializeSettingsPage() {
   populatePaceSettings();
   populateThemeSettings();
+  const currentMode = getCookie("uiMode") || "light";
+  if (modeToggleButton) {
+    modeToggleButton.checked = currentMode === "dark";
+  }
 }
 
 function populatePaceSettings() {
   const savedSpeed = getCookie("speed") || "0";
   const paceSelect = document.getElementById("paceSelect");
-  paceSelect.value = savedSpeed;
+  if (paceSelect) paceSelect.value = savedSpeed;
 }
 
 function populateThemeSettings() {
