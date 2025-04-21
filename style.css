@@ -640,19 +640,27 @@ body.fullscreen-active .timer-controls button {
   border: none;
   border-radius: 30px;
   cursor: pointer;
-  background: linear-gradient(145deg, #aaa, #888);
+  background: linear-gradient(
+    145deg,
+    var(--primary-color),
+    var(--primary-hover-color)
+  );
   color: var(--text-color-light);
   text-transform: uppercase;
   letter-spacing: 1px;
   transition: all 0.3s ease;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(var(--primary-rgb), 0.25);
   margin-top: max(20px, 2.5vh);
   align-self: center;
   min-width: 150px;
 }
 .settings-back-button:hover {
-  background: linear-gradient(145deg, #bbb, #999);
-  box-shadow: 0 7px 14px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(
+    145deg,
+    var(--primary-hover-color),
+    var(--primary-color)
+  );
+  box-shadow: 0 7px 14px rgba(var(--primary-rgb), 0.35);
 }
 
 /* Mode Toggle Switch */

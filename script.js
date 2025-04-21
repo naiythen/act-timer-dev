@@ -190,6 +190,8 @@ function rgbToHex(r, g, b) {
 function showSpeedSelection() {
   hideAllScreens();
   document.getElementById("speedSelection").style.display = "flex";
+  settingsButton.style.display = "none";
+  fullscreenButton.style.display = "block";
 }
 
 function setSpeedPreference(speedValue) {
