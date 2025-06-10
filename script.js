@@ -210,8 +210,8 @@ function startTimer(section, timeMinutes, questions) {
   isFullTest = false;
   currentSection = section;
   totalQuestions = questions;
-  const adjustmentMinutes = getSpeedAdjustmentMinutes();
-  initialDurationSeconds = Math.max(1, (timeMinutes - adjustmentMinutes) * 60);
+  // initialDurationSeconds is now the original time for the section
+  initialDurationSeconds = Math.max(1, timeMinutes * 60);
   endTime = Date.now() + initialDurationSeconds * 1000;
   pausedTime = 0;
 
@@ -236,9 +236,8 @@ function startNextFullTestSection() {
   const section = fullTestSections[currentFullTestSectionIndex];
   currentSection = section.name;
   totalQuestions = section.questions;
-  const adjustmentMinutes =
-    section.name === "Break" ? 0 : getSpeedAdjustmentMinutes();
-  initialDurationSeconds = Math.max(1, (section.time - adjustmentMinutes) * 60);
+  // initialDurationSeconds is now the original time for the section
+  initialDurationSeconds = Math.max(1, section.time * 60);
   endTime = Date.now() + initialDurationSeconds * 1000;
   pausedTime = 0;
 
@@ -265,7 +264,7 @@ function startCustomTimer() {
   isFullTest = false;
   currentSection = "Custom Timer";
   totalQuestions = questions;
-  initialDurationSeconds = timeMinutes * 60;
+  initialDurationSeconds = timeMinutes * 60; // Custom timer doesn't use pace adjustment
   endTime = Date.now() + initialDurationSeconds * 1000;
   pausedTime = 0;
 
@@ -295,7 +294,7 @@ function setupTimerUI(isCustom) {
     if (totalQuestions > 0) {
       totalQuestionCountSpan.textContent = `Questions: ${totalQuestions}`;
       totalQuestionCountSpan.style.display = "inline";
-      targetQuestionSpan.style.display = "none";
+      targetQuestionSpan.style.display = "none"; // Custom timers don't show "You should be on Q: X"
       if (separatorSpan) separatorSpan.style.display = "inline";
     } else {
       totalQuestionCountSpan.style.display = "none";
@@ -308,9 +307,15 @@ function setupTimerUI(isCustom) {
       paceDescriptions[speedPref] || "On Time"
     }`;
     paceDescriptionSpan.style.display = "inline";
-    targetQuestionSpan.style.display = "inline";
-    totalQuestionCountSpan.style.display = "none";
-    if (separatorSpan) separatorSpan.style.display = "inline";
+    if (totalQuestions > 0) {
+        targetQuestionSpan.style.display = "inline";
+        totalQuestionCountSpan.style.display = "none";
+        if (separatorSpan) separatorSpan.style.display = "inline";
+    } else {
+        targetQuestionSpan.style.display = "none";
+        totalQuestionCountSpan.style.display = "none";
+        if (separatorSpan) separatorSpan.style.display = "none";
+    }
   }
 
   updateTimerDisplay();
@@ -359,21 +364,41 @@ function updateTimerDisplay(seconds = null) {
       : 0;
   progressBar.style.width = `${progressPercent}%`;
 
+  // Updated question pacing logic
   if (
-    targetQuestionSpan.style.display !== "none" &&
+    targetQuestionSpan.style.display !== "none" && // Visible for non-custom timers with questions
     totalQuestions > 0 &&
-    initialDurationSeconds > 0
+    initialDurationSeconds > 0 // This is the original full duration
   ) {
-    const elapsedSeconds = initialDurationSeconds - remainingSeconds;
-    const targetQuestion = Math.min(
-      totalQuestions,
-      Math.max(
-        1,
-        Math.ceil((elapsedSeconds / initialDurationSeconds) * totalQuestions)
-      )
-    );
-    targetQuestionSpan.textContent = `You should be on Q: ${targetQuestion}`;
+    const adjustmentMinutes = getSpeedAdjustmentMinutes();
+    const adjustmentSeconds = adjustmentMinutes * 60;
+
+    const originalSectionDurationSeconds = initialDurationSeconds;
+    // Paced target duration: how long the user *intends* the section to take for all questions
+    const pacedTargetDurationSeconds = Math.max(1, originalSectionDurationSeconds - adjustmentSeconds);
+
+    const elapsedSeconds = originalSectionDurationSeconds - remainingSeconds; // Actual time passed
+
+    let currentTargetQuestion;
+
+    if (elapsedSeconds >= pacedTargetDurationSeconds && pacedTargetDurationSeconds > 0) {
+      currentTargetQuestion = totalQuestions;
+    } else if (pacedTargetDurationSeconds <= 0) {
+      // If pace setting implies finishing before starting, target last question
+      currentTargetQuestion = totalQuestions;
+    } else {
+      const paceProgressRatio = elapsedSeconds / pacedTargetDurationSeconds;
+      currentTargetQuestion = Math.min(
+        totalQuestions,
+        Math.max(
+          1,
+          Math.ceil(paceProgressRatio * totalQuestions)
+        )
+      );
+    }
+    targetQuestionSpan.textContent = `You should be on Q: ${currentTargetQuestion}`;
   }
+
 
   if (currentSection !== "Custom Timer") {
     const speedPref = getCookie("speed") || "0";
@@ -412,6 +437,8 @@ function handleTimerEnd() {
     }, 3000);
   } else {
     showNotification(`${currentSection} Timer Finished!`);
+    // If not a full test, and timer ends, consider going to menu or allowing restart.
+    // For now, it just shows notification. User has to click stop/back.
   }
 }
 
@@ -454,8 +481,8 @@ function resetTimerUI() {
   document.body.classList.remove("timer-active");
   document.body.classList.remove("fullscreen-active");
   backArrow.style.display = "none";
-  settingsButton.style.display = "block"; // Ensure visible on reset
-  fullscreenButton.style.display = "block"; // Ensure visible on reset
+  settingsButton.style.display = "block"; 
+  fullscreenButton.style.display = "block"; 
 }
 
 async function requestWakeLock() {
@@ -551,12 +578,10 @@ function handleFullscreenChange() {
 }
 
 function openSettings() {
-  // Check if settings are already open
   if (settingsScreen && settingsScreen.style.display === "flex") {
-    closeSettings(); // If open, close it
-    return; // Stop execution here
+    closeSettings(); 
+    return; 
   }
-  // Otherwise, open settings
   hideAllScreens();
   if (settingsScreen) settingsScreen.style.display = "flex";
   initializeSettingsPage();
@@ -566,7 +591,7 @@ function openSettings() {
 }
 
 function closeSettings() {
-  showMenu(); // Always go back to menu when closing settings
+  showMenu(); 
 }
 
 function initializeSettingsPage() {
@@ -596,8 +621,15 @@ function updatePaceSetting(value) {
   if (value !== previousValue) {
     setCookie("speed", value);
     showNotification("Pace Preference Changed!");
+    // If a timer is running and it's not a custom timer, update the display
+    // The question pacing text will update on the next tick of updateTimerDisplay()
     if (isRunning && currentSection !== "Custom Timer") {
-      updateTimerDisplay();
+       // updateTimerDisplay(); // Not strictly needed to call here, as setInterval will call it.
+                               // but paceDescriptionSpan might benefit from immediate update if not handled by setInterval quickly enough.
+                               // For now, relying on setInterval to update all relevant parts.
+       // Force an update of the pace description span immediately
+       const speedPref = getCookie("speed") || "0";
+       paceDescriptionSpan.textContent = `Pace: ${paceDescriptions[speedPref] || "On Time"}`;
     }
   }
 }
