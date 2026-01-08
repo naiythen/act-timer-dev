@@ -575,23 +575,23 @@ body.fullscreen-active .timer-controls button {
   gap: 3px;
 }
 .setting-item label {
-  font-size: clamp(0.85rem, 1.8vh, 0.95rem);
+  font-size: clamp(1rem, 2.2vh, 1.15rem);
   font-weight: 500;
   color: var(--settings-label);
-  margin-bottom: 3px;
+  margin-bottom: 5px;
   text-align: center; 
   width: 100%;
 }
 #paceSelect {
-  padding: max(12px, 1.5vh);
-  font-size: clamp(1rem, 2vh, 1.05rem);
-  border-radius: 8px;
+  padding: max(14px, 1.8vh) max(20px, 2vw);
+  font-size: clamp(1.1rem, 2.4vh, 1.2rem);
+  border-radius: 10px;
   border: 1px solid var(--select-border);
   background-color: var(--select-bg);
   color: var(--select-text);
   cursor: pointer;
   align-self: center;
-  max-width: 200px;
+  max-width: 260px;
   width: 100%;
 }
 .custom-pace-wrapper {
@@ -623,12 +623,12 @@ body.fullscreen-active .timer-controls button {
   margin-left: 6px;
 }
 .info-icon {
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: var(--settings-note-color);
   color: var(--settings-bg);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
   display: flex;
   align-items: center;
@@ -687,7 +687,7 @@ body.fullscreen-active .timer-controls button {
   padding: 3px 0;
 }
 .info-spacer {
-  width: 18px;
+  width: 22px;
   margin-left: 6px;
 }
 .theme-color-options {
@@ -698,8 +698,8 @@ body.fullscreen-active .timer-controls button {
   margin-top: 3px;
 }
 .theme-color-option {
-  width: 32px;
-  height: 32px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   border: 2px solid var(--theme-option-border);
   cursor: pointer;
@@ -715,8 +715,8 @@ body.fullscreen-active .timer-controls button {
   box-shadow: 0 0 10px 2px var(--theme-option-selected-border);
 }
 .settings-back-button {
-  padding: max(8px, 1vh) max(16px, 1.5vw);
-  font-size: clamp(0.8rem, 1.6vh, 0.9rem);
+  padding: max(14px, 1.6vh) max(40px, 3vw);
+  font-size: clamp(1rem, 2vh, 1.1rem);
   border: none;
   border-radius: 30px;
   cursor: pointer;
@@ -730,9 +730,9 @@ body.fullscreen-active .timer-controls button {
   letter-spacing: 1px;
   transition: all 0.3s ease;
   box-shadow: 0 6px 12px rgba(var(--primary-rgb), 0.25);
-  margin-top: max(5px, 0.8vh);
+  margin-top: max(10px, 1.2vh);
   align-self: center;
-  min-width: 120px;
+  min-width: 180px;
 }
 .settings-back-button:hover {
   background: linear-gradient(
@@ -752,7 +752,7 @@ body.fullscreen-active .timer-controls button {
   margin-top: 3px;
 }
 .mode-icon {
-  font-size: clamp(1.1rem, 2.5vh, 1.4rem);
+  font-size: clamp(1.4rem, 3vh, 1.8rem);
   color: var(--mode-icon-color);
   line-height: 1; 
   user-select: none;
@@ -761,11 +761,11 @@ body.fullscreen-active .timer-controls button {
 .mode-switch {
   position: relative;
   display: inline-block;
-  width: 80px;
-  height: 34px;
+  width: 100px;
+  height: 42px;
   flex-shrink: 0;
-  min-width: 80px;
-  max-width: 80px;
+  min-width: 100px;
+  max-width: 100px;
 }
 .mode-switch input {
   opacity: 0;
@@ -786,8 +786,8 @@ body.fullscreen-active .timer-controls button {
 .mode-slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
+  height: 34px;
+  width: 34px;
   left: 4px;
   bottom: 4px;
   background-color: var(--mode-slider-bg);
@@ -795,7 +795,7 @@ body.fullscreen-active .timer-controls button {
   border-radius: 50%;
 }
 input:checked + .mode-slider:before {
-  transform: translateX(46px); 
+  transform: translateX(58px); 
 }
 
 #settingsButton {
