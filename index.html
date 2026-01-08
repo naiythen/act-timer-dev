@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0C404QJMZG"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-0C404QJMZG"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-0C404QJMZG');
-</script>
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'G-0C404QJMZG');
+    </script>
     <link rel="icon" type="image/webp" href="/favico.ico" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -54,10 +55,10 @@
         <p class="speed-note">You can change this later in settings</p>
       </div>
       <div id="menu" class="content-screen" style="display: flex">
-        <button onclick="startTimer('English', 45, 75)"> English (45 min) </button>
-        <button onclick="startTimer('Math', 60, 60)">Math (60 min)</button>
-        <button onclick="startTimer('Reading', 35, 40)"> Reading (35 min) </button>
-        <button onclick="startTimer('Science', 35, 40)"> Science (35 min) </button>
+        <button id="englishBtn" onclick="startSection('English')"> English (45 min) </button>
+        <button id="mathBtn" onclick="startSection('Math')">Math (60 min)</button>
+        <button id="readingBtn" onclick="startSection('Reading')"> Reading (35 min) </button>
+        <button id="scienceBtn" onclick="startSection('Science')"> Science (35 min) </button>
         <button onclick="startFullTest()">Full ACT Test</button>
         <button onclick="showCustomInput()">Custom</button>
       </div>
@@ -102,22 +103,51 @@
         <h2>Settings</h2>
         <div class="setting-item">
           <label for="paceSelect">Pace Preference:</label>
-          <select id="paceSelect" onchange="updatePaceSetting(this.value)">
-            <option value="0">Right on Time</option>
-            <option value="1">5 Minutes Early</option>
-            <option value="2">10 Minutes Early</option>
+          <select id="paceSelect" onchange="updatePaceSelection(this.value)">
+            <option value="0">On Time</option>
+            <option value="5">5 Minutes Early</option>
+            <option value="10">10 Minutes Early</option>
+            <option value="custom">Custom</option>
           </select>
-          <p class="settings-note"> (Note: Pace preference does not apply to Custom Timer - NB) </p>
+          <div id="customPaceWrapper" class="custom-pace-wrapper" style="display: none;">
+            <input type="number" id="customPaceInput" min="0" max="30" placeholder="Minutes" onchange="updateCustomPace(this.value)" />
+          </div>
+        </div>
+        <div class="setting-item mode-setting-container">
+          <label>Enhanced ACT Mode:</label>
+          <div class="mode-toggle-wrapper">
+            <span class="info-spacer"></span>
+            <span class="mode-icon">📝</span>
+            <label class="mode-switch">
+              <input type="checkbox" id="enhancedModeToggle" onchange="toggleEnhancedMode(this.checked)" />
+              <span class="mode-slider"></span>
+            </label>
+            <span class="mode-icon">⚡</span>
+            <div class="info-tooltip-wrapper">
+              <span class="info-icon">?</span>
+              <div class="info-tooltip">
+                <strong>Enhanced ACT Times</strong>
+                <ul>
+                  <li>English: 35 min (50 Q)</li>
+                  <li>Math: 50 min (45 Q)</li>
+                  <li>Reading: 40 min (36 Q)</li>
+                  <li>Science: 40 min (40 Q)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="setting-item mode-setting-container">
           <label>Appearance:</label>
           <div class="mode-toggle-wrapper">
+            <span class="info-spacer"></span>
             <span class="mode-icon">☀️</span>
             <label class="mode-switch">
               <input type="checkbox" id="modeToggle" onchange="toggleMode(this.checked)" />
               <span class="mode-slider"></span>
             </label>
             <span class="mode-icon">🌙</span>
+            <span class="info-spacer"></span>
           </div>
         </div>
         <div class="setting-item">

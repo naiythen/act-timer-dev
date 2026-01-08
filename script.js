@@ -10,19 +10,31 @@ let isFullTest = false;
 let currentFullTestSectionIndex = 0;
 let notificationTimeout = null;
 
-const fullTestSections = [
-  { name: "English", time: 45, questions: 75 },
-  { name: "Math", time: 60, questions: 60 },
-  { name: "Break", time: 10, questions: 0 },
-  { name: "Reading", time: 35, questions: 40 },
-  { name: "Science", time: 35, questions: 40 },
-];
-
-const paceDescriptions = {
-  0: "On Time",
-  1: "5 Min Early",
-  2: "10 Min Early",
+const standardSections = {
+  English: { time: 45, questions: 75 },
+  Math: { time: 60, questions: 60 },
+  Reading: { time: 35, questions: 40 },
+  Science: { time: 35, questions: 40 },
 };
+
+const enhancedSections = {
+  English: { time: 35, questions: 50 },
+  Math: { time: 50, questions: 45 },
+  Reading: { time: 40, questions: 36 },
+  Science: { time: 40, questions: 40 },
+};
+
+function getFullTestSections() {
+  const isEnhanced = getCookie("enhancedMode") === "true";
+  const sections = isEnhanced ? enhancedSections : standardSections;
+  return [
+    { name: "English", time: sections.English.time, questions: sections.English.questions },
+    { name: "Math", time: sections.Math.time, questions: sections.Math.questions },
+    { name: "Break", time: 10, questions: 0 },
+    { name: "Reading", time: sections.Reading.time, questions: sections.Reading.questions },
+    { name: "Science", time: sections.Science.time, questions: sections.Science.questions },
+  ];
+}
 
 const timeDisplay = document.getElementById("timeDisplay");
 const progressBar = document.querySelector(".progress-bar");
@@ -48,7 +60,7 @@ const modeToggleButton = document.getElementById("modeToggle");
 function initialize() {
   const savedMode = getCookie("uiMode") || "light";
   const savedTheme = getCookie("theme");
-  const savedSpeed = getCookie("speed");
+  const savedPace = getCookie("customPace");
 
   applyMode(savedMode);
   if (savedTheme) {
@@ -57,7 +69,7 @@ function initialize() {
     applyTheme("#3498db");
   }
 
-  if (savedSpeed === null && !getCookie("speedPromptShown")) {
+  if (savedPace === null && !getCookie("speedPromptShown")) {
     showSpeedSelection();
     setCookie("speedPromptShown", "true", 1);
   } else {
@@ -67,9 +79,9 @@ function initialize() {
   document.addEventListener("visibilitychange", handleVisibilityChange);
   document.addEventListener("fullscreenchange", handleFullscreenChange);
   initializeSettingsPage();
+  updateMenuButtons();
 
   if (togglePacingVisibilityButton && questionPacingDisplay) {
-    // Check both exist
     togglePacingVisibilityButton.addEventListener("click", () => {
       questionPacingDisplay.classList.toggle("blurred");
     });
@@ -195,28 +207,55 @@ function showSpeedSelection() {
 }
 
 function setSpeedPreference(speedValue) {
-  setCookie("speed", speedValue);
+  const paceMap = { 0: 0, 1: 5, 2: 10 };
+  setCookie("customPace", paceMap[speedValue] || 0);
   showMenu();
 }
 
 function getSpeedAdjustmentMinutes() {
-  const speedPref = getCookie("speed") || "0";
-  if (speedPref === "1") return 5;
-  if (speedPref === "2") return 10;
+  const customPace = getCookie("customPace");
+  if (customPace !== null) {
+    return parseFloat(customPace) || 0;
+  }
   return 0;
+}
+
+function getSectionConfig(sectionName) {
+  const isEnhanced = getCookie("enhancedMode") === "true";
+  const sections = isEnhanced ? enhancedSections : standardSections;
+  return sections[sectionName] || { time: 0, questions: 0 };
+}
+
+function startSection(sectionName) {
+  const config = getSectionConfig(sectionName);
+  startTimer(sectionName, config.time, config.questions);
 }
 
 function startTimer(section, timeMinutes, questions) {
   isFullTest = false;
   currentSection = section;
   totalQuestions = questions;
-  // initialDurationSeconds is now the original time for the section
   initialDurationSeconds = Math.max(1, timeMinutes * 60);
   endTime = Date.now() + initialDurationSeconds * 1000;
   pausedTime = 0;
 
   setupTimerUI(false);
   startInterval();
+}
+
+function updateMenuButtons() {
+  const isEnhanced = getCookie("enhancedMode") === "true";
+  const sections = isEnhanced ? enhancedSections : standardSections;
+  
+  const englishBtn = document.getElementById("englishBtn");
+  const mathBtn = document.getElementById("mathBtn");
+  const readingBtn = document.getElementById("readingBtn");
+  const scienceBtn = document.getElementById("scienceBtn");
+  
+  if (englishBtn) englishBtn.textContent = `English (${sections.English.time} min)`;
+  if (mathBtn) mathBtn.textContent = `Math (${sections.Math.time} min)`;
+  if (readingBtn) readingBtn.textContent = `Reading (${sections.Reading.time} min)`;
+  if (scienceBtn) scienceBtn.textContent = `Science (${sections.Science.time} min)`;
 }
 
 function startFullTest() {
@@ -226,6 +265,7 @@ function startFullTest() {
 }
 
 function startNextFullTestSection() {
+  const fullTestSections = getFullTestSections();
   if (currentFullTestSectionIndex >= fullTestSections.length) {
     stopTimer();
     showNotification("Full ACT Test Completed!");
@@ -236,7 +276,6 @@ function startNextFullTestSection() {
   const section = fullTestSections[currentFullTestSectionIndex];
   currentSection = section.name;
   totalQuestions = section.questions;
-  // initialDurationSeconds is now the original time for the section
   initialDurationSeconds = Math.max(1, section.time * 60);
   endTime = Date.now() + initialDurationSeconds * 1000;
   pausedTime = 0;
@@ -302,10 +341,10 @@ function setupTimerUI(isCustom) {
       if (separatorSpan) separatorSpan.style.display = "none";
     }
   } else {
-    const speedPref = getCookie("speed") || "0";
-    paceDescriptionSpan.textContent = `Pace: ${
-      paceDescriptions[speedPref] || "On Time"
-    }`;
+    const paceOffset = getSpeedAdjustmentMinutes();
+    let paceText = "On Time";
+    if (paceOffset > 0) paceText = `${paceOffset} Min Early`;
+    paceDescriptionSpan.textContent = `Pace: ${paceText}`;
     paceDescriptionSpan.style.display = "inline";
     if (totalQuestions > 0) {
         targetQuestionSpan.style.display = "inline";
@@ -401,10 +440,10 @@ function updateTimerDisplay(seconds = null) {
 
 
   if (currentSection !== "Custom Timer") {
-    const speedPref = getCookie("speed") || "0";
-    paceDescriptionSpan.textContent = `Pace: ${
-      paceDescriptions[speedPref] || "On Time"
-    }`;
+    const paceOffset = getSpeedAdjustmentMinutes();
+    let paceText = "On Time";
+    if (paceOffset > 0) paceText = `${paceOffset} Min Early`;
+    paceDescriptionSpan.textContent = `Pace: ${paceText}`;
   }
 
   if (remainingSeconds <= 10 && remainingSeconds > 0) {
@@ -597,6 +636,7 @@ function closeSettings() {
 function initializeSettingsPage() {
   populatePaceSettings();
   populateThemeSettings();
+  populateEnhancedModeSettings();
   const currentMode = getCookie("uiMode") || "light";
   if (modeToggleButton) {
     modeToggleButton.checked = currentMode === "dark";
@@ -604,9 +644,25 @@ function initializeSettingsPage() {
 }
 
 function populatePaceSettings() {
-  const savedSpeed = getCookie("speed") || "0";
+  const savedPace = getCookie("customPace") || "0";
   const paceSelect = document.getElementById("paceSelect");
-  if (paceSelect) paceSelect.value = savedSpeed;
+  const customPaceWrapper = document.getElementById("customPaceWrapper");
+  const paceInput = document.getElementById("customPaceInput");
+  
+  if (savedPace === "0" || savedPace === "5" || savedPace === "10") {
+    if (paceSelect) paceSelect.value = savedPace;
+    if (customPaceWrapper) customPaceWrapper.style.display = "none";
+  } else {
+    if (paceSelect) paceSelect.value = "custom";
+    if (customPaceWrapper) customPaceWrapper.style.display = "flex";
+    if (paceInput) paceInput.value = savedPace;
+  }
+}
+
+function populateEnhancedModeSettings() {
+  const isEnhanced = getCookie("enhancedMode") === "true";
+  const enhancedToggle = document.getElementById("enhancedModeToggle");
+  if (enhancedToggle) enhancedToggle.checked = isEnhanced;
 }
 
 function populateThemeSettings() {
@@ -616,22 +672,49 @@ function populateThemeSettings() {
   }
 }
 
-function updatePaceSetting(value) {
-  const previousValue = getCookie("speed") || "0";
-  if (value !== previousValue) {
-    setCookie("speed", value);
-    showNotification("Pace Preference Changed!");
-    // If a timer is running and it's not a custom timer, update the display
-    // The question pacing text will update on the next tick of updateTimerDisplay()
-    if (isRunning && currentSection !== "Custom Timer") {
-       // updateTimerDisplay(); // Not strictly needed to call here, as setInterval will call it.
-                               // but paceDescriptionSpan might benefit from immediate update if not handled by setInterval quickly enough.
-                               // For now, relying on setInterval to update all relevant parts.
-       // Force an update of the pace description span immediately
-       const speedPref = getCookie("speed") || "0";
-       paceDescriptionSpan.textContent = `Pace: ${paceDescriptions[speedPref] || "On Time"}`;
+function updatePaceSelection(value) {
+  const customPaceWrapper = document.getElementById("customPaceWrapper");
+  const paceInput = document.getElementById("customPaceInput");
+  
+  if (value === "custom") {
+    if (customPaceWrapper) customPaceWrapper.style.display = "flex";
+    const currentPace = getCookie("customPace") || "0";
+    if (paceInput && currentPace !== "0" && currentPace !== "5" && currentPace !== "10") {
+      paceInput.value = currentPace;
+    } else if (paceInput) {
+      paceInput.value = "";
+      paceInput.focus();
     }
+  } else {
+    if (customPaceWrapper) customPaceWrapper.style.display = "none";
+    setCookie("customPace", value);
+    showNotification("Pace Preference Changed!");
+    updatePaceDisplay();
   }
+}
+
+function updateCustomPace(value) {
+  const numValue = Math.max(0, Math.min(30, parseInt(value) || 0));
+  setCookie("customPace", numValue);
+  const paceInput = document.getElementById("customPaceInput");
+  if (paceInput) paceInput.value = numValue;
+  showNotification("Pace Preference Changed!");
+  updatePaceDisplay();
+}
+
+function updatePaceDisplay() {
+  if (isRunning && currentSection !== "Custom Timer") {
+    const paceOffset = getSpeedAdjustmentMinutes();
+    let paceText = "On Time";
+    if (paceOffset > 0) paceText = `${paceOffset} Min Early`;
+    paceDescriptionSpan.textContent = `Pace: ${paceText}`;
+  }
+}
+
+function toggleEnhancedMode(isEnabled) {
+  setCookie("enhancedMode", isEnabled ? "true" : "false");
+  updateMenuButtons();
+  showNotification(isEnabled ? "Enhanced ACT Mode Enabled!" : "Standard ACT Mode Enabled!");
 }
 
 function updateSelectedThemeUI(selectedColor) {

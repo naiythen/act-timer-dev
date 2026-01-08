@@ -168,7 +168,6 @@ body.dark-theme {
 }
 
 #menu button:hover {
-  /* This new gradient will create a solid color look that can be transitioned smoothly */
   background: linear-gradient(
     145deg,
     var(--primary-hover-color),
@@ -556,29 +555,30 @@ body.fullscreen-active .timer-controls button {
 
 #settingsScreen {
   background-color: transparent;
-  padding: max(30px, 3.5vh) max(35px, 2.5vw);
+  padding: max(15px, 2vh) max(15px, 1.5vw);
   width: 100%;
-  max-width: 600px;
+  max-width: 480px;
   color: var(--settings-text);
   display: flex;
   flex-direction: column;
-  gap: max(25px, 3vh);
+  gap: max(12px, 1.5vh);
 }
 #settingsScreen h2 {
   text-align: center;
-  margin-bottom: max(10px, 1.5vh);
-  font-size: clamp(1.8rem, 4.5vh, 2.2rem);
+  margin-bottom: 0;
+  font-size: clamp(1.4rem, 3.5vh, 1.8rem);
   color: var(--settings-text);
 }
 .setting-item {
   display: flex;
   flex-direction: column;
+  gap: 3px;
 }
 .setting-item label {
-  font-size: clamp(1rem, 2.2vh, 1.1rem);
+  font-size: clamp(0.85rem, 1.8vh, 0.95rem);
   font-weight: 500;
   color: var(--settings-label);
-  margin-bottom: 8px;
+  margin-bottom: 3px;
   text-align: center; 
   width: 100%;
 }
@@ -591,26 +591,115 @@ body.fullscreen-active .timer-controls button {
   color: var(--select-text);
   cursor: pointer;
   align-self: center;
-  max-width: 300px;
-  width: 80%;
+  max-width: 200px;
+  width: 100%;
+}
+.custom-pace-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+#customPaceInput {
+  padding: max(10px, 1.2vh);
+  font-size: clamp(1rem, 2vh, 1.05rem);
+  border-radius: 8px;
+  border: 1px solid var(--select-border);
+  background-color: var(--select-bg);
+  color: var(--select-text);
+  text-align: center;
+  max-width: 100px;
+  width: 100%;
 }
 .settings-note {
-  font-size: clamp(0.8rem, 1.6vh, 0.9rem);
+  font-size: clamp(0.75rem, 1.5vh, 0.85rem);
   color: var(--settings-note-color);
-  margin-top: 8px;
+  margin-top: 6px;
   text-align: center;
   width: 100%;
 }
+.info-tooltip-wrapper {
+  position: relative;
+  display: inline-flex;
+  margin-left: 6px;
+}
+.info-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--settings-note-color);
+  color: var(--settings-bg);
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: help;
+  transition: all 0.2s ease;
+}
+.info-icon:hover {
+  background: var(--primary-color);
+  transform: scale(1.1);
+}
+.info-tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--settings-bg);
+  border: 1px solid var(--select-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  min-width: 180px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  z-index: 100;
+}
+.info-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 8px solid transparent;
+  border-top-color: var(--settings-bg);
+}
+.info-tooltip-wrapper:hover .info-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+.info-tooltip strong {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--settings-text);
+  margin-bottom: 8px;
+  text-align: center;
+}
+.info-tooltip ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.75rem;
+  color: var(--settings-label);
+}
+.info-tooltip li {
+  padding: 3px 0;
+}
+.info-spacer {
+  width: 18px;
+  margin-left: 6px;
+}
 .theme-color-options {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
   justify-content: center;
-  margin-top: 5px;
+  margin-top: 3px;
 }
 .theme-color-option {
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   border: 2px solid var(--theme-option-border);
   cursor: pointer;
@@ -626,8 +715,8 @@ body.fullscreen-active .timer-controls button {
   box-shadow: 0 0 10px 2px var(--theme-option-selected-border);
 }
 .settings-back-button {
-  padding: max(14px, 1.8vh) max(25px, 2vw);
-  font-size: clamp(1rem, 2.2vh, 1.1rem);
+  padding: max(8px, 1vh) max(16px, 1.5vw);
+  font-size: clamp(0.8rem, 1.6vh, 0.9rem);
   border: none;
   border-radius: 30px;
   cursor: pointer;
@@ -641,9 +730,9 @@ body.fullscreen-active .timer-controls button {
   letter-spacing: 1px;
   transition: all 0.3s ease;
   box-shadow: 0 6px 12px rgba(var(--primary-rgb), 0.25);
-  margin-top: max(20px, 2.5vh);
+  margin-top: max(5px, 0.8vh);
   align-self: center;
-  min-width: 150px;
+  min-width: 120px;
 }
 .settings-back-button:hover {
   background: linear-gradient(
@@ -654,27 +743,29 @@ body.fullscreen-active .timer-controls button {
   box-shadow: 0 7px 14px rgba(var(--primary-rgb), 0.35);
 }
 
-.mode-setting-container .mode-toggle-wrapper {
+.mode-setting-container .mode-toggle-wrapper,
+.mode-toggle-wrapper {
   display: flex;
   align-items: center; 
   justify-content: center;
   gap: 10px;
-  margin-top: 5px;
+  margin-top: 3px;
 }
 .mode-icon {
-  font-size: clamp(1.2rem, 3vh, 1.5rem);
+  font-size: clamp(1.1rem, 2.5vh, 1.4rem);
   color: var(--mode-icon-color);
   line-height: 1; 
   user-select: none;
-  position: relative; 
-  top: -5px; 
+  flex-shrink: 0;
 }
 .mode-switch {
   position: relative;
   display: inline-block;
-  width: 54px;
-  height: 30px;
+  width: 80px;
+  height: 34px;
   flex-shrink: 0;
+  min-width: 80px;
+  max-width: 80px;
 }
 .mode-switch input {
   opacity: 0;
@@ -695,8 +786,8 @@ body.fullscreen-active .timer-controls button {
 .mode-slider:before {
   position: absolute;
   content: "";
-  height: 22px;
-  width: 22px;
+  height: 26px;
+  width: 26px;
   left: 4px;
   bottom: 4px;
   background-color: var(--mode-slider-bg);
@@ -704,7 +795,7 @@ body.fullscreen-active .timer-controls button {
   border-radius: 50%;
 }
 input:checked + .mode-slider:before {
-  transform: translateX(60px); 
+  transform: translateX(46px); 
 }
 
 #settingsButton {
@@ -730,8 +821,6 @@ input:checked + .mode-slider:before {
 }
 #settingsButton:focus {
   outline: none;
-  animation: none;
-  box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.7);
 }
 #settingsButton:hover {
   transform: scale(1.1) rotate(15deg);
