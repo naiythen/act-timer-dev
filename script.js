@@ -881,3 +881,4 @@ function hideDesmos() {
   });
   document.addEventListener("mouseup", () => { resizing = false; });
 })();
+
