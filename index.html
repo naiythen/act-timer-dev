@@ -102,75 +102,77 @@
       </div>
       <div id="settingsScreen" class="content-screen" style="display: none">
         <h2>Settings</h2>
-        <div class="setting-item">
-          <label for="paceSelect">Pace Preference:</label>
-          <select id="paceSelect" onchange="updatePaceSelection(this.value)">
-            <option value="0">On Time</option>
-            <option value="5">5 Minutes Early</option>
-            <option value="10">10 Minutes Early</option>
-            <option value="custom">Custom</option>
-          </select>
-          <div id="customPaceWrapper" class="custom-pace-wrapper" style="display: none;">
-            <input type="number" id="customPaceInput" min="0" max="30" placeholder="Minutes" onchange="updateCustomPace(this.value)" />
-          </div>
-        </div>
-        <div class="setting-item mode-setting-container">
-          <label>Enhanced ACT Mode:</label>
-          <div class="mode-toggle-wrapper">
-            <span class="info-spacer"></span>
-            <span class="mode-icon">📝</span>
-            <label class="mode-switch">
-              <input type="checkbox" id="enhancedModeToggle" onchange="toggleEnhancedMode(this.checked)" />
-              <span class="mode-slider"></span>
-            </label>
-            <span class="mode-icon">⚡</span>
-            <div class="info-tooltip-wrapper">
-              <span class="info-icon">?</span>
-              <div class="info-tooltip">
-                <strong>Enhanced ACT Times</strong>
-                <ul>
-                  <li>English: 35 min (50 Q)</li>
-                  <li>Math: 50 min (45 Q)</li>
-                  <li>Reading: 40 min (36 Q)</li>
-                  <li>Science: 40 min (40 Q)</li>
-                </ul>
-              </div>
+        <div class="settings-options">
+          <div class="setting-item">
+            <label for="paceSelect">Pace Preference:</label>
+            <select id="paceSelect" onchange="updatePaceSelection(this.value)">
+              <option value="0">On Time</option>
+              <option value="5">5 Minutes Early</option>
+              <option value="10">10 Minutes Early</option>
+              <option value="custom">Custom</option>
+            </select>
+            <div id="customPaceWrapper" class="custom-pace-wrapper" style="display: none;">
+              <input type="number" id="customPaceInput" min="0" max="30" placeholder="Minutes" onchange="updateCustomPace(this.value)" />
             </div>
-        </div>
-        <div class="setting-item mode-setting-container">
-          <label>Desmos Calculator (Math):</label>
-          <div class="mode-toggle-wrapper">
-            <span class="info-spacer"></span>
-            <span class="mode-icon">🚫</span>
-            <label class="mode-switch">
-              <input type="checkbox" id="desmosToggle" onchange="toggleDesmos(this.checked)" />
-              <span class="mode-slider"></span>
-            </label>
-            <span class="mode-icon">🧮</span>
-            <div class="info-tooltip-wrapper">
-              <span class="info-icon">?</span>
-              <div class="info-tooltip">
-                <strong>Desmos Calculator</strong>
-                <p style="margin-top:6px;">Shows a floating, draggable Desmos calculator during the Math section. <em>Only available if you take the ACT online.</em></p>
+          </div>
+          <div class="setting-item mode-setting-container">
+            <label>Enhanced ACT Mode:</label>
+            <div class="mode-toggle-wrapper">
+              <span class="info-spacer"></span>
+              <span class="mode-icon">📝</span>
+              <label class="mode-switch">
+                <input type="checkbox" id="enhancedModeToggle" onchange="toggleEnhancedMode(this.checked)" />
+                <span class="mode-slider"></span>
+              </label>
+              <span class="mode-icon">⚡</span>
+              <div class="info-tooltip-wrapper">
+                <span class="info-icon">?</span>
+                <div class="info-tooltip">
+                  <strong>Enhanced ACT Times</strong>
+                  <ul>
+                    <li>English: 35 min (50 Q)</li>
+                    <li>Math: 50 min (45 Q)</li>
+                    <li>Reading: 40 min (36 Q)</li>
+                    <li>Science: 40 min (40 Q)</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        </div>
-        <div class="setting-item mode-setting-container">
-          <label>Appearance:</label>
-          <div class="mode-toggle-wrapper">
-            <span class="info-spacer"></span>
-            <span class="mode-icon">☀️</span>
-            <label class="mode-switch">
-              <input type="checkbox" id="modeToggle" onchange="toggleMode(this.checked)" />
-              <span class="mode-slider"></span>
-            </label>
-            <span class="mode-icon">🌙</span>
-            <span class="info-spacer"></span>
+          <div class="setting-item mode-setting-container">
+            <label>Desmos Calculator (Math):</label>
+            <div class="mode-toggle-wrapper">
+              <span class="info-spacer"></span>
+              <span class="mode-icon">🚫</span>
+              <label class="mode-switch">
+                <input type="checkbox" id="desmosToggle" onchange="toggleDesmos(this.checked)" />
+                <span class="mode-slider"></span>
+              </label>
+              <span class="mode-icon">🧮</span>
+              <div class="info-tooltip-wrapper">
+                <span class="info-icon">?</span>
+                <div class="info-tooltip">
+                  <strong>Desmos Calculator</strong>
+                  <p style="margin-top:6px;">Shows a floating, draggable Desmos calculator during the Math section. <em>Only available if you take the ACT online.</em></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="setting-item mode-setting-container">
+            <label>Appearance:</label>
+            <div class="mode-toggle-wrapper">
+              <span class="info-spacer"></span>
+              <span class="mode-icon">☀️</span>
+              <label class="mode-switch">
+                <input type="checkbox" id="modeToggle" onchange="toggleMode(this.checked)" />
+                <span class="mode-slider"></span>
+              </label>
+              <span class="mode-icon">🌙</span>
+              <span class="info-spacer"></span>
+            </div>
           </div>
         </div>
-        <div class="setting-item">
+        <div class="settings-theme-column">
           <label>Accent Color:</label>
           <div class="theme-color-options">
             <button class="theme-color-option no-arrow" style="background-color: #3498db" data-color="#3498db" onclick="setTheme('#3498db')"></button>
@@ -209,6 +211,7 @@
         <div class="desmos-frame-clip">
           <iframe id="desmosFrame" title="Desmos Calculator" src="about:blank" frameborder="0"></iframe>
           <div class="desmos-top-mask" aria-hidden="true"></div>
+          <div class="desmos-iframe-shield" aria-hidden="true"></div>
         </div>
       </div>
       <div class="desmos-resize" aria-hidden="true"></div>
