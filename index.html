@@ -200,14 +200,23 @@
     <div id="desmosWindow" style="display:none;">
       <div id="desmosHeader">
         <span class="desmos-title">🧮 Desmos</span>
-        <span class="desmos-note" title="Only available if you take the ACT online">Online ACT only</span>
         <button type="button" id="desmosClose" aria-label="Close Desmos">×</button>
       </div>
+      <div class="desmos-note-bar">
+        Note: Desmos is only available on the Online ACT, not the paper-and-pencil version.
+      </div>
       <div id="desmosBody">
-        <iframe id="desmosFrame" title="Desmos Calculator" src="about:blank" frameborder="0"></iframe>
+        <div class="desmos-frame-clip">
+          <iframe id="desmosFrame" title="Desmos Calculator" src="about:blank" frameborder="0"></iframe>
+          <div class="desmos-top-mask" aria-hidden="true"></div>
+        </div>
       </div>
       <div class="desmos-resize" aria-hidden="true"></div>
     </div>
+    <button type="button" id="desmosReopen" style="display:none;" aria-label="Reopen Desmos">
+      🧮 Desmos
+    </button>
+
     <div id="notificationArea"></div>
     <audio id="alarmSound" src="chime.mp3" preload="auto"></audio>
     <script src="script.js"></script>
