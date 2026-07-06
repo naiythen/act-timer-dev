@@ -595,7 +595,10 @@ function hideAllScreens() {
   document.getElementById("customInput").style.display = "none";
   document.getElementById("speedSelection").style.display = "none";
   if (settingsScreen) settingsScreen.style.display = "none";
+  hideDesmos();
+  updateDesmosReopenButton();
 }
+
 
 function showMenu() {
   hideAllScreens();
@@ -777,11 +780,17 @@ function showNotification(message, type = "info") {
 initialize();
 
 /* ---------------- Desmos floating window ---------------- */
-const DESMOS_URL = "https://www.desmos.com/calculator/g7izucn6nn";
+// Fresh unsaved calculator so no saved-graph title shows in the (cropped) top bar.
+const DESMOS_URL = "https://www.desmos.com/calculator";
 
 function populateDesmosSettings() {
   const t = document.getElementById("desmosToggle");
   if (t) t.checked = getCookie("desmosEnabled") !== "false";
+}
+
+function isTimerScreenVisible() {
+  const t = document.getElementById("timerScreen");
+  return !!(t && t.style.display !== "none");
 }
 
 function toggleDesmos(isEnabled) {
@@ -792,9 +801,19 @@ function toggleDesmos(isEnabled) {
 
 function updateDesmosVisibility() {
   const enabled = getCookie("desmosEnabled") !== "false";
-  const isMath = currentSection === "Math";
+  const isMath = currentSection === "Math" && isTimerScreenVisible();
   if (enabled && isMath) showDesmos();
   else hideDesmos();
+  updateDesmosReopenButton();
+}
+
+function updateDesmosReopenButton() {
+  const btn = document.getElementById("desmosReopen");
+  if (!btn) return;
+  const enabled = getCookie("desmosEnabled") !== "false";
+  const isMath = currentSection === "Math" && isTimerScreenVisible();
+  const winOpen = document.getElementById("desmosWindow")?.style.display === "flex";
+  btn.style.display = enabled && isMath && !winOpen ? "block" : "none";
 }
 
 function showDesmos() {
@@ -805,11 +824,13 @@ function showDesmos() {
     frame.setAttribute("src", DESMOS_URL);
   }
   win.style.display = "flex";
+  updateDesmosReopenButton();
 }
 
 function hideDesmos() {
   const win = document.getElementById("desmosWindow");
   if (win) win.style.display = "none";
+  updateDesmosReopenButton();
 }
 
 (function initDesmosWindow() {
@@ -818,9 +839,13 @@ function hideDesmos() {
   const header = document.getElementById("desmosHeader");
   const closeBtn = document.getElementById("desmosClose");
   const resizer = win.querySelector(".desmos-resize");
+  const reopenBtn = document.getElementById("desmosReopen");
 
   closeBtn?.addEventListener("click", () => {
     hideDesmos();
+  });
+  reopenBtn?.addEventListener("click", () => {
+    showDesmos();
   });
 
   // Drag
@@ -864,7 +889,7 @@ function hideDesmos() {
   }, { passive: true });
   document.addEventListener("touchend", () => { dragging = false; });
 
-  // Resize
+  // Resize handle (corner grip)
   let resizing = false, rStartX = 0, rStartY = 0, rStartW = 0, rStartH = 0;
   resizer?.addEventListener("mousedown", (e) => {
     resizing = true;
@@ -876,8 +901,8 @@ function hideDesmos() {
   });
   document.addEventListener("mousemove", (e) => {
     if (!resizing) return;
-    win.style.width = Math.max(300, rStartW + (e.clientX - rStartX)) + "px";
-    win.style.height = Math.max(260, rStartH + (e.clientY - rStartY)) + "px";
+    win.style.width = Math.max(320, rStartW + (e.clientX - rStartX)) + "px";
+    win.style.height = Math.max(320, rStartH + (e.clientY - rStartY)) + "px";
   });
   document.addEventListener("mouseup", () => { resizing = false; });
 })();
