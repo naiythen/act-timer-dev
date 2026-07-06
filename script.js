@@ -24,17 +24,21 @@ const enhancedSections = {
   Science: { time: 40, questions: 40 },
 };
 
-function getFullTestSections() {
+function getFullTestSections(options = {}) {
   const isEnhanced = getCookie("enhancedMode") === "true";
   const sections = isEnhanced ? enhancedSections : standardSections;
-  return [
+  const list = [
     { name: "English", time: sections.English.time, questions: sections.English.questions },
     { name: "Math", time: sections.Math.time, questions: sections.Math.questions },
     { name: "Break", time: 10, questions: 0 },
     { name: "Reading", time: sections.Reading.time, questions: sections.Reading.questions },
-    { name: "Science", time: sections.Science.time, questions: sections.Science.questions },
   ];
+  if (!options.noScience) {
+    list.push({ name: "Science", time: sections.Science.time, questions: sections.Science.questions });
+  }
+  return list;
 }
+let fullTestOptions = {};
 
 const timeDisplay = document.getElementById("timeDisplay");
 const progressBar = document.querySelector(".progress-bar");
@@ -65,6 +69,9 @@ function initialize() {
   // Default to Enhanced ACT mode the first time the app loads
   if (getCookie("enhancedMode") === null) {
     setCookie("enhancedMode", "true");
+  }
+  if (getCookie("desmosEnabled") === null) {
+    setCookie("desmosEnabled", "true");
   }
 
   applyMode(savedMode);
@@ -265,12 +272,20 @@ function updateMenuButtons() {
 
 function startFullTest() {
   isFullTest = true;
+  fullTestOptions = {};
+  currentFullTestSectionIndex = 0;
+  startNextFullTestSection();
+}
+
+function startFullTestNoScience() {
+  isFullTest = true;
+  fullTestOptions = { noScience: true };
   currentFullTestSectionIndex = 0;
   startNextFullTestSection();
 }
 
 function startNextFullTestSection() {
-  const fullTestSections = getFullTestSections();
+  const fullTestSections = getFullTestSections(fullTestOptions);
   if (currentFullTestSectionIndex >= fullTestSections.length) {
     stopTimer();
     showNotification("Full ACT Test Completed!");
@@ -326,6 +341,7 @@ function setupTimerUI(isCustom) {
 
   sectionTitle.textContent = currentSection;
   pauseResumeButton.textContent = "Pause";
+  updateDesmosVisibility();
 
   if (questionPacingDisplay) {
     questionPacingDisplay.style.display = "inline-flex";
@@ -527,6 +543,7 @@ function resetTimerUI() {
   backArrow.style.display = "none";
   settingsButton.style.display = "block"; 
   fullscreenButton.style.display = "block"; 
+  hideDesmos();
 }
 
 async function requestWakeLock() {
@@ -642,6 +659,7 @@ function initializeSettingsPage() {
   populatePaceSettings();
   populateThemeSettings();
   populateEnhancedModeSettings();
+  populateDesmosSettings();
   const currentMode = getCookie("uiMode") || "light";
   if (modeToggleButton) {
     modeToggleButton.checked = currentMode === "dark";
@@ -757,3 +775,109 @@ function showNotification(message, type = "info") {
 }
 
 initialize();
+
+/* ---------------- Desmos floating window ---------------- */
+const DESMOS_URL = "https://www.desmos.com/calculator/g7izucn6nn";
+
+function populateDesmosSettings() {
+  const t = document.getElementById("desmosToggle");
+  if (t) t.checked = getCookie("desmosEnabled") !== "false";
+}
+
+function toggleDesmos(isEnabled) {
+  setCookie("desmosEnabled", isEnabled ? "true" : "false");
+  showNotification(isEnabled ? "Desmos Enabled for Math" : "Desmos Disabled");
+  updateDesmosVisibility();
+}
+
+function updateDesmosVisibility() {
+  const enabled = getCookie("desmosEnabled") !== "false";
+  const isMath = currentSection === "Math";
+  if (enabled && isMath) showDesmos();
+  else hideDesmos();
+}
+
+function showDesmos() {
+  const win = document.getElementById("desmosWindow");
+  const frame = document.getElementById("desmosFrame");
+  if (!win || !frame) return;
+  if (frame.getAttribute("src") !== DESMOS_URL) {
+    frame.setAttribute("src", DESMOS_URL);
+  }
+  win.style.display = "flex";
+}
+
+function hideDesmos() {
+  const win = document.getElementById("desmosWindow");
+  if (win) win.style.display = "none";
+}
+
+(function initDesmosWindow() {
+  const win = document.getElementById("desmosWindow");
+  if (!win) return;
+  const header = document.getElementById("desmosHeader");
+  const closeBtn = document.getElementById("desmosClose");
+  const resizer = win.querySelector(".desmos-resize");
+
+  closeBtn?.addEventListener("click", () => {
+    hideDesmos();
+  });
+
+  // Drag
+  let dragging = false, startX = 0, startY = 0, origLeft = 0, origTop = 0;
+  header?.addEventListener("mousedown", (e) => {
+    if (e.target === closeBtn) return;
+    dragging = true;
+    win.classList.add("dragging");
+    const rect = win.getBoundingClientRect();
+    origLeft = rect.left; origTop = rect.top;
+    startX = e.clientX; startY = e.clientY;
+    e.preventDefault();
+  });
+  document.addEventListener("mousemove", (e) => {
+    if (!dragging) return;
+    const nx = Math.max(0, Math.min(window.innerWidth - 80, origLeft + e.clientX - startX));
+    const ny = Math.max(0, Math.min(window.innerHeight - 40, origTop + e.clientY - startY));
+    win.style.left = nx + "px";
+    win.style.top = ny + "px";
+    win.style.right = "auto";
+  });
+  document.addEventListener("mouseup", () => {
+    if (dragging) { dragging = false; win.classList.remove("dragging"); }
+  });
+
+  // Touch drag
+  header?.addEventListener("touchstart", (e) => {
+    const t = e.touches[0]; if (!t) return;
+    dragging = true;
+    const rect = win.getBoundingClientRect();
+    origLeft = rect.left; origTop = rect.top;
+    startX = t.clientX; startY = t.clientY;
+  }, { passive: true });
+  document.addEventListener("touchmove", (e) => {
+    if (!dragging) return;
+    const t = e.touches[0]; if (!t) return;
+    const nx = Math.max(0, Math.min(window.innerWidth - 80, origLeft + t.clientX - startX));
+    const ny = Math.max(0, Math.min(window.innerHeight - 40, origTop + t.clientY - startY));
+    win.style.left = nx + "px";
+    win.style.top = ny + "px";
+  }, { passive: true });
+  document.addEventListener("touchend", () => { dragging = false; });
+
+  // Resize
+  let resizing = false, rStartX = 0, rStartY = 0, rStartW = 0, rStartH = 0;
+  resizer?.addEventListener("mousedown", (e) => {
+    resizing = true;
+    const rect = win.getBoundingClientRect();
+    rStartW = rect.width; rStartH = rect.height;
+    rStartX = e.clientX; rStartY = e.clientY;
+    e.preventDefault();
+    e.stopPropagation();
+  });
+  document.addEventListener("mousemove", (e) => {
+    if (!resizing) return;
+    win.style.width = Math.max(300, rStartW + (e.clientX - rStartX)) + "px";
+    win.style.height = Math.max(260, rStartH + (e.clientY - rStartY)) + "px";
+  });
+  document.addEventListener("mouseup", () => { resizing = false; });
+})();
