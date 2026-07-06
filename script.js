@@ -62,6 +62,11 @@ function initialize() {
   const savedTheme = getCookie("theme");
   const savedPace = getCookie("customPace");
 
+  // Default to Enhanced ACT mode the first time the app loads
+  if (getCookie("enhancedMode") === null) {
+    setCookie("enhancedMode", "true");
+  }
+
   applyMode(savedMode);
   if (savedTheme) {
     applyTheme(savedTheme);
