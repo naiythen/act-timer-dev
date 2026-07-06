@@ -60,6 +60,7 @@
         <button id="readingBtn" onclick="startSection('Reading')"> Reading (35 min) </button>
         <button id="scienceBtn" onclick="startSection('Science')"> Science (35 min) </button>
         <button onclick="startFullTest()">Full ACT Test</button>
+        <button onclick="startFullTestNoScience()">Full ACT (No Science)</button>
         <button onclick="showCustomInput()">Custom</button>
       </div>
       <div id="customInput" class="content-screen" style="display: none; text-align: center">
@@ -135,7 +136,26 @@
                 </ul>
               </div>
             </div>
+        </div>
+        <div class="setting-item mode-setting-container">
+          <label>Desmos Calculator (Math):</label>
+          <div class="mode-toggle-wrapper">
+            <span class="info-spacer"></span>
+            <span class="mode-icon">🚫</span>
+            <label class="mode-switch">
+              <input type="checkbox" id="desmosToggle" onchange="toggleDesmos(this.checked)" />
+              <span class="mode-slider"></span>
+            </label>
+            <span class="mode-icon">🧮</span>
+            <div class="info-tooltip-wrapper">
+              <span class="info-icon">?</span>
+              <div class="info-tooltip">
+                <strong>Desmos Calculator</strong>
+                <p style="margin-top:6px;">Shows a floating, draggable Desmos calculator during the Math section. <em>Only available if you take the ACT online.</em></p>
+              </div>
+            </div>
           </div>
+        </div>
         </div>
         <div class="setting-item mode-setting-container">
           <label>Appearance:</label>
@@ -176,6 +196,17 @@
           <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
         </svg>
       </button>
+    </div>
+    <div id="desmosWindow" style="display:none;">
+      <div id="desmosHeader">
+        <span class="desmos-title">🧮 Desmos</span>
+        <span class="desmos-note" title="Only available if you take the ACT online">Online ACT only</span>
+        <button type="button" id="desmosClose" aria-label="Close Desmos">×</button>
+      </div>
+      <div id="desmosBody">
+        <iframe id="desmosFrame" title="Desmos Calculator" src="about:blank" frameborder="0"></iframe>
+      </div>
+      <div class="desmos-resize" aria-hidden="true"></div>
     </div>
     <div id="notificationArea"></div>
     <audio id="alarmSound" src="chime.mp3" preload="auto"></audio>
