@@ -848,62 +848,71 @@ function hideDesmos() {
     showDesmos();
   });
 
-  // Drag
-  let dragging = false, startX = 0, startY = 0, origLeft = 0, origTop = 0;
-  header?.addEventListener("mousedown", (e) => {
-    if (e.target === closeBtn) return;
-    dragging = true;
-    win.classList.add("dragging");
-    const rect = win.getBoundingClientRect();
-    origLeft = rect.left; origTop = rect.top;
-    startX = e.clientX; startY = e.clientY;
-    e.preventDefault();
-  });
-  document.addEventListener("mousemove", (e) => {
-    if (!dragging) return;
-    const nx = Math.max(0, Math.min(window.innerWidth - 80, origLeft + e.clientX - startX));
-    const ny = Math.max(0, Math.min(window.innerHeight - 40, origTop + e.clientY - startY));
+  // ---- Buttery-smooth drag & resize ----
+  // The Desmos iframe is cross-origin, so when the mouse moves over it during a
+  // drag/resize the parent window loses pointermove events → jitter. We solve
+  // this with pointer capture and a transparent shield overlay while active.
+  let mode = null; // "drag" | "resize" | null
+  let startX = 0, startY = 0;
+  let origLeft = 0, origTop = 0, origW = 0, origH = 0;
+  let pendingX = 0, pendingY = 0, rafId = 0;
+
+  const applyDrag = () => {
+    rafId = 0;
+    const nx = Math.max(0, Math.min(window.innerWidth - 80, origLeft + pendingX - startX));
+    const ny = Math.max(0, Math.min(window.innerHeight - 40, origTop + pendingY - startY));
     win.style.left = nx + "px";
     win.style.top = ny + "px";
     win.style.right = "auto";
-  });
-  document.addEventListener("mouseup", () => {
-    if (dragging) { dragging = false; win.classList.remove("dragging"); }
-  });
+  };
+  const applyResize = () => {
+    rafId = 0;
+    const w = Math.max(320, Math.min(window.innerWidth * 0.95, origW + pendingX - startX));
+    const h = Math.max(320, Math.min(window.innerHeight * 0.92, origH + pendingY - startY));
+    win.style.width = w + "px";
+    win.style.height = h + "px";
+  };
+  const schedule = (fn) => { if (!rafId) rafId = requestAnimationFrame(fn); };
 
-  // Touch drag
-  header?.addEventListener("touchstart", (e) => {
-    const t = e.touches[0]; if (!t) return;
-    dragging = true;
+  const onPointerMove = (e) => {
+    if (!mode) return;
+    pendingX = e.clientX; pendingY = e.clientY;
+    schedule(mode === "drag" ? applyDrag : applyResize);
+  };
+  const endMode = () => {
+    if (!mode) return;
+    win.classList.remove("dragging", "resizing");
+    mode = null;
+    if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
+  };
+
+  closeBtn?.addEventListener("click", () => hideDesmos());
+  reopenBtn?.addEventListener("click", () => showDesmos());
+
+  header?.addEventListener("pointerdown", (e) => {
+    if (e.target === closeBtn) return;
+    mode = "drag";
     const rect = win.getBoundingClientRect();
     origLeft = rect.left; origTop = rect.top;
-    startX = t.clientX; startY = t.clientY;
-  }, { passive: true });
-  document.addEventListener("touchmove", (e) => {
-    if (!dragging) return;
-    const t = e.touches[0]; if (!t) return;
-    const nx = Math.max(0, Math.min(window.innerWidth - 80, origLeft + t.clientX - startX));
-    const ny = Math.max(0, Math.min(window.innerHeight - 40, origTop + t.clientY - startY));
-    win.style.left = nx + "px";
-    win.style.top = ny + "px";
-  }, { passive: true });
-  document.addEventListener("touchend", () => { dragging = false; });
+    startX = e.clientX; startY = e.clientY;
+    win.classList.add("dragging");
+    header.setPointerCapture?.(e.pointerId);
+    e.preventDefault();
+  });
 
-  // Resize handle (corner grip)
-  let resizing = false, rStartX = 0, rStartY = 0, rStartW = 0, rStartH = 0;
-  resizer?.addEventListener("mousedown", (e) => {
-    resizing = true;
+  resizer?.addEventListener("pointerdown", (e) => {
+    mode = "resize";
     const rect = win.getBoundingClientRect();
-    rStartW = rect.width; rStartH = rect.height;
-    rStartX = e.clientX; rStartY = e.clientY;
+    origW = rect.width; origH = rect.height;
+    startX = e.clientX; startY = e.clientY;
+    win.classList.add("resizing");
+    resizer.setPointerCapture?.(e.pointerId);
     e.preventDefault();
     e.stopPropagation();
   });
-  document.addEventListener("mousemove", (e) => {
-    if (!resizing) return;
-    win.style.width = Math.max(320, rStartW + (e.clientX - rStartX)) + "px";
-    win.style.height = Math.max(320, rStartH + (e.clientY - rStartY)) + "px";
-  });
-  document.addEventListener("mouseup", () => { resizing = false; });
+
+  window.addEventListener("pointermove", onPointerMove);
+  window.addEventListener("pointerup", endMode);
+  window.addEventListener("pointercancel", endMode);
 })();
 
