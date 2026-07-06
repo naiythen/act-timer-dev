@@ -1065,22 +1065,16 @@ body.dark-theme .desmos-note-bar {
   overflow: hidden;
 }
 #desmosFrame {
-  /* Crop out Desmos top toolbar (title / Save Copy / account) */
   position: absolute;
   left: 0;
-  top: -112px;
+  top: 0;
   width: 100%;
-  height: calc(100% + 112px);
+  height: 100%;
   border: 0;
   display: block;
 }
 .desmos-top-mask {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 44px;
-  height: 4px;
-  pointer-events: none;
+  display: none;
 }
 /* Transparent overlay used only while dragging/resizing so pointer events
    don't get swallowed by the cross-origin iframe (that causes the jitter). */
@@ -1150,13 +1144,13 @@ body.dark-theme .desmos-note-bar {
   transform: translateX(-50%) translateY(0);
 }
 
-/* ---------- Settings polish (2-column: options left, theme picker right) ---------- */
+/* ---------- Settings polish (2-column: theme picker left, options right) ---------- */
 #settingsScreen {
   max-width: 880px;
   width: 100%;
   gap: 16px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr);
   grid-template-rows: auto 1fr auto;
   column-gap: 32px;
   row-gap: 14px;
@@ -1165,15 +1159,7 @@ body.dark-theme .desmos-note-bar {
 #settingsScreen h2 {
   grid-column: 1 / -1;
 }
-#settingsScreen .settings-options {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  min-width: 0;
-}
 #settingsScreen .settings-theme-column {
-  grid-column: 2;
-  grid-row: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1201,6 +1187,12 @@ body.dark-theme #settingsScreen .settings-theme-column {
   flex-direction: column;
   gap: 12px;
   margin-top: 0;
+}
+#settingsScreen .settings-options {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
 }
 #settingsScreen .settings-back-button {
   grid-column: 1 / -1;

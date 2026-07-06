@@ -642,12 +642,12 @@ function handleFullscreenChange() {
 }
 
 function openSettings() {
-  if (settingsScreen && settingsScreen.style.display === "flex") {
+  if (settingsScreen && settingsScreen.style.display === "grid") {
     closeSettings(); 
     return; 
   }
   hideAllScreens();
-  if (settingsScreen) settingsScreen.style.display = "flex";
+  if (settingsScreen) settingsScreen.style.display = "grid";
   initializeSettingsPage();
   settingsButton.style.display = "block";
   fullscreenButton.style.display = "block";
@@ -781,7 +781,7 @@ initialize();
 
 /* ---------------- Desmos floating window ---------------- */
 // Fresh unsaved calculator so no saved-graph title shows in the (cropped) top bar.
-const DESMOS_URL = "https://www.desmos.com/calculator";
+const DESMOS_URL = "https://www.desmos.com/calculator?embed";
 
 function populateDesmosSettings() {
   const t = document.getElementById("desmosToggle");
@@ -800,10 +800,10 @@ function toggleDesmos(isEnabled) {
 }
 
 function updateDesmosVisibility() {
-  const enabled = getCookie("desmosEnabled") !== "false";
+  // Never auto-open Desmos. Only ensure it's hidden when leaving Math,
+  // and toggle the top-center Desmos button visibility.
   const isMath = currentSection === "Math" && isTimerScreenVisible();
-  if (enabled && isMath) showDesmos();
-  else hideDesmos();
+  if (!isMath) hideDesmos();
   updateDesmosReopenButton();
 }
 
@@ -813,7 +813,10 @@ function updateDesmosReopenButton() {
   const enabled = getCookie("desmosEnabled") !== "false";
   const isMath = currentSection === "Math" && isTimerScreenVisible();
   const winOpen = document.getElementById("desmosWindow")?.style.display === "flex";
-  btn.style.display = enabled && isMath && !winOpen ? "block" : "none";
+  btn.style.display = enabled && isMath ? "inline-flex" : "none";
+  btn.classList.toggle("is-open", winOpen);
+  btn.setAttribute("aria-pressed", winOpen ? "true" : "false");
+  btn.innerHTML = winOpen ? "🧮 Hide Desmos" : "🧮 Desmos";
 }
 
 function showDesmos() {
@@ -887,7 +890,11 @@ function hideDesmos() {
   };
 
   closeBtn?.addEventListener("click", () => hideDesmos());
-  reopenBtn?.addEventListener("click", () => showDesmos());
+  reopenBtn?.addEventListener("click", () => {
+    const winOpen = win.style.display === "flex";
+    if (winOpen) hideDesmos();
+    else showDesmos();
+  });
 
   header?.addEventListener("pointerdown", (e) => {
     if (e.target === closeBtn) return;
