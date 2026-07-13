@@ -130,6 +130,13 @@ body.dark-theme {
   align-items: center;
 }
 
+@media (max-width: 480px) {
+  .container {
+    padding: 24px;
+    border-radius: 20px;
+  }
+}
+
 @keyframes gradient {
   0% {
     background-position: 0% 50%;
@@ -158,21 +165,23 @@ body.dark-theme {
 }
 
 #menu {
-  gap: clamp(16px, 1.8vh, 26px);
+  gap: 16px;
   width: 100%;
-  max-width: 960px;
+  max-width: 720px;
+  padding: 8px 0;
 }
 
 #menu button {
-  padding: clamp(22px, 2.6vh, 34px) clamp(36px, 3vw, 56px);
-  font-size: clamp(1.35rem, 1.55vw + 0.8rem, 2.1rem);
+  padding: 18px 36px;
+  font-size: 1.1rem;
+  line-height: 1.2;
   border-radius: 60px;
   cursor: pointer;
   color: var(--text-color-light);
   text-transform: uppercase;
-  letter-spacing: 1.8px;
+  letter-spacing: 1.4px;
   transition: all 0.3s ease;
-  box-shadow: 0 10px 20px var(--button-shadow);
+  box-shadow: 0 8px 16px var(--button-shadow);
   position: relative;
   overflow: hidden;
   border: 2px solid transparent;
@@ -182,9 +191,21 @@ body.dark-theme {
     var(--primary-hover-color)
   );
   width: 100%;
-  max-width: 900px;
   text-align: center;
   font-weight: 500;
+}
+
+@media (max-width: 480px) {
+  #menu {
+    gap: 14px;
+    max-width: 100%;
+  }
+
+  #menu button {
+    padding: 16px 24px;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+  }
 }
 
 
@@ -933,9 +954,8 @@ body.settings-open #fullscreenButton {
     gap: 18px;
   }
   #menu button {
-    padding: 18px 25px;
-    font-size: clamp(1.2rem, 3.2vh, 1.6rem);
-    max-width: 700px;
+    padding: 12px 22px;
+    font-size: clamp(0.95rem, 2.2vh, 1.15rem);
   }
   #timeDisplay {
     font-size: clamp(3.2rem, 14vh, 5.5rem);
@@ -993,67 +1013,94 @@ body.settings-open #fullscreenButton {
 }
 
 /* ---------- Floating Desmos window ---------- */
+:root {
+  --desmos-window-bg: #ffffff;
+  --desmos-header-bg: #f7f9fc;
+  --desmos-note-bg: #fff8e1;
+  --desmos-note-border: #f2d98b;
+  --desmos-note-text: #8a6d1f;
+}
+body.dark-theme {
+  --desmos-window-bg: #1c222c;
+  --desmos-header-bg: #232a36;
+  --desmos-note-bg: #2c2610;
+  --desmos-note-border: #5a4a17;
+  --desmos-note-text: #e8c96b;
+}
+
 #desmosWindow {
   position: fixed;
-  top: 90px;
+  top: 60px;
   left: 24px;
-  width: 480px;
-  height: 580px;
-  min-width: 320px;
-  min-height: 320px;
+  width: 760px;
+  height: 620px;
+  min-width: 560px;
+  min-height: 400px;
   max-width: 95vw;
   max-height: 92vh;
-  background: var(--container-bg, #fff);
-  border: 1px solid rgba(var(--primary-rgb), 0.35);
-  border-radius: 14px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(var(--primary-rgb), 0.18);
+  /* fully opaque so nothing behind the popup can bleed through */
+  background: var(--desmos-window-bg);
+  border: 1px solid rgba(var(--primary-rgb), 0.28);
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28), 0 4px 16px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(var(--primary-rgb), 0.12);
   z-index: 9999;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  transition: box-shadow 0.2s ease;
 }
-body.dark-theme #desmosWindow {
-  background: #1e2530;
-  border-color: rgba(var(--primary-rgb), 0.5);
+#desmosWindow.dragging,
+#desmosWindow.resizing {
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.35), 0 6px 20px rgba(0, 0, 0, 0.16),
+    0 0 0 1px rgba(var(--primary-rgb), 0.2);
 }
-#desmosHeader {
+
+.desmos-note-bar {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
+  gap: 8px;
+  padding: 9px 14px;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  background: var(--desmos-note-bg);
+  color: var(--desmos-note-text);
+  border-bottom: 1px solid var(--desmos-note-border);
+  text-align: left;
+  flex-shrink: 0;
   cursor: move;
   user-select: none;
-  background: linear-gradient(90deg, rgba(var(--primary-rgb), 0.22), rgba(var(--primary-rgb), 0.08));
-  border-bottom: 1px solid rgba(var(--primary-rgb), 0.2);
-  color: var(--text-color-dark);
 }
-#desmosHeader .desmos-title { font-weight: 700; font-size: 1rem; }
-#desmosClose {
+.desmos-note-bar .note-text {
+  flex: 1;
+}
+.desmos-note-close {
   margin-left: auto;
   background: transparent;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   line-height: 1;
   cursor: pointer;
   color: inherit;
-  padding: 0 8px;
+  opacity: 0.65;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 6px;
+  transition: background 0.15s ease, opacity 0.15s ease;
+  flex-shrink: 0;
 }
-#desmosClose:hover { background: rgba(0,0,0,0.08); }
-body.dark-theme #desmosClose:hover { background: rgba(255,255,255,0.12); }
-
-.desmos-note-bar {
-  padding: 8px 12px;
-  font-size: 0.78rem;
-  line-height: 1.35;
-  background: rgba(var(--primary-rgb), 0.12);
-  color: var(--text-color-dark);
-  border-bottom: 1px solid rgba(var(--primary-rgb), 0.18);
-  text-align: center;
+.desmos-note-close:hover {
+  background: rgba(var(--primary-rgb), 0.14);
+  opacity: 1;
 }
-body.dark-theme .desmos-note-bar {
-  background: rgba(var(--primary-rgb), 0.18);
-  color: #f0f4fa;
+.desmos-note-bar::before {
+  content: "⚠";
+  font-size: 0.95rem;
+  flex-shrink: 0;
+  line-height: 1;
 }
 
 #desmosBody {
@@ -1070,9 +1117,9 @@ body.dark-theme .desmos-note-bar {
 #desmosFrame {
   position: absolute;
   left: 0;
-  top: 0;
+  top: -51px;
   width: 100%;
-  height: 100%;
+  height: calc(100% + 51px);
   border: 0;
   display: block;
 }
@@ -1096,33 +1143,53 @@ body.dark-theme .desmos-note-bar {
 
 .desmos-resize {
   position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 26px;
-  height: 26px;
+  right: 3px;
+  bottom: 3px;
+  width: 18px;
+  height: 18px;
   cursor: nwse-resize;
   z-index: 4;
-  border-bottom-right-radius: 14px;
-  background:
-    linear-gradient(135deg, transparent 55%, rgba(var(--primary-rgb), 0.55) 55%, rgba(var(--primary-rgb), 0.55) 62%, transparent 62%,
-      transparent 70%, rgba(var(--primary-rgb), 0.75) 70%, rgba(var(--primary-rgb), 0.75) 78%, transparent 78%,
-      transparent 86%, rgba(var(--primary-rgb), 0.95) 86%);
+  opacity: 0.5;
+  background-image: radial-gradient(circle, rgba(var(--primary-rgb), 0.9) 1.4px, transparent 1.4px);
+  background-size: 5px 5px;
+  background-position: bottom right;
+  background-repeat: repeat;
+  -webkit-mask-image: linear-gradient(135deg, transparent 40%, #000 40%);
+  mask-image: linear-gradient(135deg, transparent 40%, #000 40%);
+  transition: opacity 0.15s ease;
+}
+.desmos-resize:hover {
+  opacity: 0.9;
 }
 #desmosWindow.dragging,
-#desmosWindow.resizing { opacity: 0.96; }
+#desmosWindow.resizing { opacity: 0.98; }
 #desmosWindow.resizing,
 #desmosWindow.dragging { will-change: width, height, left, top; }
+
+/* 8-direction resize handles */
+.desmos-resize-handle {
+  position: absolute;
+  z-index: 5;
+}
+.desmos-resize-handle[data-dir="n"]  { top: -4px; left: 10px; right: 10px; height: 8px; cursor: ns-resize; }
+.desmos-resize-handle[data-dir="s"]  { bottom: -4px; left: 10px; right: 10px; height: 8px; cursor: ns-resize; }
+.desmos-resize-handle[data-dir="e"]  { top: 10px; bottom: 10px; right: -4px; width: 8px; cursor: ew-resize; }
+.desmos-resize-handle[data-dir="w"]  { top: 10px; bottom: 10px; left: -4px; width: 8px; cursor: ew-resize; }
+.desmos-resize-handle[data-dir="ne"] { top: -4px; right: -4px; width: 14px; height: 14px; cursor: nesw-resize; }
+.desmos-resize-handle[data-dir="nw"] { top: -4px; left: -4px; width: 14px; height: 14px; cursor: nwse-resize; }
+.desmos-resize-handle[data-dir="sw"] { bottom: -4px; left: -4px; width: 14px; height: 14px; cursor: nesw-resize; }
+.desmos-resize-handle[data-dir="se"] { bottom: 0; right: 0; width: 18px; height: 18px; cursor: nwse-resize; }
 @media (max-width: 600px) {
-  #desmosWindow { width: 92vw; height: 62vh; left: 4vw; top: 80px; }
+  #desmosWindow { width: 92vw; height: 62vh; left: 4vw; top: 50px; }
 }
 
-/* ---------- Desmos reopen pill (Math timer only) — bottom-right of container ---------- */
+/* ---------- Desmos reopen pill (Math timer only) — bottom-left of container ---------- */
 #desmosReopen {
   position: absolute;
   bottom: 25px;
-  right: 25px;
+  left: 25px;
+  right: auto;
   top: auto;
-  left: auto;
   transform: none;
   padding: 12px 22px;
   font-size: 1rem;
@@ -1136,7 +1203,6 @@ body.dark-theme .desmos-note-bar {
   box-shadow: 0 10px 26px rgba(var(--primary-rgb), 0.4), inset 0 1px 0 rgba(255,255,255,0.25);
   z-index: 20;
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-  display: inline-flex;
   align-items: center;
   gap: 8px;
 }
@@ -1151,19 +1217,24 @@ body.dark-theme .desmos-note-bar {
 
 /* ---------- Settings polish (toggles LEFT, theme picker RIGHT, no tinted cards) ---------- */
 #settingsScreen {
-  max-width: 920px;
+  max-width: 780px;
   width: 100%;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  column-gap: 40px;
-  row-gap: 16px;
-  align-items: start;
+  grid-auto-flow: row dense;
+  column-gap: clamp(24px, 4vw, 56px);
+  row-gap: 18px;
+  align-items: center;
+  justify-content: center;
 }
-#settingsScreen h2 {
-  grid-column: 1 / -1;
-}
+#settingsScreen h2 { grid-column: 1 / -1; grid-row: 1; margin: 0; text-align: center; }
+#settingsScreen .settings-options { grid-column: 1; grid-row: 2; }
+#settingsScreen .settings-theme-column { grid-column: 2; grid-row: 2; }
+#settingsScreen .settings-back-button { grid-row: 3; }
+#settingsScreen .settings-note { grid-row: 4; }
 #settingsScreen .settings-options {
   grid-column: 1;
+  align-self: center;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -1171,28 +1242,34 @@ body.dark-theme .desmos-note-bar {
 }
 #settingsScreen .settings-theme-column {
   grid-column: 2;
+  align-self: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  align-self: start;
   padding: 6px 4px;
   gap: 12px;
-  min-width: 90px;
+  min-width: 72px;
   background: transparent;
   border: none;
 }
 #settingsScreen .settings-theme-column > label {
   font-weight: 600;
   color: var(--settings-label);
-  font-size: 1rem;
+  font-size: 0.95rem;
   margin: 0;
   text-align: center;
 }
 #settingsScreen .settings-theme-column .theme-color-options {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   margin-top: 0;
+  align-items: center;
+}
+#settingsScreen .settings-theme-column .theme-color-option {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
 }
 #settingsScreen .settings-back-button {
   grid-column: 1 / -1;
@@ -1205,8 +1282,12 @@ body.dark-theme .desmos-note-bar {
   background: transparent;
   border: none;
   border-radius: 0;
-  padding: 6px 0;
-  gap: 8px;
+  padding: 4px 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 16px;
+  row-gap: 4px;
 }
 body.dark-theme #settingsScreen .setting-item {
   background: transparent;
@@ -1214,24 +1295,84 @@ body.dark-theme #settingsScreen .setting-item {
 }
 #settingsScreen .setting-item > label {
   font-weight: 600;
-  margin-bottom: 2px;
+  margin: 0;
+  text-align: left;
+  width: auto;
+}
+#settingsScreen .setting-item #paceSelect,
+#settingsScreen .setting-item .mode-toggle-wrapper {
+  justify-self: end;
+  margin: 0;
+}
+#settingsScreen .setting-item #customPaceWrapper {
+  grid-column: 1 / -1;
+  justify-self: end;
 }
 .mode-toggle-wrapper {
-  gap: 14px;
+  gap: 12px;
 }
 @media (max-width: 720px) {
   #settingsScreen {
     grid-template-columns: 1fr;
   }
-  #settingsScreen .settings-options { grid-column: 1; }
+  #settingsScreen h2 { grid-row: 1; }
+  #settingsScreen .settings-options { grid-column: 1; grid-row: 2; }
   #settingsScreen .settings-theme-column {
     grid-column: 1;
-    grid-row: auto;
+    grid-row: 3;
   }
   #settingsScreen .settings-theme-column .theme-color-options {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
+  }
+  #settingsScreen .settings-note { grid-row: 4; }
+  #settingsScreen .settings-back-button { grid-row: 5; }
+}
+
+/* Short viewports: prevent settings from overflowing the container top/bottom */
+@media (max-height: 780px) {
+  .container:has(#settingsScreen:not([style*="display: none"])) {
+    justify-content: flex-start;
+    overflow-y: auto;
+    padding: 24px 32px;
+  }
+  #settingsScreen {
+    row-gap: 12px;
+  }
+  #settingsScreen h2 {
+    font-size: 1.6rem;
+  }
+  #settingsScreen .settings-options {
+    gap: 10px;
+  }
+  #settingsScreen .setting-item {
+    padding: 2px 0;
+  }
+  #settingsScreen .settings-theme-column .theme-color-options {
+    gap: 8px;
+  }
+  #settingsScreen .settings-theme-column .theme-color-option {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+  }
+  #settingsScreen .settings-back-button {
+    padding: 10px 28px;
+    font-size: 0.95rem;
+  }
+}
+@media (max-height: 640px) {
+  .container:has(#settingsScreen:not([style*="display: none"])) {
+    padding: 18px 24px;
+  }
+  #settingsScreen h2 {
+    font-size: 1.4rem;
+  }
+  #settingsScreen .settings-theme-column .theme-color-option {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
   }
 }
 
@@ -1259,5 +1400,176 @@ body.fullscreen-active #menu button {
     padding: 16px 28px;
     font-size: clamp(1.15rem, 2.8vh, 1.5rem);
   }
+}
+
+/* ===== Mini Timer HUD (visible when Desmos is open) ===== */
+/* ---------- Mini Timer HUD (visible while Desmos is open) ---------- */
+:root {
+  --hud-bg: rgba(255, 255, 255, 0.88);
+  --hud-border: rgba(var(--primary-rgb), 0.3);
+  --hud-text: #222;
+  --hud-pace-text: #666;
+}
+body.dark-theme {
+  --hud-bg: rgba(28, 32, 40, 0.88);
+  --hud-border: rgba(var(--primary-rgb), 0.4);
+  --hud-text: #f2f2f2;
+  --hud-pace-text: #aab0bb;
+}
+
+#timerHud {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: var(--hud-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--hud-border);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.08);
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  transition: box-shadow 0.15s ease;
+}
+#timerHud.dragging {
+  cursor: grabbing;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.24), 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+#hudTime {
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.5px;
+  color: var(--hud-text);
+  line-height: 1;
+}
+#hudTime.warning {
+  color: #ff3b3b;
+}
+#hudPace {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: var(--hud-pace-text);
+  white-space: nowrap;
+  line-height: 1;
+  border-left: 1px solid var(--hud-border);
+  padding-left: 10px;
+}
+#hudPace .hud-sep {
+  display: none;
+}
+#hudPaceDesc {
+  font-weight: 600;
+}
+#hudPaceTarget {
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+@media (max-width: 480px) {
+  #timerHud {
+    top: 12px;
+    right: 12px;
+    padding: 7px 14px;
+    gap: 8px;
+  }
+  #hudTime {
+    font-size: 1rem;
+  }
+  #hudPace {
+    font-size: 0.7rem;
+    padding-left: 8px;
+  }
+}
+
+/* ---------- Between-section interval countdown screen ---------- */
+#intervalScreen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 20px;
+  width: 100%;
+}
+#intervalScreen h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--text-color, inherit);
+}
+.interval-ring-wrapper {
+  position: relative;
+  width: min(260px, 60vw);
+  aspect-ratio: 1;
+}
+.interval-ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.interval-ring-track {
+  fill: none;
+  stroke: rgba(127, 127, 127, 0.22);
+  stroke-width: 8;
+}
+.interval-ring-progress {
+  fill: none;
+  stroke: var(--accent-color, #3498db);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.15s linear;
+}
+.interval-ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+#intervalCountdown {
+  font-size: clamp(2.6rem, 8vw, 4rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--text-color, inherit);
+}
+.interval-ring-unit {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.interval-next-label {
+  font-size: 1.05rem;
+  font-weight: 500;
+  opacity: 0.85;
+  text-align: center;
+}
+#skipIntervalButton {
+  padding: 12px 28px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  background: var(--accent-color, #3498db);
+  color: #fff;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+#skipIntervalButton:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
 }
 

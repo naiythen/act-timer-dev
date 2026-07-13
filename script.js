@@ -10,14 +10,7 @@ let isFullTest = false;
 let currentFullTestSectionIndex = 0;
 let notificationTimeout = null;
 
-const standardSections = {
-  English: { time: 45, questions: 75 },
-  Math: { time: 60, questions: 60 },
-  Reading: { time: 35, questions: 40 },
-  Science: { time: 35, questions: 40 },
-};
-
-const enhancedSections = {
+const sectionConfigs = {
   English: { time: 35, questions: 50 },
   Math: { time: 50, questions: 45 },
   Reading: { time: 40, questions: 36 },
@@ -25,16 +18,15 @@ const enhancedSections = {
 };
 
 function getFullTestSections(options = {}) {
-  const isEnhanced = getCookie("enhancedMode") === "true";
-  const sections = isEnhanced ? enhancedSections : standardSections;
+  const s = sectionConfigs;
   const list = [
-    { name: "English", time: sections.English.time, questions: sections.English.questions },
-    { name: "Math", time: sections.Math.time, questions: sections.Math.questions },
+    { name: "English", time: s.English.time, questions: s.English.questions },
+    { name: "Math", time: s.Math.time, questions: s.Math.questions },
     { name: "Break", time: 10, questions: 0 },
-    { name: "Reading", time: sections.Reading.time, questions: sections.Reading.questions },
+    { name: "Reading", time: s.Reading.time, questions: s.Reading.questions },
   ];
   if (!options.noScience) {
-    list.push({ name: "Science", time: sections.Science.time, questions: sections.Science.questions });
+    list.push({ name: "Science", time: s.Science.time, questions: s.Science.questions });
   }
   return list;
 }
@@ -66,10 +58,6 @@ function initialize() {
   const savedTheme = getCookie("theme");
   const savedPace = getCookie("customPace");
 
-  // Default to Enhanced ACT mode the first time the app loads
-  if (getCookie("enhancedMode") === null) {
-    setCookie("enhancedMode", "true");
-  }
   if (getCookie("desmosEnabled") === null) {
     setCookie("desmosEnabled", "true");
   }
@@ -233,9 +221,7 @@ function getSpeedAdjustmentMinutes() {
 }
 
 function getSectionConfig(sectionName) {
-  const isEnhanced = getCookie("enhancedMode") === "true";
-  const sections = isEnhanced ? enhancedSections : standardSections;
-  return sections[sectionName] || { time: 0, questions: 0 };
+  return sectionConfigs[sectionName] || { time: 0, questions: 0 };
 }
 
 function startSection(sectionName) {
@@ -256,18 +242,16 @@ function startTimer(section, timeMinutes, questions) {
 }
 
 function updateMenuButtons() {
-  const isEnhanced = getCookie("enhancedMode") === "true";
-  const sections = isEnhanced ? enhancedSections : standardSections;
-  
+  const s = sectionConfigs;
   const englishBtn = document.getElementById("englishBtn");
   const mathBtn = document.getElementById("mathBtn");
   const readingBtn = document.getElementById("readingBtn");
   const scienceBtn = document.getElementById("scienceBtn");
-  
-  if (englishBtn) englishBtn.textContent = `English (${sections.English.time} min)`;
-  if (mathBtn) mathBtn.textContent = `Math (${sections.Math.time} min)`;
-  if (readingBtn) readingBtn.textContent = `Reading (${sections.Reading.time} min)`;
-  if (scienceBtn) scienceBtn.textContent = `Science (${sections.Science.time} min)`;
+
+  if (englishBtn) englishBtn.textContent = `English (${s.English.time} min)`;
+  if (mathBtn) mathBtn.textContent = `Math (${s.Math.time} min)`;
+  if (readingBtn) readingBtn.textContent = `Reading (${s.Reading.time} min)`;
+  if (scienceBtn) scienceBtn.textContent = `Science (${s.Science.time} min)`;
 }
 
 function startFullTest() {
@@ -285,6 +269,14 @@ function startFullTestNoScience() {
 }
 
 function startNextFullTestSection() {
+  // Reentrancy guard: kill any running ticker & alarm before spinning up a new one.
+  clearInterval(timerInterval);
+  cancelIntervalCountdown();
+  isRunning = false;
+  if (alarmSound) {
+    try { alarmSound.pause(); alarmSound.currentTime = 0; } catch (e) {}
+  }
+
   const fullTestSections = getFullTestSections(fullTestOptions);
   if (currentFullTestSectionIndex >= fullTestSections.length) {
     stopTimer();
@@ -341,6 +333,7 @@ function setupTimerUI(isCustom) {
 
   sectionTitle.textContent = currentSection;
   pauseResumeButton.textContent = "Pause";
+  timeDisplay.classList.remove("warning");
   updateDesmosVisibility();
 
   if (questionPacingDisplay) {
@@ -486,15 +479,28 @@ function handleTimerEnd() {
 
   timeDisplay.classList.add("warning");
 
+  // If the Math section just ended, hide Desmos (window + button) right away
+  // so it doesn't linger through the transition notification.
+  if (currentSection === "Math") {
+    hideDesmos();
+  }
+
   if (isFullTest) {
     currentFullTestSectionIndex++;
-    showNotification(
-      `${currentSection} Section Finished! Starting next section soon...`
-    );
-    setTimeout(() => {
-      timeDisplay.classList.remove("warning");
+    const sections = getFullTestSections(fullTestOptions);
+    if (currentFullTestSectionIndex >= sections.length) {
+      // No more sections — let startNextFullTestSection handle the completion flow.
       startNextFullTestSection();
-    }, 3000);
+    } else {
+      const nextName = sections[currentFullTestSectionIndex].name;
+      // The 10-min Break is itself the buffer; skip the extra 30s interval
+      // when the just-ended section is adjacent to Break.
+      if (currentSection === "Break" || nextName === "Break") {
+        startNextFullTestSection();
+      } else {
+        showIntervalCountdown(nextName, 30);
+      }
+    }
   } else {
     showNotification(`${currentSection} Timer Finished!`);
     // If not a full test, and timer ends, consider going to menu or allowing restart.
@@ -521,6 +527,7 @@ function pauseResumeTimer() {
 
 function stopTimer() {
   clearInterval(timerInterval);
+  cancelIntervalCountdown();
   isRunning = false;
   isFullTest = false;
   currentFullTestSectionIndex = 0;
@@ -529,6 +536,71 @@ function stopTimer() {
   releaseWakeLock();
   showMenu();
   resetTimerUI();
+}
+
+// ---- Between-section interval countdown ----
+let intervalCountdownTimer = null;
+const INTERVAL_RING_CIRCUMFERENCE = 2 * Math.PI * 54; // r=54 in the SVG
+
+function showIntervalCountdown(nextSectionName, seconds = 30) {
+  cancelIntervalCountdown();
+  if (alarmSound) {
+    try { alarmSound.pause(); alarmSound.currentTime = 0; } catch (e) {}
+  }
+  hideAllScreens();
+  const screen = document.getElementById("intervalScreen");
+  if (!screen) {
+    startNextFullTestSection();
+    return;
+  }
+  screen.style.display = "flex";
+  document.body.classList.add("timer-active");
+  backArrow.style.display = "block";
+  settingsButton.style.display = "none";
+  fullscreenButton.style.display = "block";
+
+  const label = document.getElementById("intervalNextLabel");
+  if (label) label.textContent = `Up next: ${nextSectionName}`;
+
+  const ring = screen.querySelector(".interval-ring-progress");
+  if (ring) {
+    ring.style.strokeDasharray = String(INTERVAL_RING_CIRCUMFERENCE);
+    ring.style.strokeDashoffset = "0";
+  }
+
+  const total = seconds;
+  const start = Date.now();
+  const countdownEl = document.getElementById("intervalCountdown");
+
+  const tick = () => {
+    const elapsed = (Date.now() - start) / 1000;
+    const remaining = Math.max(0, total - elapsed);
+    if (countdownEl) countdownEl.textContent = String(Math.ceil(remaining));
+    if (ring) {
+      const pct = remaining / total;
+      ring.style.strokeDashoffset = String(
+        INTERVAL_RING_CIRCUMFERENCE * (1 - pct)
+      );
+    }
+    if (remaining <= 0) {
+      cancelIntervalCountdown();
+      startNextFullTestSection();
+    }
+  };
+  tick();
+  intervalCountdownTimer = setInterval(tick, 100);
+}
+
+function cancelIntervalCountdown() {
+  if (intervalCountdownTimer) {
+    clearInterval(intervalCountdownTimer);
+    intervalCountdownTimer = null;
+  }
+}
+
+function skipInterval() {
+  cancelIntervalCountdown();
+  startNextFullTestSection();
 }
 
 function resetTimerUI() {
@@ -594,6 +666,8 @@ function hideAllScreens() {
   document.getElementById("timerScreen").style.display = "none";
   document.getElementById("customInput").style.display = "none";
   document.getElementById("speedSelection").style.display = "none";
+  const iv = document.getElementById("intervalScreen");
+  if (iv) iv.style.display = "none";
   if (settingsScreen) settingsScreen.style.display = "none";
   hideDesmos();
   updateDesmosReopenButton();
@@ -661,7 +735,6 @@ function closeSettings() {
 function initializeSettingsPage() {
   populatePaceSettings();
   populateThemeSettings();
-  populateEnhancedModeSettings();
   populateDesmosSettings();
   const currentMode = getCookie("uiMode") || "light";
   if (modeToggleButton) {
@@ -683,12 +756,6 @@ function populatePaceSettings() {
     if (customPaceWrapper) customPaceWrapper.style.display = "flex";
     if (paceInput) paceInput.value = savedPace;
   }
-}
-
-function populateEnhancedModeSettings() {
-  const isEnhanced = getCookie("enhancedMode") === "true";
-  const enhancedToggle = document.getElementById("enhancedModeToggle");
-  if (enhancedToggle) enhancedToggle.checked = isEnhanced;
 }
 
 function populateThemeSettings() {
@@ -737,11 +804,6 @@ function updatePaceDisplay() {
   }
 }
 
-function toggleEnhancedMode(isEnabled) {
-  setCookie("enhancedMode", isEnabled ? "true" : "false");
-  updateMenuButtons();
-  showNotification(isEnabled ? "Enhanced ACT Mode Enabled!" : "Standard ACT Mode Enabled!");
-}
 
 function updateSelectedThemeUI(selectedColor) {
   const themeOptions = document.querySelectorAll(".theme-color-option");
@@ -780,8 +842,7 @@ function showNotification(message, type = "info") {
 initialize();
 
 /* ---------------- Desmos floating window ---------------- */
-// Fresh unsaved calculator so no saved-graph title shows in the (cropped) top bar.
-const DESMOS_URL = "https://www.desmos.com/calculator?embed";
+const DESMOS_URL = "https://www.desmos.com/testing/digital-act/graphing";
 
 function populateDesmosSettings() {
   const t = document.getElementById("desmosToggle");
@@ -839,23 +900,15 @@ function hideDesmos() {
 (function initDesmosWindow() {
   const win = document.getElementById("desmosWindow");
   if (!win) return;
-  const header = document.getElementById("desmosHeader");
-  const closeBtn = document.getElementById("desmosClose");
-  const resizer = win.querySelector(".desmos-resize");
+  const noteBar = win.querySelector(".desmos-note-bar");
+  const noteClose = win.querySelector(".desmos-note-close");
+  const handles = win.querySelectorAll(".desmos-resize-handle");
   const reopenBtn = document.getElementById("desmosReopen");
 
-  closeBtn?.addEventListener("click", () => {
-    hideDesmos();
-  });
-  reopenBtn?.addEventListener("click", () => {
-    showDesmos();
-  });
-
   // ---- Buttery-smooth drag & resize ----
-  // The Desmos iframe is cross-origin, so when the mouse moves over it during a
-  // drag/resize the parent window loses pointermove events → jitter. We solve
-  // this with pointer capture and a transparent shield overlay while active.
+  const MIN_W = 320, MIN_H = 320;
   let mode = null; // "drag" | "resize" | null
+  let resizeDir = "";
   let startX = 0, startY = 0;
   let origLeft = 0, origTop = 0, origW = 0, origH = 0;
   let pendingX = 0, pendingY = 0, rafId = 0;
@@ -870,10 +923,33 @@ function hideDesmos() {
   };
   const applyResize = () => {
     rafId = 0;
-    const w = Math.max(320, Math.min(window.innerWidth * 0.95, origW + pendingX - startX));
-    const h = Math.max(320, Math.min(window.innerHeight * 0.92, origH + pendingY - startY));
+    const dx = pendingX - startX;
+    const dy = pendingY - startY;
+    const maxW = window.innerWidth * 0.98;
+    const maxH = window.innerHeight * 0.96;
+    let left = origLeft, top = origTop, w = origW, h = origH;
+
+    if (resizeDir.includes("e")) {
+      w = Math.max(MIN_W, Math.min(maxW, origW + dx));
+    }
+    if (resizeDir.includes("s")) {
+      h = Math.max(MIN_H, Math.min(maxH, origH + dy));
+    }
+    if (resizeDir.includes("w")) {
+      const desiredW = origW - dx;
+      w = Math.max(MIN_W, Math.min(maxW, desiredW));
+      left = origLeft + (origW - w);
+    }
+    if (resizeDir.includes("n")) {
+      const desiredH = origH - dy;
+      h = Math.max(MIN_H, Math.min(maxH, desiredH));
+      top = origTop + (origH - h);
+    }
     win.style.width = w + "px";
     win.style.height = h + "px";
+    win.style.left = left + "px";
+    win.style.top = top + "px";
+    win.style.right = "auto";
   };
   const schedule = (fn) => { if (!rafId) rafId = requestAnimationFrame(fn); };
 
@@ -886,36 +962,42 @@ function hideDesmos() {
     if (!mode) return;
     win.classList.remove("dragging", "resizing");
     mode = null;
+    resizeDir = "";
     if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
   };
 
-  closeBtn?.addEventListener("click", () => hideDesmos());
   reopenBtn?.addEventListener("click", () => {
     const winOpen = win.style.display === "flex";
     if (winOpen) hideDesmos();
     else showDesmos();
   });
 
-  header?.addEventListener("pointerdown", (e) => {
-    if (e.target === closeBtn) return;
+  noteClose?.addEventListener("click", () => hideDesmos());
+
+  noteBar?.addEventListener("pointerdown", (e) => {
+    if (e.target === noteClose) return;
     mode = "drag";
     const rect = win.getBoundingClientRect();
     origLeft = rect.left; origTop = rect.top;
     startX = e.clientX; startY = e.clientY;
     win.classList.add("dragging");
-    header.setPointerCapture?.(e.pointerId);
+    noteBar.setPointerCapture?.(e.pointerId);
     e.preventDefault();
   });
 
-  resizer?.addEventListener("pointerdown", (e) => {
-    mode = "resize";
-    const rect = win.getBoundingClientRect();
-    origW = rect.width; origH = rect.height;
-    startX = e.clientX; startY = e.clientY;
-    win.classList.add("resizing");
-    resizer.setPointerCapture?.(e.pointerId);
-    e.preventDefault();
-    e.stopPropagation();
+  handles.forEach((h) => {
+    h.addEventListener("pointerdown", (e) => {
+      mode = "resize";
+      resizeDir = h.dataset.dir || "se";
+      const rect = win.getBoundingClientRect();
+      origLeft = rect.left; origTop = rect.top;
+      origW = rect.width; origH = rect.height;
+      startX = e.clientX; startY = e.clientY;
+      win.classList.add("resizing");
+      h.setPointerCapture?.(e.pointerId);
+      e.preventDefault();
+      e.stopPropagation();
+    });
   });
 
   window.addEventListener("pointermove", onPointerMove);
@@ -923,3 +1005,98 @@ function hideDesmos() {
   window.addEventListener("pointercancel", endMode);
 })();
 
+
+/* ===== Mini Timer HUD sync (visible while Desmos is open) ===== */
+(function initTimerHud() {
+  const hud = document.getElementById("timerHud");
+  const desmosWin = document.getElementById("desmosWindow");
+  const timerScreen = document.getElementById("timerScreen");
+  const timeEl = document.getElementById("timeDisplay");
+  const pacingEl = document.getElementById("questionPacing");
+  const paceDescEl = document.getElementById("paceDescription");
+  const targetEl = document.getElementById("targetQuestion");
+
+  const hudTime = document.getElementById("hudTime");
+  const hudPace = document.getElementById("hudPace");
+  const hudPaceDesc = document.getElementById("hudPaceDesc");
+  const hudPaceTarget = document.getElementById("hudPaceTarget");
+
+  if (!hud || !desmosWin || !timeEl) return;
+
+  function isVisible(el) {
+    if (!el) return false;
+    if (el.style.display === "none") return false;
+    const cs = getComputedStyle(el);
+    return cs.display !== "none" && cs.visibility !== "hidden";
+  }
+
+  function syncContent() {
+    if (!hudTime) return;
+    hudTime.textContent = timeEl.textContent || "00:00";
+    hudTime.classList.toggle("warning", timeEl.classList.contains("warning"));
+
+    // Pace visible only when pacing row is visible AND not blurred/hidden
+    const paceOn =
+      pacingEl &&
+      pacingEl.style.display !== "none" &&
+      !pacingEl.classList.contains("blurred") &&
+      paceDescEl && paceDescEl.style.display !== "none";
+
+    if (paceOn) {
+      hudPace.style.display = "flex";
+      hudPaceDesc.textContent = paceDescEl.textContent || "";
+      if (targetEl && targetEl.style.display !== "none" && targetEl.textContent) {
+        hudPaceTarget.style.display = "block";
+        // shorten "You should be on Q: 5" -> "Q: 5"
+        hudPaceTarget.textContent = targetEl.textContent.replace(/^You should be on\s*/i, "");
+      } else {
+        hudPaceTarget.style.display = "none";
+      }
+    } else {
+      hudPace.style.display = "none";
+    }
+  }
+
+  function syncVisibility() {
+    const show = isVisible(desmosWin) && isVisible(timerScreen);
+    hud.style.display = show ? "flex" : "none";
+    if (show) syncContent();
+  }
+
+  // Watch text/class changes on the source elements
+  const contentObs = new MutationObserver(syncContent);
+  contentObs.observe(timeEl, { childList: true, characterData: true, subtree: true, attributes: true, attributeFilter: ["class"] });
+  if (pacingEl) contentObs.observe(pacingEl, { childList: true, characterData: true, subtree: true, attributes: true, attributeFilter: ["class", "style"] });
+
+  // Watch display toggles on the Desmos window and timer screen
+  const visObs = new MutationObserver(syncVisibility);
+  visObs.observe(desmosWin, { attributes: true, attributeFilter: ["style"] });
+  if (timerScreen) visObs.observe(timerScreen, { attributes: true, attributeFilter: ["style"] });
+
+  // Drag support
+  let dragging = false, startX = 0, startY = 0, origLeft = 0, origTop = 0;
+  hud.addEventListener("pointerdown", (e) => {
+    dragging = true;
+    const rect = hud.getBoundingClientRect();
+    // Switch to left/top positioning on first drag
+    hud.style.left = rect.left + "px";
+    hud.style.top = rect.top + "px";
+    hud.style.right = "auto";
+    origLeft = rect.left; origTop = rect.top;
+    startX = e.clientX; startY = e.clientY;
+    hud.classList.add("dragging");
+    hud.setPointerCapture?.(e.pointerId);
+  });
+  hud.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+    const nx = Math.max(4, Math.min(window.innerWidth - hud.offsetWidth - 4, origLeft + (e.clientX - startX)));
+    const ny = Math.max(4, Math.min(window.innerHeight - hud.offsetHeight - 4, origTop + (e.clientY - startY)));
+    hud.style.left = nx + "px";
+    hud.style.top = ny + "px";
+  });
+  const endDrag = () => { dragging = false; hud.classList.remove("dragging"); };
+  hud.addEventListener("pointerup", endDrag);
+  hud.addEventListener("pointercancel", endDrag);
+
+  syncVisibility();
+})();

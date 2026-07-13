@@ -55,10 +55,10 @@
         <p class="speed-note">You can change this later in settings</p>
       </div>
       <div id="menu" class="content-screen" style="display: flex">
-        <button id="englishBtn" onclick="startSection('English')"> English (45 min) </button>
-        <button id="mathBtn" onclick="startSection('Math')">Math (60 min)</button>
-        <button id="readingBtn" onclick="startSection('Reading')"> Reading (35 min) </button>
-        <button id="scienceBtn" onclick="startSection('Science')"> Science (35 min) </button>
+        <button id="englishBtn" onclick="startSection('English')"> English (35 min) </button>
+        <button id="mathBtn" onclick="startSection('Math')">Math (50 min)</button>
+        <button id="readingBtn" onclick="startSection('Reading')"> Reading (40 min) </button>
+        <button id="scienceBtn" onclick="startSection('Science')"> Science (40 min) </button>
         <button onclick="startFullTest()">Full ACT Test</button>
         <button onclick="startFullTestNoScience()">Full ACT (No Science)</button>
         <button onclick="showCustomInput()">Custom</button>
@@ -100,6 +100,23 @@
         </div>
         <div id="fullTestProgress" style="display: none">Section 1 of 4</div>
       </div>
+      <div id="intervalScreen" class="content-screen" style="display: none">
+        <h2 id="intervalHeading">Starting Next Section in</h2>
+        <div class="interval-ring-wrapper">
+          <svg class="interval-ring" viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="interval-ring-track" cx="60" cy="60" r="54"></circle>
+            <circle class="interval-ring-progress" cx="60" cy="60" r="54"></circle>
+          </svg>
+          <div class="interval-ring-center">
+            <div id="intervalCountdown">30</div>
+            <div class="interval-ring-unit">seconds</div>
+          </div>
+        </div>
+        <div id="intervalNextLabel" class="interval-next-label">Up next: —</div>
+        <div class="timer-controls">
+          <button id="skipIntervalButton" onclick="skipInterval()">Skip Interval Time</button>
+        </div>
+      </div>
       <div id="settingsScreen" class="content-screen" style="display: none">
         <h2>Settings</h2>
         <div class="settings-theme-column">
@@ -127,30 +144,6 @@
             </select>
             <div id="customPaceWrapper" class="custom-pace-wrapper" style="display: none;">
               <input type="number" id="customPaceInput" min="0" max="30" placeholder="Minutes" onchange="updateCustomPace(this.value)" />
-            </div>
-          </div>
-          <div class="setting-item mode-setting-container">
-            <label>Enhanced ACT Mode:</label>
-            <div class="mode-toggle-wrapper">
-              <span class="info-spacer"></span>
-              <span class="mode-icon">📝</span>
-              <label class="mode-switch">
-                <input type="checkbox" id="enhancedModeToggle" onchange="toggleEnhancedMode(this.checked)" />
-                <span class="mode-slider"></span>
-              </label>
-              <span class="mode-icon">⚡</span>
-              <div class="info-tooltip-wrapper">
-                <span class="info-icon">?</span>
-                <div class="info-tooltip">
-                  <strong>Enhanced ACT Times</strong>
-                  <ul>
-                    <li>English: 35 min (50 Q)</li>
-                    <li>Math: 50 min (45 Q)</li>
-                    <li>Reading: 40 min (36 Q)</li>
-                    <li>Science: 40 min (40 Q)</li>
-                  </ul>
-                </div>
-              </div>
             </div>
           </div>
           <div class="setting-item mode-setting-container">
@@ -203,12 +196,9 @@
       </button>
     </div>
     <div id="desmosWindow" style="display:none;">
-      <div id="desmosHeader">
-        <span class="desmos-title">🧮 Desmos</span>
-        <button type="button" id="desmosClose" aria-label="Close Desmos">×</button>
-      </div>
       <div class="desmos-note-bar">
-        Note: Desmos is only available on the Online ACT, not the paper-and-pencil version.
+        <span class="note-text">Note: Desmos is only available on the Online ACT, not the paper-and-pencil version.</span>
+        <button type="button" class="desmos-note-close" aria-label="Close Desmos">×</button>
       </div>
       <div id="desmosBody">
         <div class="desmos-frame-clip">
@@ -217,7 +207,23 @@
           <div class="desmos-iframe-shield" aria-hidden="true"></div>
         </div>
       </div>
-      <div class="desmos-resize" aria-hidden="true"></div>
+      <div class="desmos-resize-handle" data-dir="n" aria-hidden="true"></div>
+      <div class="desmos-resize-handle" data-dir="s" aria-hidden="true"></div>
+      <div class="desmos-resize-handle" data-dir="e" aria-hidden="true"></div>
+      <div class="desmos-resize-handle" data-dir="w" aria-hidden="true"></div>
+      <div class="desmos-resize-handle" data-dir="ne" aria-hidden="true"></div>
+      <div class="desmos-resize-handle" data-dir="nw" aria-hidden="true"></div>
+      <div class="desmos-resize-handle" data-dir="sw" aria-hidden="true"></div>
+      <div class="desmos-resize desmos-resize-handle" data-dir="se" aria-hidden="true"></div>
+    </div>
+
+    <div id="timerHud" style="display: none" aria-live="polite">
+      <span id="hudTime">00:00</span>
+      <div id="hudPace" style="display: none">
+        <span class="hud-sep">•</span>
+        <span id="hudPaceDesc">Pace: On Time</span>
+        <span id="hudPaceTarget" style="display: none"></span>
+      </div>
     </div>
 
 
