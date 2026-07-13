@@ -165,15 +165,15 @@ body.dark-theme {
 }
 
 #menu {
-  gap: 16px;
+  gap: 18px;
   width: 100%;
   max-width: 720px;
-  padding: 8px 0;
+  padding: 60px 0 8px;
 }
 
 #menu button {
-  padding: 18px 36px;
-  font-size: 1.1rem;
+  padding: 20px 36px;
+  font-size: 1.15rem;
   line-height: 1.2;
   border-radius: 60px;
   cursor: pointer;
@@ -194,6 +194,31 @@ body.dark-theme {
   text-align: center;
   font-weight: 500;
 }
+
+@media (min-width: 1200px) {
+  #menu {
+    max-width: 860px;
+    gap: 22px;
+  }
+  #menu button {
+    padding: 24px 40px;
+    font-size: 1.3rem;
+    letter-spacing: 1.6px;
+  }
+}
+
+@media (min-width: 1600px) {
+  #menu {
+    max-width: 1000px;
+    gap: 26px;
+  }
+  #menu button {
+    padding: 28px 48px;
+    font-size: 1.5rem;
+    letter-spacing: 1.8px;
+  }
+}
+
 
 @media (max-width: 480px) {
   #menu {
@@ -852,7 +877,7 @@ input:checked + .mode-slider:before {
   position: absolute;
   top: 25px;
   left: 25px;
-  font-size: clamp(1.8rem, 4vh, 2.2rem);
+  font-size: clamp(1.4rem, 3vh, 1.7rem);
   line-height: 1;
   text-decoration: none;
   background: transparent;
